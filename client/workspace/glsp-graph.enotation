@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="ASCII"?>
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
+  <semanticElement uri="/"/>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GModelElement"/>
+    <position x="1190.659375" y="896.4322916666667"/>
+    <size width="216.734375" height="154.9375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GShapeElement"/>
+    <position x="575.75390625" y="905.3668154761906"/>
+    <size width="208.625" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GGraph"/>
+    <position x="848.265625" y="181.81770833333337"/>
+    <size width="128.59375" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GModelRoot"/>
+    <position x="886.3515625" y="777.5520833333334"/>
+    <size width="174.125" height="85.234375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GNode"/>
+    <position x="400.8125" y="626.7291666666667"/>
+    <size width="120.78125" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GEdge"/>
+    <position x="604.546875" y="1085.0157738095238"/>
+    <size width="192.3125" height="108.46875"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GCompartment"/>
+    <position x="320.78125" y="892.7477678571429"/>
+    <size width="200.8125" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GLabel"/>
+    <position x="373.75" y="713.9348958333334"/>
+    <size width="147.84375" height="85.234375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GIssueMarker"/>
+    <position x="332.953125" y="1205.5386904761906"/>
+    <size width="188.640625" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GPort"/>
+    <position x="410.78125" y="1070.982142857143"/>
+    <size width="110.8125" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GButton"/>
+    <position x="313.65625" y="965.7477678571429"/>
+    <size width="207.9375" height="85.234375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GBoundsAware"/>
+    <position x="870.96875" y="560.6510416666667"/>
+    <size width="204.890625" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GPoint"/>
+    <position x="1520.15625" y="568.8671875"/>
+    <size width="137.84375" height="108.46875"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GDimension"/>
+    <position x="1520.15625" y="134.703125"/>
+    <size width="182.328125" height="108.46875"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GLayoutOptions"/>
+    <position x="1169.96875" y="209.9375"/>
+    <size width="320.1875" height="340.8125"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GEdgeLayoutable"/>
+    <position x="574.59375" y="3.3515625"/>
+    <size width="225.265625" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GEdgePlacement"/>
+    <position x="1239.96875" y="10.0"/>
+    <size width="254.59375" height="131.703125"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GSide"/>
+    <position x="180.625" y="12.0"/>
+    <size width="113.03125" height="178.171875"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GLayouting"/>
+    <position x="590.359375" y="624.8177083333334"/>
+    <size width="168.96875" height="85.234375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GBounds"/>
+    <position x="1520.15625" y="728.4947916666667"/>
+    <size width="182.328125" height="154.9375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GAlignable"/>
+    <position x="603.828125" y="730.0520833333334"/>
+    <size width="160.796875" height="53.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GIssue"/>
+    <position x="836.859375" y="1186.6376488095239"/>
+    <size width="207.84375" height="108.46875"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GSeverity"/>
+    <position x="101.0" y="278.0"/>
+    <size width="148.625" height="131.703125"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GHtmlRoot"/>
+    <position x="614.5625" y="978.3668154761906"/>
+    <size width="182.296875" height="85.234375"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//GPreRenderedElement"/>
+    <position x="836.859375" y="997.9345238095239"/>
+    <size width="273.109375" height="85.234375"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GModelElement/children"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GModelElement/parent"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GGraph/layoutOptions"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GModelRoot/canvasBounds"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GEdge/routingPoints"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GEdge/source"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GEdge/target"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GIssueMarker/issues"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GBoundsAware/position"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GBoundsAware/size"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GEdgeLayoutable/edgePlacement"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GLayouting/layoutOptions"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//GAlignable/alignment"/>
+  </elements>
+</enotation:Diagram>

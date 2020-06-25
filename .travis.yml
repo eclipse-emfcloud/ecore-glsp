@@ -1,0 +1,50 @@
+branches:
+        only:
+        - master
+notifications:  
+  email:  
+    if: branch = master
+    recipients: 
+    - cletavernier@eclipsesource.com
+    - tortmayr@eclipsesource.com
+    on_success: change  
+    on_failure: always
+matrix:
+  include:
+    - language: java
+      dist: trusty
+      jdk:  openjdk11
+      before_script:
+        - cd server
+      cache:
+        directories:
+          - "$HOME/.m2/repository"
+      script:
+        - mvn clean verify -U
+      addons:
+        apt:
+          packages:
+            - libxml2-utils
+
+    - language: node_js
+      node_js: '10'
+      before_script:
+        - cd client
+      cache:
+        yarn: true
+        directories:
+          - node_modules
+      env:
+        global:
+          - CXX=g++-4.8
+          - NODE_OPTIONS="--max_old_space_size=4096"
+      addons:
+        apt:
+          update: true
+          packages:
+          - g++-4.8
+          - libsecret-1-dev
+          - xvfb
+          - libx11-dev
+          - libxkbfile-dev
+      install: false

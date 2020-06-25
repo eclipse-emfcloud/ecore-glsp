@@ -1,0 +1,44 @@
+{
+  "name": "theia-ecore",
+  "description": "Glue code to integrate Ecore GLSP sprotty client into Eclipse Theia",
+  "keywords": [
+    "theia-extension"
+  ],
+  "author": {
+    "name": "EclipseSource"
+  },
+  "license": "(EPL-2.0 OR MIT)",
+  "version": "0.2.0",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "homepage": "https://github.com/eclipsesource/ecore-glsp",
+  "bugs": "https://github.com/eclipsesource/ecore-glsp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eclipsesource/ecore-glsp.git"
+  },
+  "dependencies": {
+    "@eclipse-glsp/theia-integration": "next",
+    "@theia/core": "latest",
+    "sprotty-ecore": "0.2.0"
+  },
+  "devDependencies": {
+    "rimraf": "latest",
+    "typescript": "~3.5.3"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc && yarn run lint",
+    "lint": "tslint -c ../configs/tslint.json --project ./tsconfig.json",
+    "watch": "tsc -w"
+  },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-extension",
+      "backend": "lib/node/backend-extension"
+    }
+  ]
+}
