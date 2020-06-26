@@ -6,7 +6,7 @@ Ecore GLSP provides a web-based editor for Ecore Models (including Diagrams), in
 
 Ecore GLSP can display an existing Ecore model. The diagram layout will be persisted in an .enotation file next to the .ecore file. The diagram editor also supports creation of new elements (EClasses, EAttributes, EReferences...), as well as partial support for editing existing elements (Renaming, deleting...).
 
-![Ecore GLSP Example](images/example.png)
+![Ecore GLSP Example](images/diagramanimated.gif)
 
 Server \
 Note: to build and run the Ecore GLSP Server, you need Java with version >= 11.
