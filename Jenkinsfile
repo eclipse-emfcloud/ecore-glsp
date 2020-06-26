@@ -7,7 +7,9 @@ pipeline {
     stages {
         stage ('Build: Plain Maven (M2)') {
             steps {
-                sh 'mvn clean verify' 
+            	dir('server') {
+                	sh 'mvn clean verify'
+                }
             }
         }
     }
