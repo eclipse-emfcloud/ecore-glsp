@@ -11,7 +11,7 @@
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
     "theia:start": "cd browser-app && yarn start",
     "testcafe:start": "testcafe chrome tests/test.ts",
-    "e2etest": "npm-run-all --parallel --aggregate-output theia:start testcafe:start"
+    "e2etest": "npm-run-all --parallel --race --aggregate-output theia:start testcafe:start"
   },
   "devDependencies": {
     "lerna": "2.4.0",

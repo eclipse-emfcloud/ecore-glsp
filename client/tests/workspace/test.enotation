@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ASCII"?>
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
+  <semanticElement uri="/"/>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Class"/>
+    <position x="462.828125" y="129.0"/>
+    <size width="91.015625" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Abstract"/>
+    <position x="240.84375" y="293.83333333333337"/>
+    <size width="115.8125" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Interface"/>
+    <position x="121.0" y="96.83333333333334"/>
+    <size width="118.828125" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Enum"/>
+    <position x="12.0" y="12.0"/>
+    <size width="93.25" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//NewEClass0/neweclass1s"/>
+    <bendPoints x="511.75" y="319.33333333333337"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//NewEClass2/neweclass0s"/>
+    <bendPoints x="180.4140625" y="159.33333333333334"/>
+    <bendPoints x="261.328125" y="159.33333333333334"/>
+    <bendPoints x="261.328125" y="148.5"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Class"/>
+    <position x="11.0" y="247.0"/>
+    <size width="91.015625" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Abstract"/>
+    <position x="191.0" y="103.0"/>
+    <size width="115.8125" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Interface"/>
+    <position x="312.0" y="270.0"/>
+    <size width="118.828125" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Enum"/>
+    <position x="6.0" y="7.0"/>
+    <size width="93.25" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//DataType"/>
+    <position x="291.0" y="10.0"/>
+    <size width="167.875" height="75.015625"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//Class/abstracts"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//Interface/classs"/>
+    <bendPoints x="722.4140625" y="354.5"/>
+    <bendPoints x="348.5078125" y="354.5"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//Class/reference"/>
+    <bendPoints x="138.90625" y="268.5"/>
+    <bendPoints x="138.90625" y="124.5"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//Interface/containment"/>
+    <bendPoints x="371.4140625" y="358.5"/>
+    <bendPoints x="56.5078125" y="358.5"/>
+  </elements>
+</enotation:Diagram>

@@ -81,5 +81,17 @@ pipeline {
                 }
             }
         }
+
+        stage('E2E tests'){
+            steps{
+                container('node'){
+                    timeout(30){
+                        dir('client'){
+                            sh 'yarn e2etest'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
