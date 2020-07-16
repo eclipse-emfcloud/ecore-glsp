@@ -3,28 +3,16 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: maven
-    image: maven:3.6.2-jdk-11
+  - name: ci
+    image: eclipseglsp/ci:0.0.4
     tty: true
     resources:
       limits:
-        memory: "1Gi"
-        cpu: "0.5"
+        memory: "4Gi"
+        cpu: "2"
       requests:
-        memory: "1Gi"
-        cpu: "0.5"
-    command:
-    - cat
-  - name: node
-    image: node:10.20.1
-    tty: true
-    resources:
-      limits:
-        memory: "2Gi"
-        cpu: "1.3"
-      requests:
-        memory: "2Gi"
-        cpu: "1.3"
+        memory: "4Gi"
+        cpu: "2"
     command:
     - cat
     volumeMounts:
@@ -40,7 +28,6 @@ spec:
   - name: "yarn-global"
     emptyDir: {}
 """
-
 pipeline {
     agent {
         kubernetes {
@@ -51,16 +38,15 @@ pipeline {
     options {
         buildDiscarder logRotator(numToKeepStr: '15')
     }
-
     environment {
         YARN_CACHE_FOLDER = "${env.WORKSPACE}/yarn-cache"
         SPAWN_WRAP_SHIM_ROOT = "${env.WORKSPACE}"
+        CHROME_BIN="/usr/bin/google-chrome"
     }
-    
     stages {
         stage('Build client') {
             steps {
-                container('node') {
+                container('ci') {
                     timeout(30){
                         dir('client') {
                             sh 'yarn install'
@@ -69,13 +55,23 @@ pipeline {
                 }
             }
         }
-
         stage('Build server'){
             steps{
-                container('maven'){
+                container('ci'){
                     timeout(30){
                         dir('server'){
-                            sh 'mvn clean verify'
+                            sh 'mvn clean verify --batch-mode package'
+                        }
+                    }
+                }
+            }
+        }
+        stage('E2E tests'){
+            steps{
+                container('ci'){
+                    timeout(30){
+                        dir('client'){
+                            sh 'yarn e2etest'
                         }
                     }
                 }
