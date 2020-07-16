@@ -10,7 +10,7 @@
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
     "theia:start": "cd browser-app && yarn start",
-    "testcafe:start": "testcafe chrome tests/test.ts",
+    "testcafe:start": "testcafe chrome --no-sandbox --disable-dev-shm-usage tests/test.ts",
     "e2etest": "npm-run-all --parallel --race --aggregate-output theia:start testcafe:start"
   },
   "devDependencies": {
