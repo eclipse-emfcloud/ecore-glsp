@@ -306,17 +306,31 @@ test('Create Nodes', async t => {
         .click(selectors.okButton);
 }).after(checkDefaultWorkbench);
 
-test('Create Edges', async t => {
+test('Create Reference', async t => {
     openFile(t, selectors.testNodesOnlyEcore);
 
     createEdge(t, 'Reference', nodesSelector.classNode, nodesSelector.abstractNode);
-    createEdge(t, 'Inheritance', nodesSelector.interfaceNode, nodesSelector.abstractNode);
+
+    await t
+        .expect(defaultEdgeSelector.referenceEdge.exists).ok('Reference exists');
+});
+
+test('Create Inheritance', async t => {
+    openFile(t, selectors.testNodesOnlyEcore);
+
+    createEdge(t, 'Inheritance', nodesSelector.classNode, nodesSelector.abstractNode);
+
+    await t
+        .expect(defaultEdgeSelector.inheritanceEdge.exists).ok('Inheritance exists');
+});
+
+test('Create Containment', async t => {
+    openFile(t, selectors.testNodesOnlyEcore);
+
     createEdge(t, 'Containment', nodesSelector.interfaceNode, nodesSelector.classNode);
 
     await t
-        .expect(defaultEdgeSelector.referenceEdge.exists).ok('Reference exists')
-        .expect(defaultEdgeSelector.containmentEdge.exists).ok('Containment exists')
-        .expect(defaultEdgeSelector.inheritanceEdge.exists).ok('Inheritance exists');
+        .expect(defaultEdgeSelector.containmentEdge.exists).ok('Containment exists');
 });
 
 test('Add Attributes/Literals', async t => {
