@@ -2,7 +2,7 @@
 [![Build Status](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.eclipse.org%2Femfcloud%2Fjob%2Feclipse-emfcloud%2Fjob%2Fecore-glsp%2Fjob%2Fmaster)](https://ci.eclipse.org/emfcloud/job/eclipse-emfcloud/job/ecore-glsp/job/master)
 
 
-Ecore GLSP provides a web-based editor for Ecore Models (including Diagrams), integrated with Eclipse Theia. It contains two components: one [GLSP](https://github.com/eclipsesource/glsp) language server (Server-side, written in Java), and one GLSP client extension to actually present the diagrams (Using [Sprotty](https://github.com/eclipse/sprotty-theia)). 
+Ecore GLSP provides a web-based editor for Ecore Models (including Diagrams), integrated with Eclipse Theia. It contains two components: one [GLSP](https://github.com/eclipse-glsp/glsp) language server (Server-side, written in Java), and one GLSP client extension to actually present the diagrams (Using [Sprotty](https://github.com/eclipse/sprotty-theia)). 
 
 Ecore GLSP can display an existing Ecore model. The diagram layout will be persisted in an .enotation file next to the .ecore file. The diagram editor also supports creation of new elements (EClasses, EAttributes, EReferences...), as well as partial support for editing existing elements (Renaming, deleting...).
 
@@ -16,16 +16,14 @@ Note: to build and run the Ecore GLSP Server, you need Java with version >= 11.
   * mvn install -U
 
 * Run:
-  * Start the client as it is described in [client readme](https://github.com/eclipsesource/ecore-glsp/blob/master/client/README.md). The backend is automatically launched by the project theia-glsp-server
+  * Start the client as it is described in [client readme](https://github.com/eclipse-emfcloud/ecore-glsp/blob/master/client/README.md). The backend is automatically launched by the project theia-glsp-server
   * If you want to start the backend manually - execute the Java main class: com.eclipsesource.glsp.ecore.EcoreServerLauncher
   	For this to work with the client, you have to remove the dependency on theia-glsp-server in the browser-app's package.json
 
 ## Building and deploying via Docker
-The client repo contains a [Dockerfile](https://github.com/eclipsesource/ecore-glsp/blob/master/client/README.md), that builds the entire client application. The image listens on 0.0.0.0:3000 for incoming requests from a browser.
+The client repo contains a [Dockerfile](https://github.com/eclipse-emfcloud/ecore-glsp/blob/master/Dockerfile), that builds the entire application (client&server). The image listens on 0.0.0.0:3000 for incoming requests from a browser.
 
 For installing docker locally please consult [docker's installation description](https://docs.docker.com/install/) for your OS.
-
-**The glsp-server needs to be build locally before you build the image**
 
 **Building**
 `docker build -t <imagename>:<tagname> .` 
