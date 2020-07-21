@@ -521,9 +521,8 @@ test('Delete Nodes with DEL', async t => {
         .expect(nodesSelector.enumNode.exists).notOk("Enum has been deleted");
 });
 
-// Commented due to the inheritance issue, can be reactivated once this is fixed.
-/*
-test('Delete Edges', async t => {
+// Skipped due to the inheritance issue, can be reactivated once this is fixed.
+test.skip('Delete Edges', async t => {
     openFile(t, selectors.testEcore);
     await t
         .click(selectors.eraser)
@@ -537,7 +536,7 @@ test('Delete Edges', async t => {
         .expect(edgeSelector.inheritanceEdge.exists).notOk('Inheritance deleted');
 });
 
-test('Delete Edges with DEL', async t => {
+test.skip('Delete Edges with DEL', async t => {
     openFile(t, selectors.testEcore);
     await t
         .click(edgeSelector.referenceEdge)
@@ -550,4 +549,3 @@ test('Delete Edges with DEL', async t => {
         .expect(edgeSelector.inheritanceEdge.exists).notOk('Inheritance deleted')
         .expect(edgeSelector.referenceEdge.exists).notOk('Reference deleted');
 });
-*/
