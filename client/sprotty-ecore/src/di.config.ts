@@ -18,6 +18,7 @@ import {
     configureModelElement,
     configureViewerOptions,
     ConsoleLogger,
+    copyPasteContextMenuModule,
     decorationModule,
     defaultGLSPModule,
     defaultModule,
@@ -26,10 +27,13 @@ import {
     exportModule,
     fadeModule,
     glspCommandPaletteModule,
+    glspContextMenuModule,
     glspEditLabelValidationModule,
     GLSPGraph,
+    glspHoverModule,
     glspMouseToolModule,
     glspSelectModule,
+    glspServerCopyPasteModule,
     HtmlRoot,
     HtmlRootView,
     labelEditModule,
@@ -55,19 +59,15 @@ import {
     SRoutingHandle,
     SRoutingHandleView,
     toolFeedbackModule,
+    toolsModule,
     TYPES,
     validationModule,
     viewportModule,
-    zorderModule,
-    glspHoverModule,
-    toolsModule,
-    glspServerCopyPasteModule,
-    glspContextMenuModule,
-    copyPasteContextMenuModule
+    zorderModule
 } from "@eclipse-glsp/client/lib";
 import executeCommandModule from "@eclipse-glsp/client/lib/features/execute/di.config";
 import { Container, ContainerModule } from "inversify";
-import { EditLabelUI, contextMenuModule } from "sprotty/lib";
+import { contextMenuModule, EditLabelUI } from "sprotty/lib";
 
 import { EditLabelUIAutocomplete } from "./features/edit-label-autocomplete";
 import { LabelSelectionFeedback } from "./feedback";
@@ -97,7 +97,7 @@ import {
     LabelNodeView
 } from "./views";
 
-export default (containerId: string) => {
+export default (containerId: string): Container => {
     const classDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
         rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
         rebind(TYPES.LogLevel).toConstantValue(LogLevel.info);
@@ -105,35 +105,35 @@ export default (containerId: string) => {
 
         const context = { bind, unbind, isBound, rebind };
         bind(TYPES.IVNodePostprocessor).to(LabelSelectionFeedback);
-        configureModelElement(context, 'graph', GLSPGraph, SGraphView);
-        configureModelElement(context, 'node:class', LabeledNode, ClassNodeView);
-        configureModelElement(context, 'node:enum', LabeledNode, ClassNodeView);
-        configureModelElement(context, 'node:datatype', LabeledNode, ClassNodeView);
-        configureModelElement(context, 'label:name', SEditableLabel, SLabelView);
-        configureModelElement(context, 'label:edge-name', SEditableLabel, SLabelView);
-        configureModelElement(context, 'label:edge-multiplicity', SEditableLabel, SLabelView);
-        configureModelElement(context, 'label:instancename', SLabelNode, LabelNodeView);
-        configureModelElement(context, 'node:attribute', SLabelNodeAttribute, LabelNodeView);
-        configureModelElement(context, 'node:enumliteral', SLabelNodeLiteral, LabelNodeView);
-        configureModelElement(context, 'node:operation', SNode, RectangularNodeView);
-        configureModelElement(context, 'label:text', SLabel, SLabelView);
-        configureModelElement(context, 'comp:comp', SCompartment, SCompartmentView);
-        configureModelElement(context, 'comp:header', SCompartment, SCompartmentView);
-        configureModelElement(context, 'icon:class', IconClass, IconView);
-        configureModelElement(context, 'icon:abstract', IconAbstract, IconView);
-        configureModelElement(context, 'icon:interface', IconInterface, IconView);
-        configureModelElement(context, 'icon:enum', IconEnum, IconView);
-        configureModelElement(context, 'icon:datatype', IconDataType, IconView);
-        configureModelElement(context, 'label:icon', SLabel, SLabelView);
-        configureModelElement(context, 'html', HtmlRoot, HtmlRootView);
-        configureModelElement(context, 'routing-point', SRoutingHandle, SRoutingHandleView);
-        configureModelElement(context, 'volatile-routing-point', SRoutingHandle, SRoutingHandleView);
-        configureModelElement(context, 'edge:reference', ArrowEdge, ArrowEdgeView);
-        configureModelElement(context, 'edge:bidirectional_reference', BidirectionalArrowEdge, BidirectionalEdgeView);
-        configureModelElement(context, 'edge:bidirectional_composition', CompositionEdge, CompositionEdgeView);
-        configureModelElement(context, 'edge:inheritance', InheritanceEdge, InheritanceEdgeView);
-        configureModelElement(context, 'edge:composition', CompositionEdge, CompositionEdgeView);
-        configureModelElement(context, 'edge', SEdge, PolylineEdgeView);
+        configureModelElement(context, "graph", GLSPGraph, SGraphView);
+        configureModelElement(context, "node:class", LabeledNode, ClassNodeView);
+        configureModelElement(context, "node:enum", LabeledNode, ClassNodeView);
+        configureModelElement(context, "node:datatype", LabeledNode, ClassNodeView);
+        configureModelElement(context, "label:name", SEditableLabel, SLabelView);
+        configureModelElement(context, "label:edge-name", SEditableLabel, SLabelView);
+        configureModelElement(context, "label:edge-multiplicity", SEditableLabel, SLabelView);
+        configureModelElement(context, "label:instancename", SLabelNode, LabelNodeView);
+        configureModelElement(context, "node:attribute", SLabelNodeAttribute, LabelNodeView);
+        configureModelElement(context, "node:enumliteral", SLabelNodeLiteral, LabelNodeView);
+        configureModelElement(context, "node:operation", SNode, RectangularNodeView);
+        configureModelElement(context, "label:text", SLabel, SLabelView);
+        configureModelElement(context, "comp:comp", SCompartment, SCompartmentView);
+        configureModelElement(context, "comp:header", SCompartment, SCompartmentView);
+        configureModelElement(context, "icon:class", IconClass, IconView);
+        configureModelElement(context, "icon:abstract", IconAbstract, IconView);
+        configureModelElement(context, "icon:interface", IconInterface, IconView);
+        configureModelElement(context, "icon:enum", IconEnum, IconView);
+        configureModelElement(context, "icon:datatype", IconDataType, IconView);
+        configureModelElement(context, "label:icon", SLabel, SLabelView);
+        configureModelElement(context, "html", HtmlRoot, HtmlRootView);
+        configureModelElement(context, "routing-point", SRoutingHandle, SRoutingHandleView);
+        configureModelElement(context, "volatile-routing-point", SRoutingHandle, SRoutingHandleView);
+        configureModelElement(context, "edge:reference", ArrowEdge, ArrowEdgeView);
+        configureModelElement(context, "edge:bidirectional_reference", BidirectionalArrowEdge, BidirectionalEdgeView);
+        configureModelElement(context, "edge:bidirectional_composition", CompositionEdge, CompositionEdgeView);
+        configureModelElement(context, "edge:inheritance", InheritanceEdge, InheritanceEdgeView);
+        configureModelElement(context, "edge:composition", CompositionEdge, CompositionEdgeView);
+        configureModelElement(context, "edge", SEdge, PolylineEdgeView);
         configureViewerOptions(context, {
             needsClientLayout: true,
             baseDiv: containerId

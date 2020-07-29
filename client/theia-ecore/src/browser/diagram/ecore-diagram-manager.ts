@@ -8,13 +8,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
-import { RequestTypeHintsAction, EnableToolPaletteAction } from "@eclipse-glsp/client";
+import { EnableToolPaletteAction, RequestTypeHintsAction } from "@eclipse-glsp/client";
 import {
     GLSPDiagramManager,
     GLSPDiagramWidget,
-    GLSPTheiaSprottyConnector,
+    GLSPNotificationManager,
     GLSPTheiaDiagramServer,
-    GLSPNotificationManager
+    GLSPTheiaSprottyConnector
 } from "@eclipse-glsp/theia-integration/lib/browser";
 import { MessageService } from "@theia/core";
 import { WidgetManager } from "@theia/core/lib/browser";
@@ -25,7 +25,6 @@ import { DiagramWidget, DiagramWidgetOptions, TheiaFileSaver } from "sprotty-the
 
 import { EcoreLanguage } from "../../common/ecore-language";
 import { EcoreGLSPDiagramClient } from "./ecore-glsp-diagram-client";
-
 
 @injectable()
 export class EcoreDiagramManager extends GLSPDiagramManager {
@@ -40,10 +39,10 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
             const clientId = this.createClientId();
             const config = this.diagramConfigurationRegistry.get(options.diagramType);
             const diContainer = config.createContainer(clientId);
-            const diagramWidget = new EcoreDiagramWidget(options, clientId + '_widget', diContainer, this.editorPreferences, this.diagramConnector);
+            const diagramWidget = new EcoreDiagramWidget(options, clientId + "_widget", diContainer, this.editorPreferences, this.diagramConnector);
             return diagramWidget;
         }
-        throw Error('DiagramWidgetFactory needs DiagramWidgetOptions but got ' + JSON.stringify(options));
+        throw Error("DiagramWidgetFactory needs DiagramWidgetOptions but got " + JSON.stringify(options));
     }
     constructor(
         @inject(EcoreGLSPDiagramClient) diagramClient: EcoreGLSPDiagramClient,
@@ -53,28 +52,33 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
         @inject(MessageService) messageService: MessageService,
         @inject(GLSPNotificationManager) notificationManager: GLSPNotificationManager) {
         super();
-        this._diagramConnector = new GLSPTheiaSprottyConnector({ diagramClient,
-            fileSaver, editorManager, widgetManager, diagramManager: this, messageService, notificationManager });
+        this._diagramConnector = new GLSPTheiaSprottyConnector({
+            diagramClient,
+            fileSaver, editorManager, widgetManager, diagramManager: this, messageService, notificationManager
+        });
     }
 
-    get fileExtensions() {
+    get fileExtensions(): string[] {
         return [EcoreLanguage.FileExtension];
     }
-    get diagramConnector() {
+    get diagramConnector(): GLSPTheiaSprottyConnector {
         return this._diagramConnector;
     }
 }
 
 export class EcoreDiagramWidget extends GLSPDiagramWidget {
-    protected initializeSprotty() {
+    protected initializeSprotty(): void {
         const modelSource = this.diContainer.get<ModelSource>(TYPES.ModelSource);
-        if (modelSource instanceof DiagramServer)
+        if (modelSource instanceof DiagramServer) {
             modelSource.clientId = this.id;
-        if (modelSource instanceof GLSPTheiaDiagramServer && this.connector)
+        }
+        if (modelSource instanceof GLSPTheiaDiagramServer && this.connector) {
             this.connector.connect(modelSource);
+        }
         this.disposed.connect(() => {
-            if (modelSource instanceof GLSPTheiaDiagramServer && this.connector)
+            if (modelSource instanceof GLSPTheiaDiagramServer && this.connector) {
                 this.connector.disconnect(modelSource);
+            }
         });
 
         this.actionDispatcher.dispatch(new RequestModelAction({

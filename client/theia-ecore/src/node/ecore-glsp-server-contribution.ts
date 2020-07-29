@@ -24,11 +24,11 @@ export class EcoreGLServerContribution extends BaseGLSPServerContribution {
     readonly name = EcoreLanguage.Name;
     serverStarted = false;
     readonly description = {
-        id: 'ecore',
-        name: 'Ecore',
-        documentSelector: ['ecore'],
+        id: "ecore",
+        name: "Ecore",
+        documentSelector: ["ecore"],
         fileEvents: [
-            '**/*.ecorediagram'
+            "**/*.ecorediagram"
         ]
     };
     @inject(GLSPLaunchOptionsSymb) @optional() protected readonly launchOptions: GLSPLaunchOptions;

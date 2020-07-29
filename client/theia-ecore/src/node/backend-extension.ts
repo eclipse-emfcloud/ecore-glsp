@@ -12,19 +12,18 @@ import { ConnectionHandler, JsonRpcConnectionHandler } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node";
 import { LanguageServerContribution } from "@theia/languages/lib/node";
 import { ContainerModule, injectable } from "inversify";
+import { join, resolve } from "path";
 
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreFileGenServer } from "./ecore-file-generation";
 import { EcoreGLServerContribution } from "./ecore-glsp-server-contribution";
-import {GLSPLaunchOptions, GLSPLaunchOptionsSymb, GLSPServerLauncher} from "./glsp-server-launcher";
-import { join, resolve } from 'path';
-
+import { GLSPLaunchOptions, GLSPLaunchOptionsSymb, GLSPServerLauncher } from "./glsp-server-launcher";
 
 @injectable()
 export class EcoreGlspLaunchOptions implements GLSPLaunchOptions {
     isRunning = false;
-    hostname = 'localhost';
-    jarPath = resolve(join(__dirname, '..', '..', 'build', 'org.eclipse.emfcloud.ecore.glsp-0.0.2-SNAPSHOT-glsp.jar'));
+    hostname = "localhost";
+    jarPath = resolve(join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.glsp-0.0.2-SNAPSHOT-glsp.jar"));
     serverPort = 5007;
 }
 

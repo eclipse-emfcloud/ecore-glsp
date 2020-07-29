@@ -8,6 +8,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { SChildElement } from "@eclipse-glsp/client";
 import {
     boundsFeature,
     deletableFeature,
@@ -22,21 +23,20 @@ import {
     nameFeature,
     popupFeature,
     RectangularNode,
+    SEdge,
     selectFeature,
     SLabel,
     SShapeElement,
     WithEditableLabel,
-    withEditLabelFeature,
-    SEdge
+    withEditLabelFeature
 } from "sprotty/lib";
-
 
 export class LabeledNode extends RectangularNode implements WithEditableLabel, Nameable {
 
-    get editableLabel() {
-        const headerComp = this.children.find(element => element.type === 'comp:header');
+    get editableLabel(): (SChildElement & EditableLabel) | undefined {
+        const headerComp = this.children.find(element => element.type === "comp:header");
         if (headerComp) {
-            const label = headerComp.children.find(element => element.type === 'label:heading');
+            const label = headerComp.children.find(element => element.type === "label:heading");
             if (label && isEditableLabel(label)) {
                 return label;
             }
@@ -44,19 +44,19 @@ export class LabeledNode extends RectangularNode implements WithEditableLabel, N
         return undefined;
     }
 
-    get name() {
+    get name(): string {
         if (this.editableLabel) {
             return this.editableLabel.text;
         }
         return this.id;
     }
-    hasFeature(feature: symbol) {
+    hasFeature(feature: symbol): boolean {
         return super.hasFeature(feature) || feature === nameFeature || feature === withEditLabelFeature;
     }
 }
 
 export class SEditableLabel extends SLabel implements EditableLabel {
-    hasFeature(feature: symbol) {
+    hasFeature(feature: symbol): boolean {
         return feature === editLabelFeature || super.hasFeature(feature);
     }
 }
@@ -90,11 +90,11 @@ export class IconDataType extends Icon {
 }
 
 export class SLabelNode extends SLabel implements EditableLabel {
-    hoverFeedback: boolean = false;
+    hoverFeedback = false;
     imageName: string;
 
     hasFeature(feature: symbol): boolean {
-        return (feature === selectFeature || feature === editLabelFeature || feature === popupFeature || feature === deletableFeature || 
+        return (feature === selectFeature || feature === editLabelFeature || feature === popupFeature || feature === deletableFeature ||
             feature === hoverFeedbackFeature || super.hasFeature(feature));
     }
 }
@@ -112,6 +112,7 @@ export class ArrowEdge extends SEdge {
 }
 
 export class BidirectionalArrowEdge extends ArrowEdge {
+    // eslint-disable-next-line no-invalid-this
     public readonly sourceAnchorCorrection = this.targetAnchorCorrection;
 }
 

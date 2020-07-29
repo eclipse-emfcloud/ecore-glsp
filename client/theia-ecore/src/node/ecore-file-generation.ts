@@ -13,11 +13,10 @@ import { BackendApplicationContribution } from "@theia/core/lib/node/backend-app
 import { RawProcess, RawProcessFactory } from "@theia/process/lib/node/raw-process";
 import { Application } from "express";
 import { inject, injectable } from "inversify";
+import os = require("os");
 import * as path from "path";
 
 import { FileGenServer } from "../common/generate-protocol";
-
-const os = require('os');
 
 @injectable()
 export class EcoreFileGenServer implements FileGenServer, BackendApplicationContribution {
@@ -27,44 +26,45 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         @inject(ILogger) private readonly logger: ILogger) { }
 
     generateEcore(name: string, prefix: string, uri: string, workspacePath: string): Promise<string> {
-        const jarPath = path.resolve(__dirname, '..', '..',
-            'server', 'ecore-backend-server-1.0-SNAPSHOT-jar-with-dependencies.jar');
+        const jarPath = path.resolve(__dirname, "..", "..",
+            "server", "ecore-backend-server-1.0-SNAPSHOT-jar-with-dependencies.jar");
         if (jarPath.length === 0) {
-            throw new Error('The EcoreGeneration.jar is not found. ');
+            throw new Error("The EcoreGeneration.jar is not found. ");
         }
 
-        const command = 'java';
+        const command = "java";
         const args: string[] = [];
         let platformWorkspacePath = workspacePath;
-        if (os.platform() === 'win32') {
+        if (os.platform() === "win32") {
             platformWorkspacePath = workspacePath.substr(1);
         }
 
         args.push(
-            '-jar', jarPath,
-            '-name', name,
-            '-prefix', prefix,
-            '-uri', uri,
-            '-workspacePath', platformWorkspacePath
+            "-jar", jarPath,
+            "-name", name,
+            "-prefix", prefix,
+            "-uri", uri,
+            "-workspacePath", platformWorkspacePath
         );
 
         return new Promise(resolve => {
             const process = this.spawnProcess(command, args);
+            // eslint-disable-next-line no-null/no-null
             if (process === undefined || process.process === undefined || process === null || process.process === null) {
-                resolve('Process not spawned');
+                resolve("Process not spawned");
                 return;
             }
 
-            process.process.on('exit', (code: any) => {
+            process.process.on("exit", (code: any) => {
                 switch (code) {
-                    case 0: resolve('OK'); break;
-                    case -10: resolve('Name Parameter missing'); break;
-                    case -11: resolve('NsPrefix Parameter missing'); break;
-                    case -12: resolve('NsURI Parameter missing'); break;
-                    case -13: resolve('Workspace Path Parameter missing'); break;
-                    case -20: resolve('Encoding not found, check Server Log!'); break;
-                    case -30: resolve('IO Exception occurred, check Server Log!'); break;
-                    default: resolve('UNKNOWN ERROR'); break;
+                    case 0: resolve("OK"); break;
+                    case -10: resolve("Name Parameter missing"); break;
+                    case -11: resolve("NsPrefix Parameter missing"); break;
+                    case -12: resolve("NsURI Parameter missing"); break;
+                    case -13: resolve("Workspace Path Parameter missing"); break;
+                    case -20: resolve("Encoding not found, check Server Log!"); break;
+                    case -30: resolve("IO Exception occurred, check Server Log!"); break;
+                    default: resolve("UNKNOWN ERROR"); break;
                 }
             });
         });
@@ -87,10 +87,10 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         if (rawProcess.process === undefined) {
             return undefined;
         }
-        rawProcess.process.on('error', this.onDidFailSpawnProcess.bind(this));
+        rawProcess.process.on("error", this.onDidFailSpawnProcess.bind(this));
         const stderr = rawProcess.process.stderr;
         if (stderr) {
-            stderr.on('data', this.logError.bind(this));
+            stderr.on("data", this.logError.bind(this));
         }
         return rawProcess;
     }
@@ -99,7 +99,7 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         this.logger.error(error);
     }
 
-    protected logError(data: string | Buffer) {
+    protected logError(data: string | Buffer): void {
         if (data) {
             this.logger.error(`Ecore Gen: ${data}`);
         }

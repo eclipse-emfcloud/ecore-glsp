@@ -8,41 +8,42 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+/** @jsx svg */
 import { injectable } from "inversify";
-import * as snabbdom from "snabbdom-jsx";
+import { svg } from "snabbdom-jsx";
 import { VNode } from "snabbdom/vnode";
 import { IVNodePostprocessor, SModelElement } from "sprotty";
 
 import { SLabelNode } from "./model";
-
-const JSX = { createElement: snabbdom.svg };
 
 /**
  * A NodeDecorator to install visual feedback on selected NodeLabels
  */
 @injectable()
 export class LabelSelectionFeedback implements IVNodePostprocessor {
-  decorate(vnode: VNode, element: SModelElement): VNode {
-    if (element instanceof SLabelNode && element.selected) {
-      const vPadding = 1;
-      const hPadding = 5;
+    decorate(vnode: VNode, element: SModelElement): VNode {
+        if (element instanceof SLabelNode && element.selected) {
+            const vPadding = 1;
+            const hPadding = 5;
 
-      const feedback: VNode = (
-        <rect
-          x={-hPadding}
-          y={-element.bounds.height / 2 - vPadding}
-          width={element.bounds.width + 2 * hPadding}
-          height={element.bounds.height + 2 * vPadding}
-          class-selection-feedback={true}
-        />
-      );
-      if (!vnode.children) {
-        vnode.children = [];
-      }
-      vnode.children.push(feedback);
+            const feedback: VNode = (
+                <rect
+                    x={-hPadding}
+                    y={-element.bounds.height / 2 - vPadding}
+                    width={element.bounds.width + 2 * hPadding}
+                    height={element.bounds.height + 2 * vPadding}
+                    class-selection-feedback={true}
+                />
+            );
+            if (!vnode.children) {
+                vnode.children = [];
+            }
+            vnode.children.push(feedback);
+        }
+        return vnode;
     }
-    return vnode;
-  }
 
-  postUpdate(): void { }
+    postUpdate(): void {
+        // nothing to do
+    }
 }

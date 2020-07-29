@@ -14,10 +14,16 @@
     "e2etest": "npm-run-all --parallel --aggregate-output theia:start testcafe:start"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.16.0",
+    "@typescript-eslint/parser": "^2.16.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-header": "^3.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-no-null": "^1.0.2",
+    "eslint-plugin-react": "^7.20.3",
     "lerna": "2.4.0",
     "npm-run-all": "^4.1.5",
-    "testcafe": "^1.7.1",
-    "tslint": "^5.5.0"
+    "testcafe": "^1.7.1"
   },
   "resolutions": {
     "**/@theia/editor": "1.0.0",
