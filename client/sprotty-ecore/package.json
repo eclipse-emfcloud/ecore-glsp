@@ -34,7 +34,9 @@
     "build": "tsc && yarn run lint",
     "lint": "eslint -c ./.eslintrc.js --ext .ts,.tsx ./src",
     "watch": "tsc -w",
-    "bundle": "webpack --progress --config ./configs/webpack.config.js"
+    "bundle": "webpack --progress --config ./configs/webpack.config.js",
+    "publish:latest": "yarn publish --tag latest",
+    "publish:next": "yarn publish --new-version \"$(semver $npm_package_version -i minor)-next.$(git rev-parse --short HEAD)\" --tag next"
   },
   "files": [
     "lib",

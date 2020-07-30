@@ -81,5 +81,12 @@ pipeline {
                 }
             }
         }
+        
+        stage('Deploy (master only)') {
+            when { branch 'master' }
+            steps {
+                build job: 'deploy-ecore-glsp-npm', wait: false
+            }
+        }
     }
 }
