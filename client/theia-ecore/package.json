@@ -1,5 +1,5 @@
 {
-  "name": "theia-ecore",
+  "name": "@eclipse-emfcloud/theia-ecore",
   "description": "Glue code to integrate Ecore GLSP sprotty client into Eclipse Theia",
   "keywords": [
     "theia-extension"
@@ -13,11 +13,11 @@
     "lib",
     "src"
   ],
-  "homepage": "https://github.com/eclipsesource/ecore-glsp",
-  "bugs": "https://github.com/eclipsesource/ecore-glsp",
+  "homepage": "https://github.com/eclipse-emfcloud/ecore-glsp",
+  "bugs": "https://github.com/eclipse-emfcloud/ecore-glsp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eclipsesource/ecore-glsp.git"
+    "url": "https://github.com/eclipse-emfcloud/ecore-glsp"
   },
   "dependencies": {
     "@eclipse-glsp/theia-integration": "next",

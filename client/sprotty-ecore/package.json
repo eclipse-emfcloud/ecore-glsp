@@ -1,5 +1,5 @@
 {
-  "name": "sprotty-ecore",
+  "name": "@eclipse-emfcloud/sprotty-ecore",
   "version": "0.2.0",
   "description": "sprotty diagrams for Ecore",
   "author": {
@@ -11,11 +11,11 @@
     "workflow",
     "diagram"
   ],
-  "homepage": "https://github.com/eclipsesource/ecore-glsp",
-  "bugs": "https://github.com/eclipsesource/ecore-glsp",
+  "homepage": "https://github.com/eclipse-emfcloud/ecore-glsp",
+  "bugs": "https://github.com/eclipse-emfcloud/ecore-glsp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eclipsesource/ecore-glsp.git"
+    "url": "https://github.com/eclipse-emfcloud/ecore-glsp"
   },
   "dependencies": {
     "@eclipse-glsp/client": "next"
