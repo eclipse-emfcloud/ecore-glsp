@@ -8,10 +8,10 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { createEcoreDiagramContainer } from "@eclipse-emfcloud/sprotty-ecore/lib";
 import { TYPES } from "@eclipse-glsp/client/lib";
 import { SelectionService } from "@theia/core";
 import { Container, inject, injectable } from "inversify";
-import { createEcoreDiagramContainer } from "sprotty-ecore/lib";
 import { DiagramConfiguration, TheiaDiagramServer, TheiaSprottySelectionForwarder } from "sprotty-theia/lib";
 
 import { EcoreLanguage } from "../../common/ecore-language";

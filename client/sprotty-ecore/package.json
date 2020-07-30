@@ -15,15 +15,16 @@
   "bugs": "https://github.com/eclipse-emfcloud/ecore-glsp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eclipse-emfcloud/ecore-glsp"
+    "url": "https://github.com/eclipse-emfcloud/ecore-glsp.git"
   },
   "dependencies": {
-    "@eclipse-glsp/client": "next"
+    "@eclipse-glsp/client": "next",
+    "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
     "css-loader": "^1.0.1",
     "eslint": "^6.8.0",
-    "rimraf": "latest",
+    "rimraf": "^2.6.1",
     "ts-loader": "^5.3.0",
     "typescript": "~3.5.3",
     "webpack": "^4.23.1"

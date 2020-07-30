@@ -16,7 +16,7 @@
     "@theia/terminal": "latest",
     "@theia/typescript": "latest",
     "@theia/workspace": "latest",
-    "theia-ecore": "^0.2.0"
+    "@eclipse-emfcloud/theia-ecore": "^0.2.0"
   },
   "devDependencies": {
     "@theia/cli": "latest"

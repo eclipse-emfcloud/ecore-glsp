@@ -53,8 +53,8 @@
     "**/@eclipse-glsp/theia-integration": "0.8.0-rc-02"
   },
   "workspaces": [
-    "theia-ecore",
     "sprotty-ecore",
+    "theia-ecore",
     "browser-app"
   ],
   "dependencies": {

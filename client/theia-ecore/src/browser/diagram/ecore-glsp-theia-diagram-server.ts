@@ -8,10 +8,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import {
+    AttributeTypesAction,
+    ReturnAttributeTypesAction
+} from "@eclipse-emfcloud/sprotty-ecore/lib/features/edit-label-autocomplete";
 import { ActionHandlerRegistry } from "@eclipse-glsp/client/lib";
 import { GLSPTheiaDiagramServer } from "@eclipse-glsp/theia-integration/lib/browser";
 import { injectable } from "inversify";
-import { AttributeTypesAction, ReturnAttributeTypesAction } from "sprotty-ecore/lib/features/edit-label-autocomplete";
 
 @injectable()
 export class EcoreGLSPTheiaDiagramServer extends GLSPTheiaDiagramServer {
