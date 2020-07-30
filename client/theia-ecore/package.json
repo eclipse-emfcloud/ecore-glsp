@@ -25,6 +25,7 @@
     "sprotty-ecore": "0.2.0"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
     "rimraf": "latest",
     "typescript": "~3.5.3"
   },
@@ -32,7 +33,7 @@
     "prepare": "yarn run clean && yarn run build",
     "clean": "rimraf lib",
     "build": "tsc && yarn run lint",
-    "lint": "tslint -c ../configs/tslint.json --project ./tsconfig.json",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
     "watch": "tsc -w"
   },
   "theiaExtensions": [

@@ -9,9 +9,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 export namespace EcoreLanguage {
-    export const Id: string = "ecore";
-    export const Name: string = "Ecore";
-    export const Label: string = "Ecore diagram";
-    export const DiagramType: string = "ecorediagram";
-    export const FileExtension: string = ".ecore";
+    export const Id = "ecore";
+    export const Name = "Ecore";
+    export const Label = "Ecore diagram";
+    export const DiagramType = "ecorediagram";
+    export const FileExtension = ".ecore";
 }

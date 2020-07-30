@@ -10,9 +10,9 @@
  ********************************************************************************/
 import { JsonRpcServer } from "@theia/core/lib/common/messaging";
 
-export const FileGenServer = Symbol('FileGenServer');
-export const FILEGEN_SERVICE_PATH = '/services/codegen';
+export const FileGenServer = Symbol("FileGenServer");
+export const FILEGEN_SERVICE_PATH = "/services/codegen";
 
 export interface FileGenServer extends JsonRpcServer<undefined> {
-    generateEcore(name: string, prefix: string, uri: string, path: string): Promise<string>
+    generateEcore(name: string, prefix: string, uri: string, path: string): Promise<string>;
 }

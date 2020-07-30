@@ -14,13 +14,13 @@ import {
     OpenerService,
     QuickOpenItem,
     QuickOpenMode,
-    QuickOpenModel,
     QuickOpenOptions,
     QuickOpenService
 } from "@theia/core/lib/browser";
 import { Command, CommandContribution, CommandRegistry } from "@theia/core/lib/common/command";
 import { MessageService } from "@theia/core/lib/common/message-service";
 import { ProgressService } from "@theia/core/lib/common/progress-service";
+import { QuickOpenModel } from "@theia/core/lib/common/quick-open-model";
 import { SelectionService } from "@theia/core/lib/common/selection-service";
 import URI from "@theia/core/lib/common/uri";
 import { UriAwareCommandHandler, UriCommandHandler } from "@theia/core/lib/common/uri-command-handler";
@@ -33,17 +33,13 @@ import { inject, injectable } from "inversify";
 
 import { FileGenServer } from "../common/generate-protocol";
 
-
-
-export const EXAMPLE_NAVIGATOR = [...NAVIGATOR_CONTEXT_MENU, 'example'];
-export const EXAMPLE_EDITOR = [...EDITOR_CONTEXT_MENU, 'example'];
-
-
+export const EXAMPLE_NAVIGATOR = [...NAVIGATOR_CONTEXT_MENU, "example"];
+export const EXAMPLE_EDITOR = [...EDITOR_CONTEXT_MENU, "example"];
 
 export const NEW_ECORE_FILE: Command = {
-    id: 'file.newEcoreFile',
-    category: 'File',
-    label: 'New Ecore-File',
+    id: "file.newEcoreFile",
+    category: "File",
+    label: "New Ecore-File"
 };
 
 @injectable()
@@ -66,17 +62,17 @@ export class EcoreCommandContribution implements CommandContribution {
                 if (parent) {
                     const parentUri = new URI(parent.uri);
 
-                    const createEcore = (name: string, nsPrefix: string, nsURI: string) => {
+                    const createEcore = (name: string, nsPrefix: string, nsURI: string): void => {
                         if (name) {
                             this.fileGenServer.generateEcore(name, nsPrefix, nsURI, parentUri.path.toString()).then(() => {
-                                const ecorePath = parentUri.toString() + '/' + name + '.ecore';
+                                const ecorePath = parentUri.toString() + "/" + name + ".ecore";
                                 const fileUriEcore = new URI(ecorePath);
                                 open(this.openerService, fileUriEcore);
                             });
                         }
                     };
 
-                    const showInput = (hint: string, prefix: string, onEnter: (result: string) => void) => {
+                    const showInput = (hint: string, prefix: string, onEnter: (result: string) => void): void => {
                         const quickOpenModel: QuickOpenModel = {
                             onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
                                 const dynamicItems: QuickOpenItem[] = [];
@@ -95,10 +91,10 @@ export class EcoreCommandContribution implements CommandContribution {
                         this.quickOpenService.open(quickOpenModel, this.getOptions(hint, false));
                     };
 
-                    showInput("Name", "Name of Ecore", (nameOfEcore) => {
-                        showInput("Prefix", "Prefix", (prefix) => {
-                            showInput("URI", "URI", (ecore_uri) => {
-                                createEcore(nameOfEcore, prefix, ecore_uri);
+                    showInput("Name", "Name of Ecore", nameOfEcore => {
+                        showInput("Prefix", "Prefix", prefix => {
+                            showInput("URI", "URI", ecoreUri => {
+                                createEcore(nameOfEcore, prefix, ecoreUri);
                             });
                         });
                     });
@@ -108,7 +104,7 @@ export class EcoreCommandContribution implements CommandContribution {
     }
 
     protected withProgress<T>(task: () => Promise<T>): Promise<T> {
-        return this.progressService.withProgress('', 'scm', task);
+        return this.progressService.withProgress("", "scm", task);
     }
 
     protected newUriAwareCommandHandler(handler: UriCommandHandler<URI>): UriAwareCommandHandler<URI> {
@@ -135,7 +131,8 @@ export class EcoreCommandContribution implements CommandContribution {
         return this.fileSystem.getFileStat(candidate.parent.toString());
     }
 
-    private getOptions(placeholder: string, fuzzyMatchLabel: boolean = true, onClose: (canceled: boolean) => void = () => { }): QuickOpenOptions {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    private getOptions(placeholder: string, fuzzyMatchLabel = true, onClose: (canceled: boolean) => void = () => { }): QuickOpenOptions {
         return QuickOpenOptions.resolve({
             placeholder,
             fuzzyMatchLabel,
@@ -170,7 +167,7 @@ export class WorkspaceRootUriAwareCommandHandler extends UriAwareCommandHandler<
             return uri;
         }
         // Return the first root if available.
-        if (!!this.workspaceService.tryGetRoots().length) {
+        if (this.workspaceService.tryGetRoots().length) {
             return new URI(this.workspaceService.tryGetRoots()[0].uri);
         }
         return undefined;
@@ -181,6 +178,7 @@ class SingleStringInputOpenItem extends QuickOpenItem {
 
     constructor(
         private readonly label: string,
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         private readonly execute: (item: QuickOpenItem) => void = () => { },
         private readonly canRun: (mode: QuickOpenMode) => boolean = mode => mode === QuickOpenMode.OPEN,
         private readonly canClose: (mode: QuickOpenMode) => boolean = mode => true) {

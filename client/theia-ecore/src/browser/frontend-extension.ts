@@ -21,11 +21,10 @@ import { DiagramConfiguration, DiagramManager, DiagramManagerProvider } from "sp
 
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreDiagramConfiguration } from "./diagram/ecore-diagram-configuration";
-import { EcoreDiagramManager } from "./diagram/ecore-diagram-manager.";
+import { EcoreDiagramManager } from "./diagram/ecore-diagram-manager";
 import { EcoreGLSPDiagramClient } from "./diagram/ecore-glsp-diagram-client";
 import { EcoreGLSPClientContribution } from "./ecore-glsp--contribution";
 import { EcoreCommandContribution } from "./EcoreCommandContribution";
-
 
 export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind, isBound: interfaces.IsBound, rebind: interfaces.Rebind) => {
     bind(EcoreGLSPClientContribution).toSelf().inSingletonScope();
@@ -36,14 +35,10 @@ export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Un
     bind(FrontendApplicationContribution).toService(EcoreDiagramManager);
     bind(OpenHandler).toService(EcoreDiagramManager);
     bind(WidgetFactory).toService(EcoreDiagramManager);
-    bind(DiagramManagerProvider).toProvider<DiagramManager>((context) => {
-        return () => {
-            return new Promise<DiagramManager>((resolve) => {
-                const diagramManager = context.container.get<EcoreDiagramManager>(EcoreDiagramManager);
-                resolve(diagramManager);
-            });
-        };
-    });
+    bind(DiagramManagerProvider).toProvider<DiagramManager>(context => () => new Promise<DiagramManager>(resolve => {
+        const diagramManager = context.container.get<EcoreDiagramManager>(EcoreDiagramManager);
+        resolve(diagramManager);
+    }));
     bind(CommandContribution).to(EcoreCommandContribution);
     bind(FileGenServer).toDynamicValue(ctx => {
         const connection = ctx.container.get(WebSocketConnectionProvider);

@@ -9,10 +9,13 @@
   "typescriptHero.imports.stringQuoteStyle": "\"",
   "typescriptHero.imports.insertSemicolons": true,
   "typescriptHero.imports.multiLineTrailingComma": false,
-  "tslint.alwaysShowRuleFailuresAsWarnings": false,
+  "typescriptHero.imports.ignoredFromRemoval": [
+    "react",
+    "snabbdom-jsx"
+  ],
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll.eslint": true
   },
   "search.exclude": {
     "**/node_modules": true,
@@ -25,5 +28,13 @@
   "[json]": {
     "editor.tabSize": 2
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.enable": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "html",
+    "typescript",
+    "typescriptreact"
+  ]
 }
