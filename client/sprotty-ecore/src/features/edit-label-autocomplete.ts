@@ -46,9 +46,9 @@ export class EditLabelUIAutocomplete extends EditLabelUI {
         super.initializeContents(containerElement);
     }
 
-    protected configureAndAdd(element: HTMLElement, containerElement: HTMLElement): void {
+    protected configureAndAdd(element: HTMLInputElement | HTMLTextAreaElement, containerElement: HTMLElement): void {
         super.configureAndAdd(element, containerElement);
-        element.addEventListener("keydown", event => this.handleKeyDown(event));
+        element.addEventListener("keydown", (event: KeyboardEvent) => this.handleKeyDown(event));
     }
 
     protected handleKeyDown(event: KeyboardEvent): void {
