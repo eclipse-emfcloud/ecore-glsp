@@ -9,7 +9,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 import { join, resolve } from "path";
-import { Selector } from "testcafe";
+import { Selector, ClientFunction } from "testcafe";
 
 import * as config from "./config.json";
 
@@ -164,6 +164,10 @@ const layout = async (t) => {
         .wait(500);
 };
 
+var focus = ClientFunction(() => {
+    document.getElementById("ecorediagram_0").focus();
+});
+
 const port = process.env.PORT || config.defaultPort;
 
 fixture`Ecore-glsp E2E-Testing`// declare the fixture
@@ -173,7 +177,7 @@ fixture`Ecore-glsp E2E-Testing`// declare the fixture
 
 test('Open Workbench', async t => {
     await t
-        .wait(5000)
+        .wait(10000)
         .click(selectors.wsSelect);
     await checkDefaultWorkbench(t);
 });
@@ -195,16 +199,14 @@ test('Switch Theme', async t => {
         .expect(Selector('div.p-Widget.p-DockPanel.p-SplitPanel-child').getStyleProperty('color')).eql('rgb(97, 97, 97)');
 });
 
-// FIXME: The number of "Sprotty labels" should be either 256 (243 EClasses + 13 EEnums) or 512
-// (x2 for the hidden sprotty diagram used for layout). For some reason, it is currently 261.
-// To be investigated.
-test.skip('Open UML.ecore (Autolayout/ Big Ecore)', async t => {
+test('Open UML.ecore (Autolayout/ Big Ecore)', async t => {
     openFile(t, selectors.umlEcore);
 
     await t
         .wait(10000) // Necessary to wait as the layouting needs to be executed.
         .expect(Selector('text.name.sprotty-label').withText('ConnectorKind').exists).ok('Class ConnectorKind exists')
-        .expect(Selector('text.name.sprotty-label').count).eql(512)
+        .expect(Selector('g.node.ecore-node.enum').count).eql(26)
+        .expect(Selector('g.node.ecore-node.class').count).eql(486)
         .expect(Selector('text.name.sprotty-label').withText('ConnectorKind').parent("g.node.ecore-node").getAttribute('transform')).eql('translate(12, 12)');
 });
 
@@ -249,8 +251,7 @@ test('Create and Delete ecore file', async t => {
 
 }).after(checkDefaultWorkbench);
 
-// FIXME This test fails from time to time, on Datatype creation
-test.skip('Create Nodes', async t => {
+test('Create Nodes', async t => {
     openFile(t, selectors.emptyEcore);
 
     createNode(t, "Class", 12, 12);
@@ -290,7 +291,7 @@ test.skip('Create Nodes', async t => {
         .expect(selectors.line.child().child().withText('NewEEnum3').exists).ok('Ecore serialization worked')
         .expect(selectors.line.child().child().withText('NewEDataType4').exists).ok('Ecore serialization worked');
 
-
+    await focus();
     // Delete again
     await t.wait(500);
     deleteNode(t, defaultNodesSelector.classNode);
@@ -503,11 +504,10 @@ test('Delete Nodes with Eraser', async t => {
         .expect(nodesSelector.interfaceNode.exists).notOk("Interface has been deleted");
 });
 
-// FIXME: Keybinding DEL affects the File Explorer (file.delete), for some reason
-// The Keybinding seems to work fine in a standard runtime environment; so maybe
-// there's a focus issue?
-test.skip('Delete Nodes with DEL', async t => {
+test('Delete Nodes with DEL', async t => {
     openFile(t, selectors.testEcore);
+    await t.wait(100)
+    await focus();
     await t
         .wait(200)
         .click(nodesSelector.classNode, { offsetY: -40 })
