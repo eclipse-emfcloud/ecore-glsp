@@ -21,9 +21,11 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.api.model.GraphicalModelState;
+import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.GModelIndex;
 import org.eclipse.glsp.server.operationhandler.DeleteOperationHandler;
 
@@ -56,7 +58,9 @@ public class EcoreDeleteOperationHandler extends DeleteOperationHandler {
 		
 		notation.ifPresent(EcoreUtil::delete);
 		semantic.ifPresent(EcoreUtil::delete);
-		
+		if(notation.isPresent()){
+			modelState.getIndex().removeURI(notation.get().getSemanticElement().getUri());
+		}
 		return true;
 	}
 	

@@ -11,6 +11,7 @@
 package org.eclipse.emfcloud.ecore.glsp;
 
 import org.eclipse.emfcloud.ecore.glsp.actions.AttributeTypesAction;
+import org.eclipse.emfcloud.ecore.glsp.handler.EcoreRequestMarkersActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
@@ -39,6 +40,7 @@ import org.eclipse.glsp.api.provider.ToolPaletteItemProvider;
 import org.eclipse.glsp.api.registry.OperationHandlerRegistry;
 import org.eclipse.glsp.server.actionhandler.ComputedBoundsActionHandler;
 import org.eclipse.glsp.server.actionhandler.OperationActionHandler;
+import org.eclipse.glsp.server.actionhandler.RequestMarkersHandler;
 import org.eclipse.glsp.server.actionhandler.SaveModelActionHandler;
 import org.eclipse.glsp.server.actionhandler.UndoRedoActionHandler;
 import org.eclipse.glsp.server.di.DefaultGLSPModule;
@@ -51,6 +53,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	protected void configureActionHandlers(MultiBindConfig<ActionHandler> bindings) {
 		super.configureActionHandlers(bindings);
 		bindings.add(EcoreGetAttributeTypesActionHandler.class);
+		bindings.rebind(RequestMarkersHandler.class, EcoreRequestMarkersActionHandler.class);
 		bindings.rebind(SaveModelActionHandler.class, EcoreSaveModelActionHandler.class);
 		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);

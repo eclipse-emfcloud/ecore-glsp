@@ -14,12 +14,19 @@ import { SelectionService } from "@theia/core";
 import { Container, inject, injectable } from "inversify";
 import { DiagramConfiguration, TheiaDiagramServer, TheiaSprottySelectionForwarder } from "sprotty-theia/lib";
 
+import {
+    connectTheiaMarkerManager,
+    TheiaMarkerManager,
+    TheiaMarkerManagerFactory
+} from "@eclipse-glsp/theia-integration/lib/browser/diagram/glsp-theia-marker-manager";
+
 import { EcoreLanguage } from "../../common/ecore-language";
 import { EcoreGLSPTheiaDiagramServer } from "./ecore-glsp-theia-diagram-server";
 
 @injectable()
 export class EcoreDiagramConfiguration implements DiagramConfiguration {
     @inject(SelectionService) protected selectionService: SelectionService;
+    @inject(TheiaMarkerManagerFactory) protected readonly theiaMarkerManager: () => TheiaMarkerManager;
     diagramType: string = EcoreLanguage.DiagramType;
 
     createContainer(widgetId: string): Container {
@@ -29,7 +36,7 @@ export class EcoreDiagramConfiguration implements DiagramConfiguration {
         // container.rebind(KeyTool).to(TheiaKeyTool).inSingletonScope()
         container.bind(TYPES.IActionHandlerInitializer).to(TheiaSprottySelectionForwarder);
         container.bind(SelectionService).toConstantValue(this.selectionService);
-
+        connectTheiaMarkerManager(container, this.theiaMarkerManager, this.diagramType);
         return container;
     }
 }

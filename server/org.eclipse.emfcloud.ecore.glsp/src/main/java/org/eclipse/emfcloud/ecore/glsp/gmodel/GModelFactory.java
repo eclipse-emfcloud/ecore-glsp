@@ -22,7 +22,9 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
+import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.CSS;
@@ -51,11 +53,11 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		classifierNodeFactory = new ClassifierNodeFactory(modelState, this);
 		labelFactory = new LabelFactory(modelState);
 		getOrCreateRoot();
-
 	}
 
 	@Override
 	public GModelElement create(EObject semanticElement) {
+		EcoreModelIndex index = modelState.getIndex();
 		GModelElement result = null;
 		if (semanticElement instanceof EClassifier) {
 			result = classifierNodeFactory.create((EClassifier) semanticElement);
@@ -69,6 +71,7 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		if (result == null) {
 			throw createFailed(semanticElement);
 		}
+		index.indexGModelElement(EcoreUtil.getURI(semanticElement).fragment().toString(), result);
 		return result;
 	}
 
@@ -135,6 +138,8 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 				builder.addRoutingPoints(gPoints);
 			}
 		});
+
+		//modelState.getIndex().indexGModelElement(EcoreUtil.getURI(eReference).fragment().toString(), builder.build());
 		return builder.build();
 	}
 
