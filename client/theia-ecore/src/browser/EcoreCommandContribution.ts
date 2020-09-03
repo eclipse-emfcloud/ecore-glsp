@@ -42,6 +42,30 @@ export const NEW_ECORE_FILE: Command = {
     label: "New Ecore-File"
 };
 
+export const GENERATE_GENMODEL_DEFAULT: Command = {
+    id: "file.generateGenModelDefault",
+    category: "File",
+    label: "Generate GenModel (with default Values)"
+};
+
+export const GENERATE_GENMODEL: Command = {
+    id: "file.generateGenModel",
+    category: "File",
+    label: "Generate GenModel"
+};
+
+export const GENERATE_CODE: Command = {
+    id: "file.generateCode",
+    category: "File",
+    label: "Generate Code"
+};
+
+export const GENERATE_CODE_DEFAULT: Command = {
+    id: "file.generateCodeDefault",
+    category: "File",
+    label: "Generate Code (with default Values)"
+};
+
 @injectable()
 export class EcoreCommandContribution implements CommandContribution {
 
@@ -98,6 +122,105 @@ export class EcoreCommandContribution implements CommandContribution {
                             });
                         });
                     });
+                }
+            })
+        }));
+        registry.registerCommand(GENERATE_GENMODEL_DEFAULT, this.newWorkspaceRootUriAwareCommandHandler({
+            execute: uri => this.getDirectory(uri).then(parent => {
+                if (parent) {
+                    const parentUri = new URI(parent.uri);
+
+                    this.fileGenServer.generateGenModel(parentUri.path.toString() ,uri.path.toString(), "", "").then(() => {
+                        const extensionStart = uri.displayName.lastIndexOf(".");
+                        const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
+                        const fileUri = new URI(genmodelPath);
+                        open(this.openerService, fileUri);
+                    });
+                }
+            })
+        }));
+        registry.registerCommand(GENERATE_GENMODEL, this.newWorkspaceRootUriAwareCommandHandler({
+            execute: uri => this.getDirectory(uri).then(parent => {
+                if (parent) {
+                    const parentUri = new URI(parent.uri);
+
+                    const showInput = (hint: string, prefix: string, onEnter: (result: string) => void): void => {
+                        const quickOpenModel: QuickOpenModel = {
+                            onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
+                                const dynamicItems: QuickOpenItem[] = [];
+                                const suffix = "Press 'Enter' to confirm or 'Escape' to cancel.";
+
+                                dynamicItems.push(new SingleStringInputOpenItem(
+                                    `${prefix}: ${lookFor}. ${suffix}`,
+                                    () => onEnter(lookFor),
+                                    (mode: QuickOpenMode) => mode === QuickOpenMode.OPEN,
+                                    () => false
+                                ));
+
+                                acceptor(dynamicItems);
+                            }
+                        };
+                        this.quickOpenService.open(quickOpenModel, this.getOptions(hint, false));
+                    };
+
+                    showInput("Name", "Custom RootPackage Name", customPackageName => {
+                        showInput("Namespace", "Custom Namespace", customNameSpace => {
+                                this.fileGenServer.generateGenModel(parentUri.path.toString() ,uri.path.toString(), customPackageName, customNameSpace).then(() => {
+                                    const extensionStart = uri.displayName.lastIndexOf(".");
+                                    const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
+                                    const fileUri = new URI(genmodelPath);
+                                    open(this.openerService, fileUri);
+                            });
+                        });
+                    });
+                }
+            })
+        }));
+        registry.registerCommand(GENERATE_CODE, this.newWorkspaceRootUriAwareCommandHandler({
+            execute: uri => this.getDirectory(uri).then(parent => {
+                if (parent) {
+                    const parentUri = new URI(parent.uri);
+
+                    const showInput = (hint: string, prefix: string, onEnter: (result: string) => void) => {
+                        const quickOpenModel: QuickOpenModel = {
+                            onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
+                                const dynamicItems: QuickOpenItem[] = [];
+                                const suffix = "Press 'Enter' to confirm or 'Escape' to cancel.";
+
+                                dynamicItems.push(new SingleStringInputOpenItem(
+                                    `${prefix}: ${lookFor}. ${suffix}`,
+                                    () => onEnter(lookFor),
+                                    (mode: QuickOpenMode) => mode === QuickOpenMode.OPEN,
+                                    () => false
+                                ));
+
+                                acceptor(dynamicItems);
+                            }
+                        };
+                        this.quickOpenService.open(quickOpenModel, this.getOptions(hint, false));
+                    };
+
+                    showInput("Output folder name (relative from project root)", "folder name", folderName => {
+                        if (folderName.trim() === "") {
+                            folderName = "src";
+                        }
+                        folderName = parentUri.parent.path.toString() + "/" + folderName;
+                        this.fileGenServer.generateCode(uri.path.toString(), folderName).then(() => {
+                            open(this.openerService, uri);
+                        });
+                    });
+                }
+            })
+        }));
+        registry.registerCommand(GENERATE_CODE_DEFAULT, this.newWorkspaceRootUriAwareCommandHandler({
+            execute: uri => this.getDirectory(uri).then(parent => {
+                if (parent) {
+                    const parentUri = new URI(parent.uri);
+                    if(parentUri.parent){
+                        this.fileGenServer.generateCode(uri.path.toString(), parentUri.parent.path.toString()).then(() => {
+                            open(this.openerService, uri);
+                        });
+                    }
                 }
             })
         }));

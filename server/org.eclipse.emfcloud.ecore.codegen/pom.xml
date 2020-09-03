@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.eclipse.emfcloud.ecore</groupId>
-  <artifactId>org.eclipse.emfcloud.ecore.backend</artifactId>
+  <artifactId>org.eclipse.emfcloud.ecore.codegen</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <url>https://github.com/eclipsesource/ecore-glsp</url>
@@ -53,7 +53,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>org.eclipse.emfcloud.ecore.backend.EcoreProvider</mainClass>
+              <mainClass>org.eclipse.emfcloud.ecore.codegen.GenmodelGenerator</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -108,7 +108,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>org.eclipse.emfcloud.ecore.backend.EcoreProvider</mainClass>
+              <mainClass>org.eclipse.emfcloud.ecore.codegen.EcoreProvider</mainClass>
             </manifest>
           </archive>
         </configuration>

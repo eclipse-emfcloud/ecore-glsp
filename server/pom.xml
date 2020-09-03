@@ -11,6 +11,8 @@
 
     <modules>
         <module>org.eclipse.emfcloud.ecore.backend</module>
+        <module>org.eclipse.emfcloud.ecore.backend-app</module>
+        <module>org.eclipse.emfcloud.ecore.codegen</module>
         <module>org.eclipse.emfcloud.ecore.glsp</module>
     </modules>
 </project>

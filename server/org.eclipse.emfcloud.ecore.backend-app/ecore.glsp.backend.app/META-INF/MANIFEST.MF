@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ecore GLSP Backend
+Bundle-SymbolicName: ecore.glsp.backend.app;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: ecore.glsp.backend.app
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.equinox.app
