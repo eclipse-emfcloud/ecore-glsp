@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Ecore GLSP Backend" uid="ecore.glsp.codegen" id="ecore.glsp.backend.app.product" application="org.eclipse.emf.codegen.CodeGen" version="1.0.0" useFeatures="true" includeLaunchers="true">
-
+<product name="Ecore GLSP Backend" uid="org.eclipse.emfcloud.ecore.codegen.product" id="ecore.glsp.backend.app.product" application="org.eclipse.emf.codegen.CodeGen" version="1.0.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -14,23 +13,20 @@
 
    <windowImages/>
 
-
    <launcher name="ecore_glsp_backend">
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
    </plugins>
 
    <features>
-      <feature id="ecore.glsp.codegen.feature"/>
+      <feature id="org.eclipse.emfcloud.ecore.codegen.feature"/>
    </features>
 
    <configurations>

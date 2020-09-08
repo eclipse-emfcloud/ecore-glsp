@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ecore.glsp.codegen.product</name>
+	<name>org.eclipse.emfcloud.ecore.codegen.feature</name>
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.pde.FeatureBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.m2e.core.maven2Builder</name>
 			<arguments>
@@ -13,10 +18,11 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
+		<nature>org.eclipse.pde.FeatureNature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1599121354262</id>
+			<id>0</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

@@ -9,7 +9,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>ecore.glsp.codegen.product</artifactId>
+	<artifactId>org.eclipse.emfcloud.ecore.codegen.product</artifactId>
 	<version>1.0.0</version>
 	<packaging>eclipse-repository</packaging>
 

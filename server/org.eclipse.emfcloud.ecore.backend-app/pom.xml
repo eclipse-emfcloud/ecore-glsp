@@ -14,9 +14,9 @@
 
 	<modules>
 		<module>targetplatform</module>
-		<module>ecore.glsp.backend.app</module>
-		<module>ecore.glsp.codegen.product</module>
-		<module>ecore.glsp.codegen.feature</module>
+		<module>org.eclipse.emfcloud.ecore.backend.app</module>
+		<module>org.eclipse.emfcloud.ecore.codegen.feature</module>
+		<module>org.eclipse.emfcloud.ecore.codegen.product</module>
 	</modules>
 
 	<build>

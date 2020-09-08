@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ecore.glsp.codegen.feature"
+      id="org.eclipse.emfcloud.ecore.codegen.feature"
       label="Ecore GLSP Codegen"
       version="1.0.0.qualifier">
 
@@ -39,13 +39,6 @@
    <requires>
       <import plugin="org.eclipse.equinox.app"/>
    </requires>
-
-   <plugin
-         id="ecore.glsp.backend.app"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.jdt.core"
@@ -117,6 +110,13 @@
 
    <plugin
          id="com.ibm.icu"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emfcloud.ecore.backend.app"
          download-size="0"
          install-size="0"
          version="0.0.0"

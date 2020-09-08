@@ -9,7 +9,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>ecore.glsp.codegen.feature</artifactId>
+	<artifactId>org.eclipse.emfcloud.ecore.codegen.feature</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
 
