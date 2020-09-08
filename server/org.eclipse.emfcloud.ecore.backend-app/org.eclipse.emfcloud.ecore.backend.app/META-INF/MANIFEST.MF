@@ -5,4 +5,5 @@ Bundle-SymbolicName: org.eclipse.emfcloud.ecore.backend.app;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: ecore.glsp.backend.app
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: org.eclipse.equinox.app
+Require-Bundle: org.eclipse.equinox.app,
+ org.eclipse.emf.codegen;bundle-version="2.19.0"
