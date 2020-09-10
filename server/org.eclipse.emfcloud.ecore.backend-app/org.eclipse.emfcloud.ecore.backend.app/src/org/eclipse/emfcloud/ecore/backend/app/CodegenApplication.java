@@ -1,6 +1,6 @@
 package org.eclipse.emfcloud.ecore.backend.app;
 
-import org.eclipse.emf.codegen.CodeGen;
+import org.eclipse.emf.codegen.ecore.Generator;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 
@@ -8,7 +8,7 @@ public class CodegenApplication implements IApplication {
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		CodeGen codegen = new CodeGen();
+		Generator codegen = new Generator();
 		String[] args = getArgs(context);
 		codegen.run(args);
 		return null;
