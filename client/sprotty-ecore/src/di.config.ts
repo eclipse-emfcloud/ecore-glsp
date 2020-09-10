@@ -41,6 +41,7 @@ import {
     LogLevel,
     modelHintsModule,
     modelSourceModule,
+    navigationModule,
     openModule,
     paletteModule,
     PolylineEdgeView,
@@ -142,7 +143,7 @@ export default (containerId: string): Container => {
     container.load(decorationModule, validationModule, defaultModule, glspMouseToolModule, defaultGLSPModule, glspSelectModule, boundsModule, viewportModule, toolsModule,
         glspHoverModule, fadeModule, exportModule, expandModule, openModule, buttonModule, modelSourceModule, labelEditModule, labelEditUiModule, glspEditLabelModule,
         classDiagramModule, saveModule, executeCommandModule, toolFeedbackModule, modelHintsModule, glspContextMenuModule, glspServerCopyPasteModule,
-        copyPasteContextMenuModule, glspCommandPaletteModule, paletteModule, routingModule, edgeLayoutModule, zorderModule,
+        copyPasteContextMenuModule, navigationModule, glspCommandPaletteModule, paletteModule, routingModule, edgeLayoutModule, zorderModule,
         layoutCommandsModule);
 
     return container;
