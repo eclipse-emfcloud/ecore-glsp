@@ -26,10 +26,12 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         @inject(ILogger) private readonly logger: ILogger) { }
 
     generateEcore(name: string, prefix: string, uri: string, workspacePath: string): Promise<string> {
-        const jarPath = path.resolve(__dirname, "..", "..",
-            "server", "ecore-backend-server-1.0-SNAPSHOT-jar-with-dependencies.jar");
+        const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
+            "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
+            "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
+            "org.eclipse.equinox.launcher_1.5.600.v20191014-2022.jar");
         if (jarPath.length === 0) {
-            throw new Error("The EcoreGeneration.jar is not found. ");
+            throw new Error("The eclipse.equinox.launcher is not found. ");
         }
 
         const command = "java";
@@ -38,13 +40,12 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         if (os.platform() === "win32") {
             platformWorkspacePath = workspacePath.substr(1);
         }
-
         args.push(
-            "-jar", jarPath,
-            "-name", name,
-            "-prefix", prefix,
-            "-uri", uri,
-            "-workspacePath", platformWorkspacePath
+            "-cp", jarPath,
+            "org.eclipse.equinox.launcher.Main",
+            "-data", workspacePath,
+            "-application", "org.eclipse.emfcloud.ecore.backend.app.create-ecore",
+            name, prefix, uri, platformWorkspacePath
         );
 
         return new Promise(resolve => {
@@ -58,12 +59,6 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
             process.process.on("exit", (code: any) => {
                 switch (code) {
                     case 0: resolve("OK"); break;
-                    case -10: resolve("Name Parameter missing"); break;
-                    case -11: resolve("NsPrefix Parameter missing"); break;
-                    case -12: resolve("NsURI Parameter missing"); break;
-                    case -13: resolve("Workspace Path Parameter missing"); break;
-                    case -20: resolve("Encoding not found, check Server Log!"); break;
-                    case -30: resolve("IO Exception occurred, check Server Log!"); break;
                     default: resolve("UNKNOWN ERROR"); break;
                 }
             });
@@ -71,12 +66,6 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
     }
 
     generateGenModel(workspacePath: string,ecorePath: string, customPackageName: string, customNamespace: string): Promise<string> {
-        const helperPath = path.resolve(__dirname, "..", "..",
-            "server", "org.eclipse.emfcloud.ecore.codegen-1.0-SNAPSHOT-jar-with-dependencies.jar");
-        if (helperPath.length === 0) {
-            throw new Error("The org.eclipse.emfcloud.ecore.codegen-1.0-SNAPSHOT-jar-with-dependencies.jar is not found. ");
-        }
-
         const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
             "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
             "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",

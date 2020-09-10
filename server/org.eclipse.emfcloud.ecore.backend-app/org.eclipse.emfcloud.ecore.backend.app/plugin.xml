@@ -26,6 +26,18 @@
       </application>
    </extension>
    <extension
+         id="create-ecore"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.emfcloud.ecore.backend.app.CreateEcoreApplication">
+         </run>
+      </application>
+   </extension>
+   <extension
          id="codegen"
          point="org.eclipse.core.runtime.applications">
       <application
