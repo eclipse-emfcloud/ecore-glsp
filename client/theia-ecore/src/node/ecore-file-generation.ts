@@ -65,7 +65,7 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         });
     }
 
-    generateGenModel(workspacePath: string,ecorePath: string, customPackageName: string, customNamespace: string): Promise<string> {
+    generateGenModel(workspacePath: string,ecorePath: string, customPackageName: string, folderName: string): Promise<string> {
         const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
             "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
             "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
@@ -81,8 +81,7 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
             "org.eclipse.equinox.launcher.Main",
             "-data", workspacePath,
             "-application", "org.eclipse.emfcloud.ecore.backend.app.create-genmodel",
-            "-ecore2GenModel", ecorePath,
-            customPackageName, customNamespace
+            ecorePath, customPackageName, folderName
         );
         
         return new Promise(resolve => {
