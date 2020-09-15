@@ -8,7 +8,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
-import { EnableToolPaletteAction, RequestTypeHintsAction } from "@eclipse-glsp/client";
+import { EnableToolPaletteAction, GLSPActionDispatcher, RequestTypeHintsAction } from "@eclipse-glsp/client";
 import {
     GLSPDiagramManager,
     GLSPDiagramWidget,
@@ -67,6 +67,11 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
 }
 
 export class EcoreDiagramWidget extends GLSPDiagramWidget {
+
+    getGlspActionDispatcher(): GLSPActionDispatcher {
+        return this.diContainer.get<GLSPActionDispatcher>(TYPES.IActionDispatcher);
+    }
+
     protected initializeSprotty(): void {
         const modelSource = this.diContainer.get<ModelSource>(TYPES.ModelSource);
         if (modelSource instanceof DiagramServer) {

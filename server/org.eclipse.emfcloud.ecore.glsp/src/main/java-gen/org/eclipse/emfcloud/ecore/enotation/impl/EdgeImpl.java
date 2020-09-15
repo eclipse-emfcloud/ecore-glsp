@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 
-import org.eclipse.glsp.graph.GPoint;
+import org.eclipse.emfcloud.ecore.enotation.Point;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,7 +49,7 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<GPoint> bendPoints;
+	protected EList<Point> bendPoints;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -76,9 +76,9 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 	 * @generated
 	 */
 	@Override
-	public EList<GPoint> getBendPoints() {
+	public EList<Point> getBendPoints() {
 		if (bendPoints == null) {
-			bendPoints = new EObjectContainmentEList<GPoint>(GPoint.class, this, EnotationPackage.EDGE__BEND_POINTS);
+			bendPoints = new EObjectContainmentEList<Point>(Point.class, this, EnotationPackage.EDGE__BEND_POINTS);
 		}
 		return bendPoints;
 	}
@@ -122,7 +122,7 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 		switch (featureID) {
 			case EnotationPackage.EDGE__BEND_POINTS:
 				getBendPoints().clear();
-				getBendPoints().addAll((Collection<? extends GPoint>)newValue);
+				getBendPoints().addAll((Collection<? extends Point>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);

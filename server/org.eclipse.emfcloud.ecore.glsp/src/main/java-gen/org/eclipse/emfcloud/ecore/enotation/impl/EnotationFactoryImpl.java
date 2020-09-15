@@ -68,6 +68,8 @@ public class EnotationFactoryImpl extends EFactoryImpl implements EnotationFacto
 			case EnotationPackage.EDGE: return createEdge();
 			case EnotationPackage.DIAGRAM: return createDiagram();
 			case EnotationPackage.SEMANTIC_PROXY: return createSemanticProxy();
+			case EnotationPackage.POINT: return createPoint();
+			case EnotationPackage.DIMENSION: return createDimension();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -115,6 +117,28 @@ public class EnotationFactoryImpl extends EFactoryImpl implements EnotationFacto
 	public SemanticProxy createSemanticProxy() {
 		SemanticProxyImpl semanticProxy = new SemanticProxyImpl();
 		return semanticProxy;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Point createPoint() {
+		PointImpl point = new PointImpl();
+		return point;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Dimension createDimension() {
+		DimensionImpl dimension = new DimensionImpl();
+		return dimension;
 	}
 
 	/**

@@ -22,6 +22,7 @@ import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.CSS;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.graph.GCompartment;
 import org.eclipse.glsp.graph.GNode;
 import org.eclipse.glsp.graph.builder.impl.GCompartmentBuilder;
@@ -111,9 +112,9 @@ public class ClassifierNodeFactory extends AbstractGModelFactory<EClassifier, GN
 	private void applyShapeData(EClassifier classifier, GNodeBuilder builder) {
 		modelState.getIndex().getNotation(classifier, Shape.class).ifPresent(shape -> {
 			if (shape.getPosition() != null) {
-				builder.position(GraphUtil.copy(shape.getPosition()));
+				builder.position(EcoreEdgeUtil.copy(shape.getPosition()));
 			} else if (shape.getSize() != null) {
-				builder.size(GraphUtil.copy(shape.getSize()));
+				builder.size(EcoreEdgeUtil.copy(shape.getSize()));
 			}
 		});
 	}

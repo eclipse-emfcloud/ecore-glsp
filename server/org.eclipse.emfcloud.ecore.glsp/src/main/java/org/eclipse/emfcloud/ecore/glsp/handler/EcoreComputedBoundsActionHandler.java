@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.api.action.Action;
 import org.eclipse.glsp.api.action.ActionMessage;
 import org.eclipse.glsp.api.action.ActionProcessor;
@@ -60,10 +61,10 @@ public class EcoreComputedBoundsActionHandler extends ComputedBoundsActionHandle
 
 	private void changeElementBounds(Shape element, GDimension dimension, GPoint position) {
 		if (position != null) {
-			element.setPosition(position);
+			element.setPosition(EcoreEdgeUtil.copy(position));
 		}
 		if (dimension != null) {
-			element.setSize(dimension);
+			element.setSize(EcoreEdgeUtil.copy(dimension));
 		}
 	}
 }

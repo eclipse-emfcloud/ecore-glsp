@@ -84,13 +84,22 @@ public interface EnotationPackage extends EPackage {
 	int NOTATION_ELEMENT__SEMANTIC_ELEMENT = 0;
 
 	/**
+	 * The feature id for the '<em><b>Graphic Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTATION_ELEMENT__GRAPHIC_ID = 1;
+
+	/**
 	 * The number of structural features of the '<em>Notation Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NOTATION_ELEMENT_FEATURE_COUNT = 1;
+	int NOTATION_ELEMENT_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Notation Element</em>' class.
@@ -119,6 +128,15 @@ public interface EnotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int SHAPE__SEMANTIC_ELEMENT = NOTATION_ELEMENT__SEMANTIC_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Graphic Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SHAPE__GRAPHIC_ID = NOTATION_ELEMENT__GRAPHIC_ID;
 
 	/**
 	 * The feature id for the '<em><b>Position</b></em>' containment reference.
@@ -176,6 +194,15 @@ public interface EnotationPackage extends EPackage {
 	int EDGE__SEMANTIC_ELEMENT = NOTATION_ELEMENT__SEMANTIC_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Graphic Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__GRAPHIC_ID = NOTATION_ELEMENT__GRAPHIC_ID;
+
+	/**
 	 * The feature id for the '<em><b>Bend Points</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -220,6 +247,15 @@ public interface EnotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIAGRAM__SEMANTIC_ELEMENT = NOTATION_ELEMENT__SEMANTIC_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Graphic Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__GRAPHIC_ID = NOTATION_ELEMENT__GRAPHIC_ID;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -293,6 +329,99 @@ public interface EnotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int SEMANTIC_PROXY_OPERATION_COUNT = 0;
+
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.PointImpl <em>Point</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emfcloud.ecore.enotation.impl.PointImpl
+	 * @see org.eclipse.emfcloud.ecore.enotation.impl.EnotationPackageImpl#getPoint()
+	 * @generated
+	 */
+	int POINT = 5;
+
+	/**
+	 * The feature id for the '<em><b>X</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POINT__X = 0;
+
+	/**
+	 * The feature id for the '<em><b>Y</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POINT__Y = 1;
+
+	/**
+	 * The number of structural features of the '<em>Point</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POINT_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Point</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int POINT_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.DimensionImpl <em>Dimension</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.emfcloud.ecore.enotation.impl.DimensionImpl
+	 * @see org.eclipse.emfcloud.ecore.enotation.impl.EnotationPackageImpl#getDimension()
+	 * @generated
+	 */
+	int DIMENSION = 6;
+
+	/**
+	 * The feature id for the '<em><b>Height</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIMENSION__HEIGHT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Width</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIMENSION__WIDTH = 1;
+
+	/**
+	 * The number of structural features of the '<em>Dimension</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIMENSION_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Dimension</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIMENSION_OPERATION_COUNT = 0;
 
 
 	/**
@@ -370,6 +499,17 @@ public interface EnotationPackage extends EPackage {
 	EReference getNotationElement_SemanticElement();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emfcloud.ecore.enotation.NotationElement#getGraphicId <em>Graphic Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Graphic Id</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.NotationElement#getGraphicId()
+	 * @see #getNotationElement()
+	 * @generated
+	 */
+	EAttribute getNotationElement_GraphicId();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emfcloud.ecore.enotation.Diagram <em>Diagram</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -421,6 +561,70 @@ public interface EnotationPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getSemanticProxy_ResolvedElement();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emfcloud.ecore.enotation.Point <em>Point</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Point</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Point
+	 * @generated
+	 */
+	EClass getPoint();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emfcloud.ecore.enotation.Point#getX <em>X</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>X</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Point#getX()
+	 * @see #getPoint()
+	 * @generated
+	 */
+	EAttribute getPoint_X();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emfcloud.ecore.enotation.Point#getY <em>Y</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Y</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Point#getY()
+	 * @see #getPoint()
+	 * @generated
+	 */
+	EAttribute getPoint_Y();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.emfcloud.ecore.enotation.Dimension <em>Dimension</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Dimension</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Dimension
+	 * @generated
+	 */
+	EClass getDimension();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emfcloud.ecore.enotation.Dimension#getHeight <em>Height</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Height</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Dimension#getHeight()
+	 * @see #getDimension()
+	 * @generated
+	 */
+	EAttribute getDimension_Height();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emfcloud.ecore.enotation.Dimension#getWidth <em>Width</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Width</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Dimension#getWidth()
+	 * @see #getDimension()
+	 * @generated
+	 */
+	EAttribute getDimension_Width();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -508,6 +712,14 @@ public interface EnotationPackage extends EPackage {
 		EReference NOTATION_ELEMENT__SEMANTIC_ELEMENT = eINSTANCE.getNotationElement_SemanticElement();
 
 		/**
+		 * The meta object literal for the '<em><b>Graphic Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NOTATION_ELEMENT__GRAPHIC_ID = eINSTANCE.getNotationElement_GraphicId();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.DiagramImpl <em>Diagram</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -550,6 +762,58 @@ public interface EnotationPackage extends EPackage {
 		 * @generated
 		 */
 		EReference SEMANTIC_PROXY__RESOLVED_ELEMENT = eINSTANCE.getSemanticProxy_ResolvedElement();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.PointImpl <em>Point</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emfcloud.ecore.enotation.impl.PointImpl
+		 * @see org.eclipse.emfcloud.ecore.enotation.impl.EnotationPackageImpl#getPoint()
+		 * @generated
+		 */
+		EClass POINT = eINSTANCE.getPoint();
+
+		/**
+		 * The meta object literal for the '<em><b>X</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute POINT__X = eINSTANCE.getPoint_X();
+
+		/**
+		 * The meta object literal for the '<em><b>Y</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute POINT__Y = eINSTANCE.getPoint_Y();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.DimensionImpl <em>Dimension</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.emfcloud.ecore.enotation.impl.DimensionImpl
+		 * @see org.eclipse.emfcloud.ecore.enotation.impl.EnotationPackageImpl#getDimension()
+		 * @generated
+		 */
+		EClass DIMENSION = eINSTANCE.getDimension();
+
+		/**
+		 * The meta object literal for the '<em><b>Height</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIMENSION__HEIGHT = eINSTANCE.getDimension_Height();
+
+		/**
+		 * The meta object literal for the '<em><b>Width</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DIMENSION__WIDTH = eINSTANCE.getDimension_Width();
 
 	}
 

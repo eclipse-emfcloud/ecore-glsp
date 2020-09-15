@@ -18,14 +18,14 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
+import org.eclipse.emfcloud.ecore.enotation.Dimension;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.enotation.EnotationFactory;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emfcloud.ecore.enotation.Point;
 import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
-
-import org.eclipse.glsp.graph.GraphPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -68,6 +68,20 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 	 * @generated
 	 */
 	private EClass semanticProxyEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass pointEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass dimensionEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -115,9 +129,6 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 		EnotationPackageImpl theEnotationPackage = registeredEnotationPackage instanceof EnotationPackageImpl ? (EnotationPackageImpl)registeredEnotationPackage : new EnotationPackageImpl();
 
 		isInited = true;
-
-		// Initialize simple dependencies
-		GraphPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theEnotationPackage.createPackageContents();
@@ -209,6 +220,16 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 	 * @generated
 	 */
 	@Override
+	public EAttribute getNotationElement_GraphicId() {
+		return (EAttribute)notationElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getDiagram() {
 		return diagramEClass;
 	}
@@ -259,6 +280,66 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 	 * @generated
 	 */
 	@Override
+	public EClass getPoint() {
+		return pointEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPoint_X() {
+		return (EAttribute)pointEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getPoint_Y() {
+		return (EAttribute)pointEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getDimension() {
+		return dimensionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getDimension_Height() {
+		return (EAttribute)dimensionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getDimension_Width() {
+		return (EAttribute)dimensionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EnotationFactory getEnotationFactory() {
 		return (EnotationFactory)getEFactoryInstance();
 	}
@@ -291,6 +372,7 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 
 		notationElementEClass = createEClass(NOTATION_ELEMENT);
 		createEReference(notationElementEClass, NOTATION_ELEMENT__SEMANTIC_ELEMENT);
+		createEAttribute(notationElementEClass, NOTATION_ELEMENT__GRAPHIC_ID);
 
 		diagramEClass = createEClass(DIAGRAM);
 		createEReference(diagramEClass, DIAGRAM__ELEMENTS);
@@ -298,6 +380,14 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 		semanticProxyEClass = createEClass(SEMANTIC_PROXY);
 		createEAttribute(semanticProxyEClass, SEMANTIC_PROXY__URI);
 		createEReference(semanticProxyEClass, SEMANTIC_PROXY__RESOLVED_ELEMENT);
+
+		pointEClass = createEClass(POINT);
+		createEAttribute(pointEClass, POINT__X);
+		createEAttribute(pointEClass, POINT__Y);
+
+		dimensionEClass = createEClass(DIMENSION);
+		createEAttribute(dimensionEClass, DIMENSION__HEIGHT);
+		createEAttribute(dimensionEClass, DIMENSION__WIDTH);
 	}
 
 	/**
@@ -323,9 +413,6 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 		setNsPrefix(eNS_PREFIX);
 		setNsURI(eNS_URI);
 
-		// Obtain other dependent packages
-		GraphPackage theGraphPackage = (GraphPackage)EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI);
-
 		// Create type parameters
 
 		// Set bounds for type parameters
@@ -337,14 +424,15 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(shapeEClass, Shape.class, "Shape", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getShape_Position(), theGraphPackage.getGPoint(), null, "position", null, 0, 1, Shape.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getShape_Size(), theGraphPackage.getGDimension(), null, "size", null, 0, 1, Shape.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getShape_Position(), this.getPoint(), null, "position", null, 0, 1, Shape.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getShape_Size(), this.getDimension(), null, "size", null, 0, 1, Shape.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(edgeEClass, Edge.class, "Edge", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getEdge_BendPoints(), theGraphPackage.getGPoint(), null, "bendPoints", null, 0, -1, Edge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEdge_BendPoints(), this.getPoint(), null, "bendPoints", null, 0, -1, Edge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(notationElementEClass, NotationElement.class, "NotationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getNotationElement_SemanticElement(), this.getSemanticProxy(), null, "semanticElement", null, 0, 1, NotationElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNotationElement_GraphicId(), ecorePackage.getEString(), "graphicId", null, 0, 1, NotationElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(diagramEClass, Diagram.class, "Diagram", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDiagram_Elements(), this.getNotationElement(), null, "elements", null, 0, -1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -352,6 +440,14 @@ public class EnotationPackageImpl extends EPackageImpl implements EnotationPacka
 		initEClass(semanticProxyEClass, SemanticProxy.class, "SemanticProxy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getSemanticProxy_Uri(), ecorePackage.getEString(), "uri", null, 0, 1, SemanticProxy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSemanticProxy_ResolvedElement(), ecorePackage.getEObject(), null, "resolvedElement", null, 0, 1, SemanticProxy.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(pointEClass, Point.class, "Point", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPoint_X(), ecorePackage.getEDouble(), "x", null, 0, 1, Point.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPoint_Y(), ecorePackage.getEDouble(), "y", null, 0, 1, Point.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(dimensionEClass, Dimension.class, "Dimension", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDimension_Height(), ecorePackage.getEDouble(), "height", null, 0, 1, Dimension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDimension_Width(), ecorePackage.getEDouble(), "width", null, 0, 1, Dimension.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

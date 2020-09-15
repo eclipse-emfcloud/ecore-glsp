@@ -24,9 +24,9 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.CSS;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.api.jsonrpc.GLSPServerException;
 import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.graph.GGraph;
@@ -39,7 +39,6 @@ import org.eclipse.glsp.graph.builder.impl.GEdgePlacementBuilder;
 import org.eclipse.glsp.graph.builder.impl.GGraphBuilder;
 import org.eclipse.glsp.graph.builder.impl.GLabelBuilder;
 import org.eclipse.glsp.graph.util.GConstants;
-import org.eclipse.glsp.graph.util.GraphUtil;
 
 public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement> {
 
@@ -131,7 +130,7 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 
 			if (edge.getBendPoints() != null) {
 				ArrayList<GPoint> gPoints = new ArrayList<>();
-				edge.getBendPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
+				edge.getBendPoints().forEach(p -> gPoints.add(EcoreEdgeUtil.copy(p)));
 				builder.addRoutingPoints(gPoints);
 			}
 		});

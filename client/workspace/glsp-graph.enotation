@@ -1,168 +1,197 @@
 <?xml version="1.0" encoding="ASCII"?>
-<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation" graphicId="ef6198b9-a43a-4095-8992-36cc8a1387b8">
   <semanticElement uri="/"/>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="26d9bd36-e92c-4a2c-bc8e-859605ea76c7">
     <semanticElement uri="//GModelElement"/>
-    <position x="1190.659375" y="896.4322916666667"/>
-    <size width="216.734375" height="154.9375"/>
+    <position x="1179.46875" y="268.0"/>
+    <size height="223.390625" width="144.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="eb57d080-1f80-4e86-81c2-5ba51ba6fe26">
     <semanticElement uri="//GShapeElement"/>
-    <position x="575.75390625" y="905.3668154761906"/>
-    <size width="208.625" height="53.0"/>
+    <position x="574.1875" y="230.27619047619055"/>
+    <size height="189.203125" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="ad05b6d2-9b38-48b8-84ff-6f6171cd051c">
     <semanticElement uri="//GGraph"/>
-    <position x="848.265625" y="181.81770833333337"/>
-    <size width="128.59375" height="53.0"/>
+    <position x="670.125" y="570.7761904761905"/>
+    <size height="112.15625" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="ce2f1622-5782-4cd4-ab08-68d8745423b1">
     <semanticElement uri="//GModelRoot"/>
-    <position x="886.3515625" y="777.5520833333334"/>
-    <size width="174.125" height="85.234375"/>
+    <position x="904.5703125" y="830.9428571428572"/>
+    <size height="162.609375" width="75.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="f11c5eee-e97f-414b-878e-961e1e59f086">
     <semanticElement uri="//GNode"/>
-    <position x="400.8125" y="626.7291666666667"/>
-    <size width="120.78125" height="53.0"/>
+    <position x="392.640625" y="961.3595238095238"/>
+    <size height="105.25" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="0c3a5dbf-cbd7-49fa-8948-ad7e0d6f89f2">
     <semanticElement uri="//GEdge"/>
-    <position x="604.546875" y="1085.0157738095238"/>
-    <size width="192.3125" height="108.46875"/>
+    <position x="950.5" y="269.9428571428572"/>
+    <size height="198.96875" width="98.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="761e0c26-0c40-47f2-97e3-e27ab6aa7b27">
     <semanticElement uri="//GCompartment"/>
-    <position x="320.78125" y="892.7477678571429"/>
-    <size width="200.8125" height="53.0"/>
+    <position x="318.734375" y="660.4428571428572"/>
+    <size height="179.15625" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="5ac455db-d1ce-45cd-b41b-d43832d2422e">
     <semanticElement uri="//GLabel"/>
-    <position x="373.75" y="713.9348958333334"/>
-    <size width="147.84375" height="85.234375"/>
+    <position x="343.390625" y="866.3595238095238"/>
+    <size height="154.5" width="75.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="5fe644e3-f3c4-474b-a87f-4c547f3b1f80">
     <semanticElement uri="//GIssueMarker"/>
-    <position x="332.953125" y="1205.5386904761906"/>
-    <size width="188.640625" height="53.0"/>
+    <position x="329.953125" y="69.204761904762"/>
+    <size height="167.9375" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="569d111c-447d-4ace-a821-c8048750be63">
     <semanticElement uri="//GPort"/>
-    <position x="410.78125" y="1070.982142857143"/>
-    <size width="110.8125" height="53.0"/>
+    <position x="403.203125" y="227.204761904762"/>
+    <size height="94.6875" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="7cead24e-81ba-4be5-b299-b7fff4f0d201">
     <semanticElement uri="//GButton"/>
-    <position x="313.65625" y="965.7477678571429"/>
-    <size width="207.9375" height="85.234375"/>
+    <position x="283.296875" y="132.204761904762"/>
+    <size height="214.59375" width="75.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="7ed3bbc1-96e7-4126-91c7-ef50529fe711">
     <semanticElement uri="//GBoundsAware"/>
-    <position x="870.96875" y="560.6510416666667"/>
-    <size width="204.890625" height="53.0"/>
+    <position x="895.078125" y="46.66666666666663"/>
+    <size height="181.59375" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="7915606b-de1c-4ce6-9d66-583c30681bb2">
     <semanticElement uri="//GPoint"/>
-    <position x="1520.15625" y="568.8671875"/>
-    <size width="137.84375" height="108.46875"/>
+    <position x="1179.46875" y="130.0"/>
+    <size height="144.265625" width="98.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="8ae941d0-e03d-4586-9a97-9c9ba7b9b34f">
     <semanticElement uri="//GDimension"/>
-    <position x="1520.15625" y="134.703125"/>
-    <size width="182.328125" height="108.46875"/>
+    <position x="1179.46875" y="12.0"/>
+    <size height="188.765625" width="98.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="ccf288f0-4d98-4c5c-aed2-d9d7705aa209">
     <semanticElement uri="//GLayoutOptions"/>
-    <position x="1169.96875" y="209.9375"/>
-    <size width="320.1875" height="340.8125"/>
+    <position x="822.28125" y="482.9428571428572"/>
+    <size height="327.1875" width="328.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="ecc98ce7-bbff-4ec4-afe5-f7e5972ccf0f">
     <semanticElement uri="//GEdgeLayoutable"/>
-    <position x="574.59375" y="3.3515625"/>
-    <size width="225.265625" height="53.0"/>
+    <position x="572.015625" y="964.9428571428572"/>
+    <size height="202.015625" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="9251dc29-ce8b-4637-a7b7-579ca070dfbf">
     <semanticElement uri="//GEdgePlacement"/>
-    <position x="1239.96875" y="10.0"/>
-    <size width="254.59375" height="131.703125"/>
+    <position x="822.28125" y="925.9428571428572"/>
+    <size height="261.578125" width="121.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="e0d1bf7f-73ae-43c6-8b0d-5a98280600fa">
     <semanticElement uri="//GSide"/>
-    <position x="180.625" y="12.0"/>
-    <size width="113.03125" height="178.171875"/>
+    <position x="161.8125" y="12.0"/>
+    <size height="101.484375" width="167.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="62c68704-6377-465d-a06b-15fe26effbf7">
     <semanticElement uri="//GLayouting"/>
-    <position x="590.359375" y="624.8177083333334"/>
-    <size width="168.96875" height="85.234375"/>
+    <position x="580.8125" y="664.1095238095238"/>
+    <size height="175.625" width="75.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="d0db3db3-42b4-4712-bc53-eadd7bb92886">
     <semanticElement uri="//GBounds"/>
-    <position x="1520.15625" y="728.4947916666667"/>
-    <size width="182.328125" height="154.9375"/>
+    <position x="1179.46875" y="808.9428571428572"/>
+    <size height="188.765625" width="144.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="9e997713-99a9-4410-9a3f-f25f2d449288">
     <semanticElement uri="//GAlignable"/>
-    <position x="603.828125" y="730.0520833333334"/>
-    <size width="160.796875" height="53.0"/>
+    <position x="916.015625" y="157.5"/>
+    <size height="139.71875" width="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="10d8e22a-a4e7-49fd-a911-9ac714430cb9">
     <semanticElement uri="//GIssue"/>
-    <position x="836.859375" y="1186.6376488095239"/>
-    <size width="207.84375" height="108.46875"/>
+    <position x="567.890625" y="34.538095238095366"/>
+    <size height="214.390625" width="98.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="aa672d95-1145-4f35-82a9-8e88f6b06c64">
     <semanticElement uri="//GSeverity"/>
-    <position x="101.0" y="278.0"/>
-    <size width="148.625" height="131.703125"/>
+    <position x="12.0" y="12.0"/>
+    <size height="129.8125" width="121.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="2065752e-a3f1-4775-bc73-e6f229b8c9ea">
     <semanticElement uri="//GHtmlRoot"/>
-    <position x="614.5625" y="978.3668154761906"/>
-    <size width="182.296875" height="85.234375"/>
+    <position x="593.328125" y="843.4428571428572"/>
+    <size height="188.953125" width="75.0"/>
   </elements>
-  <elements xsi:type="enotation:Shape">
+  <elements xsi:type="enotation:Shape" graphicId="daf6be3a-bef6-407d-bf41-ac552f0827f2">
     <semanticElement uri="//GPreRenderedElement"/>
-    <position x="836.859375" y="997.9345238095239"/>
-    <size width="273.109375" height="85.234375"/>
+    <position x="899.125" y="387.9428571428572"/>
+    <size height="250.34375" width="75.0"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="d308e99f-b228-47a6-b521-6f0bbafdab9d">
     <semanticElement uri="//GModelElement/children"/>
+    <bendPoints x="1253.9322916666667" y="268.0"/>
+    <bendPoints x="1253.9322916666665" y="258.0"/>
+    <bendPoints x="1328.3958333333333" y="258.0"/>
+    <bendPoints x="1328.3958333333333" y="268.0"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
-    <semanticElement uri="//GModelElement/parent"/>
-  </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="620e875f-e3d0-4a5f-a21f-6855fbc8ca36">
     <semanticElement uri="//GGraph/layoutOptions"/>
+    <bendPoints x="782.28125" y="592.2761904761905"/>
+    <bendPoints x="822.28125" y="592.2761904761905"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="15bcfb0e-dbf1-4b05-a3a1-0ba409876b19">
     <semanticElement uri="//GModelRoot/canvasBounds"/>
+    <bendPoints x="1067.1796875" y="880.9428571428572"/>
+    <bendPoints x="1179.46875" y="880.9428571428572"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="987fac20-6565-4c88-aa05-f9147d8fbed3">
     <semanticElement uri="//GEdge/routingPoints"/>
+    <bendPoints x="1149.46875" y="289.5428571428572"/>
+    <bendPoints x="1159.46875" y="289.5428571428572"/>
+    <bendPoints x="1159.46875" y="203.5"/>
+    <bendPoints x="1179.46875" y="203.5"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="bcd57094-aed1-4e2e-9e2e-2e54dcf1de3a">
     <semanticElement uri="//GEdge/source"/>
+    <bendPoints x="1149.46875" y="309.14285714285717"/>
+    <bendPoints x="1179.46875" y="309.1428571428571"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="30ca5c18-4cf7-4a37-b582-a778bb96755d">
     <semanticElement uri="//GEdge/target"/>
+    <bendPoints x="1149.46875" y="328.7428571428572"/>
+    <bendPoints x="1159.46875" y="328.74285714285713"/>
+    <bendPoints x="1159.46875" y="329.71428571428567"/>
+    <bendPoints x="1179.46875" y="329.7142857142857"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="dba607d8-e2e4-406c-b886-682ad2c4571d">
     <semanticElement uri="//GIssueMarker/issues"/>
+    <bendPoints x="497.890625" y="83.53809523809532"/>
+    <bendPoints x="567.890625" y="83.53809523809537"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="b1d548aa-aa78-4dc0-939a-fb1c61343d2c">
     <semanticElement uri="//GBoundsAware/position"/>
+    <bendPoints x="1076.671875" y="75.33333333333329"/>
+    <bendPoints x="1159.46875" y="75.33333333333326"/>
+    <bendPoints x="1159.46875" y="154.5"/>
+    <bendPoints x="1179.46875" y="154.5"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="4016535c-f7df-4def-9041-854b261347bb">
     <semanticElement uri="//GBoundsAware/size"/>
+    <bendPoints x="1076.671875" y="60.99999999999996"/>
+    <bendPoints x="1179.46875" y="61.0"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="d3ba016c-66b2-4353-a04c-483f0467dcf7">
     <semanticElement uri="//GEdgeLayoutable/edgePlacement"/>
+    <bendPoints x="774.03125" y="986.4428571428572"/>
+    <bendPoints x="822.28125" y="986.4428571428572"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="bb60c86c-a7af-4775-b6c7-68c809c2765f">
     <semanticElement uri="//GLayouting/layoutOptions"/>
+    <bendPoints x="756.4375" y="701.6095238095238"/>
+    <bendPoints x="822.28125" y="701.6095238095238"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
+  <elements xsi:type="enotation:Edge" graphicId="13de263f-7cac-4484-b5db-c37d62d8c6a1">
     <semanticElement uri="//GAlignable/alignment"/>
+    <bendPoints x="1055.734375" y="179.0"/>
+    <bendPoints x="1179.46875" y="179.0"/>
   </elements>
 </enotation:Diagram>

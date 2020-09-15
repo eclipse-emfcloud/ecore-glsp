@@ -24,6 +24,7 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.api.operation.Operation;
 import org.eclipse.glsp.api.operation.kind.CreateNodeOperation;
@@ -59,7 +60,7 @@ public class CreateClassifierNodeOperationHandler extends BasicOperationHandler<
 		Diagram diagram = facade.getDiagram();
 		Shape shape = facade.initializeShape(eClassifier);
 		if (operation.getLocation() != null) {
-			operation.getLocation().ifPresent(shape::setPosition);
+			operation.getLocation().ifPresent(location -> shape.setPosition(EcoreEdgeUtil.copy(location)));
 		}
 		diagram.getElements().add(shape);
 	}

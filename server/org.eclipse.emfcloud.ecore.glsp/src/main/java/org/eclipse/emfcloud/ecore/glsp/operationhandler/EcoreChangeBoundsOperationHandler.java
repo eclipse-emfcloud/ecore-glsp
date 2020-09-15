@@ -13,6 +13,7 @@ package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.api.operation.kind.ChangeBoundsOperation;
 import org.eclipse.glsp.api.types.ElementAndBounds;
@@ -38,10 +39,10 @@ public class EcoreChangeBoundsOperationHandler extends BasicOperationHandler<Cha
 
 	private void changeElementBounds(Shape element, GDimension dimension, GPoint position) {
 		if (position != null) {
-			element.setPosition(position);
+			element.setPosition(EcoreEdgeUtil.copy(position));
 		}
 		if (dimension != null) {
-			element.setSize(dimension);
+			element.setSize(EcoreEdgeUtil.copy(dimension));
 		}
 	}
 

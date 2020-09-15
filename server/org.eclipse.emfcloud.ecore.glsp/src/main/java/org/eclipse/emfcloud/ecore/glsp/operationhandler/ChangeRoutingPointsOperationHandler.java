@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.api.operation.kind.ChangeRoutingPointsOperation;
 import org.eclipse.glsp.api.types.ElementAndRoutingPoints;
@@ -39,7 +40,7 @@ public class ChangeRoutingPointsOperationHandler extends BasicOperationHandler<C
     private void changeEdgePoints(Edge element, List<GPoint> points) {
         if (points != null) {
             element.getBendPoints().clear();
-            element.getBendPoints().addAll(points);
+            points.forEach(p -> element.getBendPoints().add(EcoreEdgeUtil.copy(p)));
         }
     }
 

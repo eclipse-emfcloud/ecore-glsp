@@ -44,7 +44,8 @@
   "workspaces": [
     "sprotty-ecore",
     "theia-ecore",
-    "browser-app"
+    "browser-app",
+    "ecore-property-view"
   ],
   "dependencies": {
     "yarn": "^1.22.4"

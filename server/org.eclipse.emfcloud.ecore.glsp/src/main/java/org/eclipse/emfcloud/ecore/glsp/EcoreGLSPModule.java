@@ -16,6 +16,8 @@ import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandl
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreSaveModelActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreUndoRedoActionHandler;
+import org.eclipse.emfcloud.ecore.glsp.handler.EditEcorePropertiesOperationHandler;
+import org.eclipse.emfcloud.ecore.glsp.handler.RequestEcorePropertiesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelFactory;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelStateProvider;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.ChangeRoutingPointsOperationHandler;
@@ -55,6 +57,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
+		bindings.add(RequestEcorePropertiesActionHandler.class);
 	}
 	
 	@Override
@@ -93,6 +96,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.add(EcoreLabelEditOperationHandler.class);
 		bindings.add(ChangeRoutingPointsOperationHandler.class);
 		bindings.add(LayoutOperationHandler.class);
+		bindings.add(EditEcorePropertiesOperationHandler.class);
 	}
 
 	@Override

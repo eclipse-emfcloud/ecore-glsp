@@ -96,6 +96,14 @@ public class EnotationAdapterFactory extends AdapterFactoryImpl {
 				return createSemanticProxyAdapter();
 			}
 			@Override
+			public Adapter casePoint(Point object) {
+				return createPointAdapter();
+			}
+			@Override
+			public Adapter caseDimension(Dimension object) {
+				return createDimensionAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -182,6 +190,34 @@ public class EnotationAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSemanticProxyAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emfcloud.ecore.enotation.Point <em>Point</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Point
+	 * @generated
+	 */
+	public Adapter createPointAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.emfcloud.ecore.enotation.Dimension <em>Dimension</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Dimension
+	 * @generated
+	 */
+	public Adapter createDimensionAdapter() {
 		return null;
 	}
 

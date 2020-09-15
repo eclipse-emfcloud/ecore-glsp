@@ -18,11 +18,10 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emfcloud.ecore.enotation.Dimension;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
+import org.eclipse.emfcloud.ecore.enotation.Point;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
-
-import org.eclipse.glsp.graph.GDimension;
-import org.eclipse.glsp.graph.GPoint;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,7 +46,7 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * @generated
 	 * @ordered
 	 */
-	protected GPoint position;
+	protected Point position;
 
 	/**
 	 * The cached value of the '{@link #getSize() <em>Size</em>}' containment reference.
@@ -57,7 +56,7 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * @generated
 	 * @ordered
 	 */
-	protected GDimension size;
+	protected Dimension size;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -84,7 +83,7 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * @generated
 	 */
 	@Override
-	public GPoint getPosition() {
+	public Point getPosition() {
 		return position;
 	}
 
@@ -93,8 +92,8 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetPosition(GPoint newPosition, NotificationChain msgs) {
-		GPoint oldPosition = position;
+	public NotificationChain basicSetPosition(Point newPosition, NotificationChain msgs) {
+		Point oldPosition = position;
 		position = newPosition;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EnotationPackage.SHAPE__POSITION, oldPosition, newPosition);
@@ -109,7 +108,7 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * @generated
 	 */
 	@Override
-	public void setPosition(GPoint newPosition) {
+	public void setPosition(Point newPosition) {
 		if (newPosition != position) {
 			NotificationChain msgs = null;
 			if (position != null)
@@ -129,7 +128,7 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * @generated
 	 */
 	@Override
-	public GDimension getSize() {
+	public Dimension getSize() {
 		return size;
 	}
 
@@ -138,8 +137,8 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetSize(GDimension newSize, NotificationChain msgs) {
-		GDimension oldSize = size;
+	public NotificationChain basicSetSize(Dimension newSize, NotificationChain msgs) {
+		Dimension oldSize = size;
 		size = newSize;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EnotationPackage.SHAPE__SIZE, oldSize, newSize);
@@ -154,7 +153,7 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	 * @generated
 	 */
 	@Override
-	public void setSize(GDimension newSize) {
+	public void setSize(Dimension newSize) {
 		if (newSize != size) {
 			NotificationChain msgs = null;
 			if (size != null)
@@ -209,10 +208,10 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case EnotationPackage.SHAPE__POSITION:
-				setPosition((GPoint)newValue);
+				setPosition((Point)newValue);
 				return;
 			case EnotationPackage.SHAPE__SIZE:
-				setSize((GDimension)newValue);
+				setSize((Dimension)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -227,10 +226,10 @@ public class ShapeImpl extends NotationElementImpl implements Shape {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case EnotationPackage.SHAPE__POSITION:
-				setPosition((GPoint)null);
+				setPosition((Point)null);
 				return;
 			case EnotationPackage.SHAPE__SIZE:
-				setSize((GDimension)null);
+				setSize((Dimension)null);
 				return;
 		}
 		super.eUnset(featureID);

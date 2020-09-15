@@ -15,7 +15,9 @@
     "@theia/markers": "^1.4.0",
     "@theia/monaco": "^1.4.0",
     "@theia/messages": "^1.4.0",
-    "@eclipse-emfcloud/theia-ecore": "^0.2.0"
+    "@eclipse-emfcloud/theia-ecore": "^0.2.0",
+    "@ndoschek/property-view": "file:../ext-packages/ndoschek-property-view-0.0.2-n06.tgz",
+    "@eclipse-emfcloud/ecore-property-view": "0.0.1"
   },
   "devDependencies": {
     "@theia/cli": "^1.4.0"

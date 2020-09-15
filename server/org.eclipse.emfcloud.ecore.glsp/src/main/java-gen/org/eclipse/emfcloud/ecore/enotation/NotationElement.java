@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.emfcloud.ecore.enotation.NotationElement#getSemanticElement <em>Semantic Element</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.NotationElement#getGraphicId <em>Graphic Id</em>}</li>
  * </ul>
  *
  * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getNotationElement()
@@ -50,5 +51,27 @@ public interface NotationElement extends EObject {
 	 * @generated
 	 */
 	void setSemanticElement(SemanticProxy value);
+
+	/**
+	 * Returns the value of the '<em><b>Graphic Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Graphic Id</em>' attribute.
+	 * @see #setGraphicId(String)
+	 * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getNotationElement_GraphicId()
+	 * @model
+	 * @generated
+	 */
+	String getGraphicId();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emfcloud.ecore.enotation.NotationElement#getGraphicId <em>Graphic Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Graphic Id</em>' attribute.
+	 * @see #getGraphicId()
+	 * @generated
+	 */
+	void setGraphicId(String value);
 
 } // NotationElement

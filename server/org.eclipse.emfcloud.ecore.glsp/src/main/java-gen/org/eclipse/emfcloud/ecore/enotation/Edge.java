@@ -12,8 +12,6 @@ package org.eclipse.emfcloud.ecore.enotation;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.glsp.graph.GPoint;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Edge</b></em>'.
@@ -33,7 +31,7 @@ import org.eclipse.glsp.graph.GPoint;
 public interface Edge extends NotationElement {
 	/**
 	 * Returns the value of the '<em><b>Bend Points</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.glsp.graph.GPoint}.
+	 * The list contents are of type {@link org.eclipse.emfcloud.ecore.enotation.Point}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Bend Points</em>' containment reference list.
@@ -41,6 +39,6 @@ public interface Edge extends NotationElement {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<GPoint> getBendPoints();
+	EList<Point> getBendPoints();
 
 } // Edge

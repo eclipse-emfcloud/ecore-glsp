@@ -13,6 +13,7 @@ package org.eclipse.emfcloud.ecore.glsp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EObject;
@@ -23,15 +24,15 @@ import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.enotation.EnotationFactory;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emfcloud.ecore.enotation.Point;
 import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.GNode;
-import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.graph.GShapeElement;
-import org.eclipse.glsp.graph.util.GraphUtil;
 
 import com.google.common.base.Preconditions;
 
@@ -118,9 +119,14 @@ public class EcoreFacade {
 	private Diagram createDiagram() {
 		Diagram diagram = EnotationFactory.eINSTANCE.createDiagram();
 		diagram.setSemanticElement(createProxy(ePackage));
+		diagram.setGraphicId(generateId());
 		notationResource.getContents().add(diagram);
 		diagramIsNewlyCreated = true;
 		return diagram;
+	}
+	
+	private String generateId() {
+		return UUID.randomUUID().toString();
 	}
 
 	public Optional<Shape> initializeShape(GShapeElement shapeElement) {
@@ -136,6 +142,7 @@ public class EcoreFacade {
 	public Shape initializeShape(EObject semanticElement, GShapeElement shapeElement) {
 		Shape shape = EnotationFactory.eINSTANCE.createShape();
 		shape.setSemanticElement(createProxy(semanticElement));
+		shape.setGraphicId(generateId());
 		if (shapeElement != null) {
 			updateShape(shape, shapeElement);
 
@@ -155,6 +162,7 @@ public class EcoreFacade {
 	public Edge initializeEdge(EObject semanticElement, GEdge gEdge) {
 		Edge edge = EnotationFactory.eINSTANCE.createEdge();
 		edge.setSemanticElement(createProxy(semanticElement));
+		edge.setGraphicId(generateId());
 		if (gEdge != null) {
 			updateEdge(edge, gEdge);
 		}
@@ -191,20 +199,20 @@ public class EcoreFacade {
 
 	public void updateShape(Shape shape, GShapeElement shapeElement) {
 		if (shapeElement.getSize() != null) {
-			shape.setSize(GraphUtil.copy(shapeElement.getSize()));
+			shape.setSize(EcoreEdgeUtil.copy(shapeElement.getSize()));
 
 		}
 		if (shapeElement.getPosition() != null) {
-			shape.setPosition(GraphUtil.copy(shapeElement.getPosition()));
+			shape.setPosition(EcoreEdgeUtil.copy(shapeElement.getPosition()));
 		}
 	}
 
 	public void updateEdge(Edge edge, GEdge gEdge) {
 		edge.getBendPoints().clear();
 		if (gEdge.getRoutingPoints() != null) {
-			ArrayList<GPoint> gPoints = new ArrayList<>();
-			gEdge.getRoutingPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
-			edge.getBendPoints().addAll(gPoints);
+			ArrayList<Point> points = new ArrayList<>();
+			gEdge.getRoutingPoints().forEach(p -> points.add(EcoreEdgeUtil.copy(p)));
+			edge.getBendPoints().addAll(points);
 		}
 	}
 

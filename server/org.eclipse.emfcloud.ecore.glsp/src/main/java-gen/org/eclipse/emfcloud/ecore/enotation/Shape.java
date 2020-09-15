@@ -10,9 +10,6 @@
  */
 package org.eclipse.emfcloud.ecore.enotation;
 
-import org.eclipse.glsp.graph.GDimension;
-import org.eclipse.glsp.graph.GPoint;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Shape</b></em>'.
@@ -36,12 +33,12 @@ public interface Shape extends NotationElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Position</em>' containment reference.
-	 * @see #setPosition(GPoint)
+	 * @see #setPosition(Point)
 	 * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getShape_Position()
 	 * @model containment="true"
 	 * @generated
 	 */
-	GPoint getPosition();
+	Point getPosition();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.emfcloud.ecore.enotation.Shape#getPosition <em>Position</em>}' containment reference.
@@ -51,19 +48,19 @@ public interface Shape extends NotationElement {
 	 * @see #getPosition()
 	 * @generated
 	 */
-	void setPosition(GPoint value);
+	void setPosition(Point value);
 
 	/**
 	 * Returns the value of the '<em><b>Size</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Size</em>' containment reference.
-	 * @see #setSize(GDimension)
+	 * @see #setSize(Dimension)
 	 * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getShape_Size()
 	 * @model containment="true"
 	 * @generated
 	 */
-	GDimension getSize();
+	Dimension getSize();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.emfcloud.ecore.enotation.Shape#getSize <em>Size</em>}' containment reference.
@@ -73,6 +70,6 @@ public interface Shape extends NotationElement {
 	 * @see #getSize()
 	 * @generated
 	 */
-	void setSize(GDimension value);
+	void setSize(Dimension value);
 
 } // Shape

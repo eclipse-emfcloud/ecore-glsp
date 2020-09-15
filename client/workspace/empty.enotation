@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ASCII"?>
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation" graphicId="343e1262-de5e-42ac-b72c-32c92d7f8b3b">
+  <semanticElement uri="/"/>
+  <elements xsi:type="enotation:Shape" graphicId="a4ab8444-bf67-42f9-aaa1-5f97cc12ae0f">
+    <semanticElement uri="//NewEClass0"/>
+    <position x="575.0" y="230.0"/>
+    <size height="261.21875" width="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape" graphicId="77c177a1-30cd-4519-bb3e-25c523d21b87">
+    <semanticElement uri="//NewEClass1"/>
+    <position x="575.0" y="330.0"/>
+    <size height="155.484375" width="43.0"/>
+  </elements>
+</enotation:Diagram>

@@ -34,7 +34,7 @@ export class GLSPServerLauncher implements BackendApplicationContribution {
 
     initialize(): void {
         if (!this.launchOptions.isRunning && !this.start()) {
-            this.logError("Error during model server startup");
+            this.logError("Error during glsp server startup");
         }
     }
 
@@ -83,13 +83,13 @@ export class GLSPServerLauncher implements BackendApplicationContribution {
 
     protected logError(data: string | Buffer): void {
         if (data) {
-            this.logger.error(`ModelServerBackendContribution: ${data}`);
+            this.logger.error(`GLSPServerLauncher: ${data}`);
         }
     }
 
     protected logInfo(data: string | Buffer): void {
         if (data) {
-            this.logger.info(`ModelServerBackendContribution: ${data}`);
+            this.logger.info(`GLSPServerLauncher: ${data}`);
         }
     }
 

@@ -32,6 +32,7 @@ import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.NotationElementImpl#getSemanticElement <em>Semantic Element</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.NotationElementImpl#getGraphicId <em>Graphic Id</em>}</li>
  * </ul>
  *
  * @generated
@@ -46,6 +47,25 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 	 * @ordered
 	 */
 	protected SemanticProxy semanticElement;
+
+	/**
+	 * The default value of the '{@link #getGraphicId() <em>Graphic Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGraphicId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String GRAPHIC_ID_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getGraphicId() <em>Graphic Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getGraphicId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String graphicId = GRAPHIC_ID_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -117,6 +137,29 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
+	public String getGraphicId() {
+		return graphicId;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setGraphicId(String newGraphicId) {
+		String oldGraphicId = graphicId;
+		graphicId = newGraphicId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnotationPackage.NOTATION_ELEMENT__GRAPHIC_ID, oldGraphicId, graphicId));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
@@ -135,6 +178,8 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				return getSemanticElement();
+			case EnotationPackage.NOTATION_ELEMENT__GRAPHIC_ID:
+				return getGraphicId();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -149,6 +194,9 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				setSemanticElement((SemanticProxy)newValue);
+				return;
+			case EnotationPackage.NOTATION_ELEMENT__GRAPHIC_ID:
+				setGraphicId((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -165,6 +213,9 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				setSemanticElement((SemanticProxy)null);
 				return;
+			case EnotationPackage.NOTATION_ELEMENT__GRAPHIC_ID:
+				setGraphicId(GRAPHIC_ID_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -179,8 +230,26 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				return semanticElement != null;
+			case EnotationPackage.NOTATION_ELEMENT__GRAPHIC_ID:
+				return GRAPHIC_ID_EDEFAULT == null ? graphicId != null : !GRAPHIC_ID_EDEFAULT.equals(graphicId);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (graphicId: ");
+		result.append(graphicId);
+		result.append(')');
+		return result.toString();
 	}
 
 } //NotationElementImpl

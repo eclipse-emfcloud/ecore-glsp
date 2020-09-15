@@ -16,6 +16,8 @@ import { ActionHandlerRegistry } from "@eclipse-glsp/client/lib";
 import { GLSPTheiaDiagramServer } from "@eclipse-glsp/theia-integration/lib/browser";
 import { injectable } from "inversify";
 
+import { EditEcorePropertiesOperation, RequestEcorePropertiesAction } from "../action-definitions";
+
 @injectable()
 export class EcoreGLSPTheiaDiagramServer extends GLSPTheiaDiagramServer {
     initialize(registry: ActionHandlerRegistry): void {
@@ -23,6 +25,8 @@ export class EcoreGLSPTheiaDiagramServer extends GLSPTheiaDiagramServer {
 
         registry.register(AttributeTypesAction.KIND, this);
         registry.register(ReturnAttributeTypesAction.KIND, this);
+        registry.register(RequestEcorePropertiesAction.KIND, this);
+        registry.register(EditEcorePropertiesOperation.KIND, this);
     }
 
 }
