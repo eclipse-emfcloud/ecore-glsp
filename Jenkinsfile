@@ -60,7 +60,8 @@ pipeline {
                 container('ci'){
                     timeout(30){
                         dir('server'){
-                            sh 'mvn clean verify --batch-mode package'
+                        	sh 'mvn --version'
+                            sh 'mvn clean verify --batch-mode'
                         }
                     }
                 }
