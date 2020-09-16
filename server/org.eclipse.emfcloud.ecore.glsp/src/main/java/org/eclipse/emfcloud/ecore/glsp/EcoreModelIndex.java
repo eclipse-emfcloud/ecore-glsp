@@ -17,17 +17,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
-import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.glsp.graph.GModelElement;
-import org.eclipse.glsp.graph.builder.GModelElementBuilder;
 import org.eclipse.glsp.graph.impl.GModelIndexImpl;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 
 public class EcoreModelIndex extends GModelIndexImpl {
 	private BiMap<String, EObject> semanticIndex;
@@ -76,12 +74,12 @@ public class EcoreModelIndex extends GModelIndexImpl {
 		indexGModelElement(newUri, element);
 	}
 
-	public void updateReferenceRoot(String uri, String newUri){
+	// Only works for uris in the format //root/labelname for now
+	public void updateReferenceRoot(String root, String newRoot){
 		for(String s: uriToGModelElement.keySet()){
-			if(s.substring(2, 2 + uri.length()).equals(uri) && s.charAt(uri.length() + 2) == '/'){
-				String createdOldURI = "//" + uri + s.substring(2+uri.length());
-				String createdNewURI = "//" + newUri + s.substring(2+uri.length());
-				updateURI(createdOldURI, createdNewURI);
+			if(checkRoot(s, root) && isReference(s, root)){
+				String createdNewURI = updateRoot(s, root, newRoot);
+				updateURI(s, createdNewURI);
 			}
 		}
 	}
@@ -93,6 +91,18 @@ public class EcoreModelIndex extends GModelIndexImpl {
 				updateURI(uri, createdNewURI);
 			}
 		}
+	}
+
+	public boolean checkRoot(String uri, String root){
+		return uri.substring(2, 2 + root.length()).equals(root);
+	}
+
+	public boolean isReference(String uri, String root){
+		return uri.charAt(root.length() + 2) == '/';
+	}
+
+	public String updateRoot(String uri, String root, String newRoot){
+		return "//" + newRoot + uri.substring(2+root.length());
 	}
 
 	public void indexNotation(NotationElement notationElement) {

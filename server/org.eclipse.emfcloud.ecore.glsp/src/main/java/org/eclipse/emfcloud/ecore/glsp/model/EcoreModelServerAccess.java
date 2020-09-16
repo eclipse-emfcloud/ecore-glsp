@@ -20,16 +20,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -37,22 +32,16 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
-import org.eclipse.emfcloud.modelserver.client.NotificationSubscriptionListener;
 import org.eclipse.emfcloud.modelserver.client.Response;
-import org.eclipse.emfcloud.modelserver.coffee.model.coffee.CoffeePackage;
-import org.eclipse.emfcloud.modelserver.coffee.model.coffee.Flow;
-import org.eclipse.emfcloud.modelserver.coffee.model.coffee.Node;
 import org.eclipse.emfcloud.modelserver.command.CCommand;
 import org.eclipse.emfcloud.modelserver.common.codecs.EncodingException;
 import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
 import org.eclipse.glsp.api.jsonrpc.GLSPServerException;
-import org.eclipse.glsp.graph.GNode;
 
 import com.google.common.base.Preconditions;
 
@@ -64,42 +53,26 @@ public class EcoreModelServerAccess {
 	private String sourceURI;
 	private ResourceSet resourceSet;
 
-	private EcoreFacade workflowFacade;
-
-	private Map<String, Node> idMapping;
+	private EcoreFacade ecoreFacade;
 
 	private ModelServerClient modelServerClient;
-	private NotificationSubscriptionListener<EObject> subscriptionListener;
 
 	private EditingDomain editingDomain;
-    private CommandCodec commandCodec;
-    
-    //Added for now, should be removed later
-    private EcoreModelIndex modelIndex;
+	private CommandCodec commandCodec;
+
+	// Added for now, should be removed later
+	private EcoreModelIndex modelIndex;
 
 	public EcoreModelServerAccess(String sourceURI, ModelServerClient modelServerClient, EcoreModelIndex modelIndex) {
 		Preconditions.checkNotNull(modelServerClient);
 		this.sourceURI = sourceURI;
 		this.modelServerClient = modelServerClient;
 		this.resourceSet = setupResourceSet();
-		/*this.editingDomain = new AdapterFactoryEditingDomain(adapterFactory, new BasicCommandStack(), resourceSet);
-        this.commandCodec = commandCodec;*/
-        this.modelIndex = modelIndex;
-	}
-	/*
-	public void subscribe(NotificationSubscriptionListener<EObject> subscriptionListener) {
-		this.subscriptionListener = subscriptionListener;
-		this.modelServerClient.subscribe(getSemanticResource(sourceURI), subscriptionListener, FORMAT_XMI);
+		this.modelIndex = modelIndex;
 	}
 
-	public void unsubscribe() {
-		if (subscriptionListener != null) {
-			this.modelServerClient.unsubscribe(getSemanticResource(sourceURI));
-		}
-	}
-	*/
 	public void update() {
-		EObject root = workflowFacade.getSemanticResource().getContents().get(0);
+		EObject root = ecoreFacade.getSemanticResource().getContents().get(0);
 		modelServerClient.update(sourceURI, root, FORMAT_XMI);
 	}
 
@@ -110,28 +83,26 @@ public class EcoreModelServerAccess {
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
 		return resourceSet;
 	}
-	
-	public EcoreFacade getWorkflowFacade() {
-		if (workflowFacade == null) {
+
+	public EcoreFacade getEcoreFacade() {
+		if (ecoreFacade == null) {
 			createEcoreFacade();
 		}
-		return workflowFacade;
+		return ecoreFacade;
 	}
 
-	public void setEcoreFacade(EcoreFacade workflowFacade) {
-		this.workflowFacade = workflowFacade;
+	public void setEcoreFacade(EcoreFacade ecoreFacade) {
+		this.ecoreFacade = ecoreFacade;
 	}
 
 	protected EcoreFacade createEcoreFacade() {
 		try {
 			Resource notationResource = loadResource(convertToFile(sourceURI).getAbsolutePath()); // leave local for now
-			EObject root = modelServerClient.get(sourceURI, FORMAT_XMI)
-					.thenApply(res -> res.body()).get();
+			EObject root = modelServerClient.get(sourceURI, FORMAT_XMI).thenApply(res -> res.body()).get();
 
-			Resource semanticResource = loadResource(convertToFile(sourceURI).getAbsolutePath(),
-					root);
-			workflowFacade = new EcoreFacade(semanticResource, notationResource, modelIndex);
-			return workflowFacade;
+			Resource semanticResource = loadResource(convertToFile(sourceURI).getAbsolutePath(), root);
+			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelIndex);
+			return ecoreFacade;
 		} catch (IOException | InterruptedException | ExecutionException e) {
 			LOGGER.error(e);
 			return null;
@@ -144,10 +115,6 @@ public class EcoreModelServerAccess {
 		}
 		return null;
 	}
-
-	/*private String getSemanticResource(String uri) {
-		return uri.replaceFirst(".enotation", ".ecore");
-	}*/
 
 	public static String toXMI(Resource resource) throws IOException {
 		OutputStream out = new ByteArrayOutputStream();
@@ -172,27 +139,9 @@ public class EcoreModelServerAccess {
 		return resourceSet.createResource(URI.createFileURI(path));
 	}
 
-	public void setNodeMapping(Map<Node, GNode> mapping) {
-		initIdMap(mapping);
-	}
-
-	private void initIdMap(Map<Node, GNode> mapping) {
-		idMapping = new HashMap<>();
-		mapping.entrySet().forEach(entry -> idMapping.put(entry.getValue().getId(), entry.getKey()));
-	}
-
-	public Node getNodeById(String id) {
-		return idMapping.get(id);
-	}
-    /* Not needed for now
-	public Optional<Flow> getFlow(Node source, Node target) {
-		return this.workflowFacade.getCurrentWorkflow().getFlows().stream()
-				.filter(flow -> source.equals(flow.getSource()) && target.equals(flow.getTarget())).findFirst();
-	}*/
-
 	public void save() {
 		try {
-			workflowFacade.getNotationResource().save(Collections.emptyMap());
+			ecoreFacade.getNotationResource().save(Collections.emptyMap());
 		} catch (IOException e) {
 			throw new GLSPServerException("Could not save notation resource", e);
 		}

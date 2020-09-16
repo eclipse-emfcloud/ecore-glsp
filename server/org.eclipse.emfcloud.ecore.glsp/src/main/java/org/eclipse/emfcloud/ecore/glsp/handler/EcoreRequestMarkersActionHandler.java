@@ -45,7 +45,6 @@ public class EcoreRequestMarkersActionHandler extends RequestMarkersHandler {
             validation.validate(modeluri);
             Thread.sleep(1000);
             markers = createMarkers(validation.recentValidationResultMap.get(modeluri), ecoreModelState);
-            System.out.println("Test");
             
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
