@@ -10,7 +10,7 @@
     <version>1.0</version>
 
     <modules>
-        <!-- <module>org.eclipse.emfcloud.ecore.backend-app</module> -->
+        <module>org.eclipse.emfcloud.ecore.backend-app</module>
         <module>org.eclipse.emfcloud.ecore.glsp</module>
     </modules>
 </project>
