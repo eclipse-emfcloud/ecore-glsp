@@ -61,7 +61,7 @@ pipeline {
                     timeout(30){
                         dir('server'){
                         	sh 'mvn --version'
-                            sh 'mvn clean verify --batch-mode -Dmaven.repo.local=/home/jenkins/.m2/repository'
+                            sh 'mvn clean verify --batch-mode'
                         }
                     }
                 }
