@@ -16,8 +16,42 @@ public class CreateEcoreApplication implements IApplication {
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-        String[] args = getArgs(context);
-        createEcore(args[0], args[1], args[2], Paths.get(args[3], args[0]+".ecore"));
+		String[] args = getArgs(context);
+		String name = null;
+		String prefix = null;
+		String uri = null;
+		String workspacePath = null;
+		for (int i = 0; i < args.length; i++) {
+			switch (i) {
+			case 0:
+				name = args[i];
+				break;
+			case 1:
+				prefix = args[i];
+				break;
+			case 2:
+				uri = args[i];
+				break;
+			case 3:
+				workspacePath = args[i];
+				break;
+			}
+		}
+
+		if (name == null) {
+			System.exit(-10);
+		}
+		if (prefix == null) {
+			System.exit(-11);
+		}
+		if (uri == null) {
+			System.exit(-12);
+		}
+		if (workspacePath == null) {
+			System.exit(-13);
+		}
+
+		createEcore(name, prefix, uri, Paths.get(workspacePath, name+".ecore"));
 		return null;
 	}
 	
