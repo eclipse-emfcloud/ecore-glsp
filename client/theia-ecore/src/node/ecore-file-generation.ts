@@ -26,13 +26,7 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         @inject(ILogger) private readonly logger: ILogger) { }
 
     generateEcore(name: string, prefix: string, uri: string, workspacePath: string): Promise<string> {
-        const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
-            "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
-            "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
-            "org.eclipse.equinox.launcher_1.5.600.v20191014-2022.jar");
-        if (jarPath.length === 0) {
-            throw new Error("The eclipse.equinox.launcher is not found. ");
-        }
+        const jarPath = this.getEclipseProductJar();
 
         const command = "java";
         const args: string[] = [];
@@ -43,7 +37,6 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         args.push(
             "-cp", jarPath,
             "org.eclipse.equinox.launcher.Main",
-            "-data", workspacePath,
             "-application", "org.eclipse.emfcloud.ecore.backend.app.create-ecore",
             name, prefix, uri, platformWorkspacePath
         );
@@ -59,6 +52,10 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
             process.process.on("exit", (code: any) => {
                 switch (code) {
                     case 0: resolve("OK"); break;
+                    case -10: resolve("Name is missing"); break;
+                    case -11: resolve("Prefix is missing"); break;
+                    case -12: resolve("Uri is missing"); break;
+                    case -13: resolve("Workspace Path is missing"); break;
                     default: resolve("UNKNOWN ERROR"); break;
                 }
             });
@@ -66,20 +63,13 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
     }
 
     generateGenModel(workspacePath: string,ecorePath: string, customPackageName: string, folderName: string): Promise<string> {
-        const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
-            "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
-            "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
-            "org.eclipse.equinox.launcher_1.5.600.v20191014-2022.jar");
-        if (jarPath.length === 0) {
-            throw new Error("The eclipse.equinox.launcher is not found. ");
-        }        
+        const jarPath = this.getEclipseProductJar();
 
         const command = "java";
         const args: string[] = [];
         args.push(
             "-cp", jarPath,
             "org.eclipse.equinox.launcher.Main",
-            "-data", workspacePath,
             "-application", "org.eclipse.emfcloud.ecore.backend.app.create-genmodel",
             ecorePath, customPackageName, folderName
         );
@@ -101,6 +91,9 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
             process.process.on("exit", (code: any) => {
                 switch (code) {
                     case 0: resolve("OK"); break;
+                    case -10: resolve("Ecore File Path is missing"); break;
+                    case -11: resolve("Custom Root Package is missing"); break;
+                    case -12: resolve("Outputfolder is missing"); break;
                     default: resolve("UNKNOWN ERROR " + code); break;
                 }
             });
@@ -108,13 +101,7 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
     }
 
     generateCode(genmodelPath: string, workspacePath: string): Promise<string> {
-        const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
-            "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
-            "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
-            "org.eclipse.equinox.launcher_1.5.600.v20191014-2022.jar");
-        if (jarPath.length === 0) {
-            throw new Error("The eclipse.equinox.launcher is not found. ");
-        }   
+        const jarPath = this.getEclipseProductJar();
 
         const command = "java";
         const args: string[] = [];
@@ -153,6 +140,18 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
 
     setClient(): void {
         // do nothing
+    }
+
+    private getEclipseProductJar(): string{
+        const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
+            "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
+            "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
+            "org.eclipse.equinox.launcher_1.5.600.v20191014-2022.jar"); 
+        if (jarPath.length === 0) {
+            throw new Error("The eclipse.equinox.launcher is not found. ");
+        }
+
+        return jarPath;
     }
 
     private spawnProcess(command: string, args?: string[]): RawProcess | undefined {
