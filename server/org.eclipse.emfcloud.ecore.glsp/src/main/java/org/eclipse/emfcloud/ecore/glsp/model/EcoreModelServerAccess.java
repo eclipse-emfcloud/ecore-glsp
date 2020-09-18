@@ -41,7 +41,6 @@ import org.eclipse.emfcloud.modelserver.client.Response;
 import org.eclipse.emfcloud.modelserver.command.CCommand;
 import org.eclipse.emfcloud.modelserver.common.codecs.EncodingException;
 import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
-import org.eclipse.glsp.api.jsonrpc.GLSPServerException;
 
 import com.google.common.base.Preconditions;
 
@@ -143,7 +142,6 @@ public class EcoreModelServerAccess {
 		try {
 			ecoreFacade.getNotationResource().save(Collections.emptyMap());
 		} catch (IOException e) {
-			throw new GLSPServerException("Could not save notation resource", e);
 		}
 
 	}

@@ -16,7 +16,7 @@ import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.glsp.api.action.Action;
 import org.eclipse.glsp.api.action.ActionMessage;
-import org.eclipse.glsp.api.action.ActionProcessor;
+import org.eclipse.glsp.api.action.ActionDispatcher;
 import org.eclipse.glsp.api.action.kind.ComputedBoundsAction;
 import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.api.operation.kind.LayoutOperation;
@@ -32,7 +32,7 @@ import com.google.inject.Inject;
 public class EcoreComputedBoundsActionHandler extends ComputedBoundsActionHandler {
 
 	@Inject
-	private ActionProcessor actionProcessor;
+	private ActionDispatcher actionDispatcher;
 
 	@Override
 	public List<Action> executeAction(ComputedBoundsAction computedBoundsAction, GraphicalModelState graphicalModelState) {
@@ -49,7 +49,7 @@ public class EcoreComputedBoundsActionHandler extends ComputedBoundsActionHandle
 				LayoutUtil.applyBounds(model, computedBoundsAction, graphicalModelState);
 				if (modelState.getEditorContext().getEcoreFacade().diagramNeedsAutoLayout()) {
 					ActionMessage layoutMessage = new ActionMessage(modelState.getClientId(), new LayoutOperation());
-					actionProcessor.process(layoutMessage);
+					actionDispatcher.dispatch(layoutMessage);
 				}
 				return submissionHandler.doSubmitModel(true, modelState);
 			}

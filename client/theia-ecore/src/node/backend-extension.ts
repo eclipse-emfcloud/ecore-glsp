@@ -8,9 +8,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { GLSPServerContribution } from "@eclipse-glsp/theia-integration/lib/node";
 import { ConnectionHandler, JsonRpcConnectionHandler } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node";
-import { LanguageServerContribution } from "@theia/languages/lib/node";
 import { ContainerModule, injectable } from "inversify";
 import { join, resolve } from "path";
 
@@ -29,7 +29,7 @@ export class EcoreGlspLaunchOptions implements GLSPLaunchOptions {
 
 export default new ContainerModule(bind => {
     bind(GLSPLaunchOptionsSymb).to(EcoreGlspLaunchOptions).inSingletonScope();
-    bind(LanguageServerContribution).to(EcoreGLServerContribution).inSingletonScope();
+    bind(GLSPServerContribution).to(EcoreGLServerContribution).inSingletonScope();
     bind(EcoreFileGenServer).toSelf().inSingletonScope();
     bind(BackendApplicationContribution).toService(EcoreFileGenServer);
     bind(ConnectionHandler).toDynamicValue(ctx =>

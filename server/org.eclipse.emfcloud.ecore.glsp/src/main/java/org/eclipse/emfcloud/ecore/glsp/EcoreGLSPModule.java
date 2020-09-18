@@ -28,7 +28,6 @@ import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreDeleteOperationHand
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLabelEditOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
-import org.eclipse.glsp.api.action.Action;
 import org.eclipse.glsp.api.configuration.ServerConfiguration;
 import org.eclipse.glsp.api.diagram.DiagramConfiguration;
 import org.eclipse.glsp.api.factory.ModelFactory;
@@ -45,6 +44,7 @@ import org.eclipse.glsp.server.actionhandler.SaveModelActionHandler;
 import org.eclipse.glsp.server.actionhandler.UndoRedoActionHandler;
 import org.eclipse.glsp.server.di.DefaultGLSPModule;
 import org.eclipse.glsp.server.di.MultiBindConfig;
+import org.eclipse.glsp.server.operationhandler.CompoundOperationHandler;
 import org.eclipse.glsp.server.operationhandler.LayoutOperationHandler;
 
 public class EcoreGLSPModule extends DefaultGLSPModule {
@@ -60,12 +60,6 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
 	}
 	
-	@Override
-	protected void configureActions(MultiBindConfig<Action> bindings) {
-		super.configureActions(bindings);
-		bindings.add(AttributeTypesAction.class);
-	}
-
 	@Override
 	public Class<? extends ModelFactory> bindModelFactory() {
 		return EcoreModelFactory.class;
@@ -88,6 +82,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 
 	@Override
 	protected void configureOperationHandlers(MultiBindConfig<OperationHandler> bindings) {
+		bindings.add(CompoundOperationHandler.class);
 		bindings.add(EcoreChangeBoundsOperationHandler.class);
 		bindings.add(EcoreDeleteOperationHandler.class);
 		bindings.add(CreateClassifierNodeOperationHandler.class);
