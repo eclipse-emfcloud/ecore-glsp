@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import static org.eclipse.glsp.api.jsonrpc.GLSPServerException.getOrThrow;
+import static org.eclipse.glsp.api.protocol.GLSPServerException.getOrThrow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
-import org.eclipse.glsp.api.jsonrpc.GLSPServerException;
+import org.eclipse.glsp.api.protocol.GLSPServerException;
 import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.api.operation.kind.ApplyLabelEditOperation;
 import org.eclipse.glsp.graph.GModelElement;
