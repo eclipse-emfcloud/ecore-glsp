@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Ecore GLSP Server App
+Bundle-SymbolicName: org.eclipse.emfcloud.ecore.glsp.app;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Eclipse EMF.Cloud Project
+Automatic-Module-Name: org.eclipse.emfcloud.ecore.glsp.app
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.equinox.app;bundle-version="1.4.0",
+ org.eclipse.emfcloud.ecore.glsp;bundle-version="0.0.2"
+Export-Package: org.eclipse.emfcloud.ecore.glsp.app

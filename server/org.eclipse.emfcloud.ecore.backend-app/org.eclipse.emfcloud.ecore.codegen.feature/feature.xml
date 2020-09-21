@@ -2,14 +2,16 @@
 <feature
       id="org.eclipse.emfcloud.ecore.codegen.feature"
       label="Ecore GLSP Codegen"
-      version="1.0.0.qualifier">
+      version="1.0.0.qualifier"
+      provider-name="Eclipse EMF.Cloud Project">
 
    <description url="https://github.com/eclipse-emfcloud/ecore-glsp">
-      [Enter Feature Description here.]
+      Ecore Backend Application, including ecore-related commands (Create Ecore file,
+      create GenModel, Generate code...)
    </description>
 
    <copyright url="https://github.com/eclipse-emfcloud/ecore-glsp">
-  Copyright (c) 2020 EclipseSource and others.
+      Copyright (c) 2020 EclipseSource and others.
  
   This program and the accompanying materials are made available under the
   terms of the Eclipse Public License v. 2.0 which is available at

@@ -17,6 +17,7 @@ import os = require("os");
 import * as path from "path";
 
 import { FileGenServer } from "../common/generate-protocol";
+import { findEquinoxLauncher } from "./equinox";
 
 @injectable()
 export class EcoreFileGenServer implements FileGenServer, BackendApplicationContribution {
@@ -26,23 +27,17 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         @inject(ILogger) private readonly logger: ILogger) { }
 
     generateEcore(name: string, prefix: string, uri: string, workspacePath: string): Promise<string> {
-        const jarPath = this.getEclipseProductJar();
-
-        const command = "java";
-        const args: string[] = [];
         let platformWorkspacePath = workspacePath;
         if (os.platform() === "win32") {
             platformWorkspacePath = workspacePath.substr(1);
         }
-        args.push(
-            "-cp", jarPath,
-            "org.eclipse.equinox.launcher.Main",
+        const args = [
             "-application", "org.eclipse.emfcloud.ecore.backend.app.create-ecore",
             name, prefix, uri, platformWorkspacePath
-        );
+        ];
 
         return new Promise(resolve => {
-            const process = this.spawnProcess(command, args);
+            const process = this.startEclipseApp(args);
             // eslint-disable-next-line no-null/no-null
             if (process === undefined || process.process === undefined || process === null || process.process === null) {
                 resolve("Process not spawned");
@@ -63,19 +58,14 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
     }
 
     generateGenModel(workspacePath: string, ecorePath: string, customPackageName: string, folderName: string): Promise<string> {
-        const jarPath = this.getEclipseProductJar();
-
-        const command = "java";
         const args: string[] = [];
         args.push(
-            "-cp", jarPath,
-            "org.eclipse.equinox.launcher.Main",
             "-application", "org.eclipse.emfcloud.ecore.backend.app.create-genmodel",
             ecorePath, customPackageName, folderName
         );
 
         return new Promise(resolve => {
-            const process = this.spawnProcess(command, args);
+            const process = this.startEclipseApp(args);
             // eslint-disable-next-line no-null/no-null
             if (process === undefined || process.process === undefined || process === null || process.process === null) {
                 resolve("Process not spawned");
@@ -88,7 +78,7 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
                 }
             }
 
-            process.process.on("exit", (code: any) => {
+            process.process.on("exit", (code: number | null) => {
                 switch (code) {
                     case 0: resolve("OK"); break;
                     case -10: resolve("Ecore File Path is missing"); break;
@@ -101,22 +91,16 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
     }
 
     generateCode(genmodelPath: string, workspacePath: string): Promise<string> {
-        const jarPath = this.getEclipseProductJar();
-
-        const command = "java";
-        const args: string[] = [];
-        args.push(
-            "-cp", jarPath,
-            "org.eclipse.equinox.launcher.Main",
+        const args: string[] = [
             "-data", workspacePath,
             "-application", "org.eclipse.emfcloud.ecore.backend.app.codegen",
             genmodelPath
-        );
+        ];
 
         return new Promise(resolve => {
-            const process = this.spawnProcess(command, args);
             // eslint-disable-next-line no-null/no-null
-            if (process === undefined || process.process === undefined || process === null || process.process === null) {
+            const process = this.startEclipseApp(args);
+            if (process === undefined || process.process === undefined) {
                 resolve("Process not spawned");
                 return;
             }
@@ -142,16 +126,16 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
         // do nothing
     }
 
-    private getEclipseProductJar(): string {
-        const jarPath = path.resolve(__dirname, "..", "..", "..", "..",
-            "server", "org.eclipse.emfcloud.ecore.backend-app", "org.eclipse.emfcloud.ecore.codegen.product",
-            "target", "products", "org.eclipse.emfcloud.ecore.codegen.product", "linux", "gtk", "x86_64", "plugins",
-            "org.eclipse.equinox.launcher_1.5.600.v20191014-2022.jar");
-        if (jarPath.length === 0) {
-            throw new Error("The eclipse.equinox.launcher is not found. ");
-        }
+    private startEclipseApp(args: string[]): RawProcess | undefined {
+        const jarPath = this.getEclipseProductJar();
+        const completeArgs = ["-jar", jarPath, ...args];
 
-        return jarPath;
+        return this.spawnProcess("java", completeArgs);
+    }
+
+    private getEclipseProductJar(): string {
+        const productPath = path.resolve(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.codegen.product-1.0.0");
+        return findEquinoxLauncher(productPath);
     }
 
     private spawnProcess(command: string, args?: string[]): RawProcess | undefined {

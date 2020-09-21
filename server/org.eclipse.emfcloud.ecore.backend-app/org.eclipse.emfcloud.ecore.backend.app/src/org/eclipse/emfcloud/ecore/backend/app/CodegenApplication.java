@@ -47,7 +47,7 @@ public class CodegenApplication implements IApplication {
 	}
 	
 	private String[] getArgs(IApplicationContext context) {
-		Object object = context.getArguments().get("application.args");
+		Object object = context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
 		if (object instanceof String[]) {
 			return (String[])object;
 		}

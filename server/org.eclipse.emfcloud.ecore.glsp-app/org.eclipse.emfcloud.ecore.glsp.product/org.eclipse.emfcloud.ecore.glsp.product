@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Ecore GLSP Backend" uid="org.eclipse.emfcloud.ecore.codegen.product" id="ecore.glsp.backend.app.product" application="org.eclipse.emf.codegen.CodeGen" version="1.0.0" useFeatures="true" includeLaunchers="true">
+<product name="Ecore GLSP Server" uid="org.eclipse.emfcloud.ecore.glsp.product" id="org.eclipse.emfcloud.ecore.glsp.app.product" application="org.eclipse.emfcloud.ecore.glsp.app.ecore-glsp-server" version="1.0.0" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
+      <programArgs>-nosplash
+      </programArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
 
    <windowImages/>
 
-   <launcher name="ecore_glsp_backend">
+   <launcher name="ecore-glsp-server">
       <win useIco="false">
          <bmp/>
       </win>
@@ -26,7 +28,7 @@
    </plugins>
 
    <features>
-      <feature id="org.eclipse.emfcloud.ecore.codegen.feature"/>
+      <feature id="org.eclipse.emfcloud.ecore.glsp.feature"/>
    </features>
 
    <configurations>

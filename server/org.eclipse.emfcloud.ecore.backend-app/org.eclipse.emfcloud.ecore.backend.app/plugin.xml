@@ -5,7 +5,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.eclipse.emf.codegen.CodeGen"
+            application="org.eclipse.emfcloud.ecore.backend.app.codegen"
             name="Ecore GLSP Backend">
          <property
                name="appName"

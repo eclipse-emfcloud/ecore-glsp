@@ -1,0 +1,7 @@
+target "Ecore GLSP Dev" with source, requirements
+
+// All-in-one target platform for Eclipse development (Ecore GLSP Server + Ecore Backend App)
+
+include "ecore-server.tpd"
+include "ecore-backend-app.tpd"
+

@@ -20,7 +20,7 @@
       <package
             uri="http://www.eclipsesource.com/glsp/ecore/notation"
             class="org.eclipse.emfcloud.ecore.enotation.EnotationPackage"
-            genModel="src/main/resources/enotation.genmodel"/>
+            genModel="resources/enotation.genmodel"/>
    </extension>
 
 </plugin>
