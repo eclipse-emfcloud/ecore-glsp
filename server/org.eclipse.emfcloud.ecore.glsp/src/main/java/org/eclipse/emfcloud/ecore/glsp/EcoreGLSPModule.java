@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
-import org.eclipse.emfcloud.ecore.glsp.actions.AttributeTypesAction;
+import org.eclipse.emfcloud.ecore.glsp.actions.ReturnAttributeTypesAction;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
@@ -43,6 +43,7 @@ import org.eclipse.glsp.server.actionhandler.SaveModelActionHandler;
 import org.eclipse.glsp.server.actionhandler.UndoRedoActionHandler;
 import org.eclipse.glsp.server.di.DefaultGLSPModule;
 import org.eclipse.glsp.server.di.MultiBindConfig;
+import org.eclipse.glsp.server.operationhandler.CompoundOperationHandler;
 import org.eclipse.glsp.server.operationhandler.LayoutOperationHandler;
 
 public class EcoreGLSPModule extends DefaultGLSPModule {
@@ -57,12 +58,6 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
 	}
 	
-	@Override
-	protected void configureActions(MultiBindConfig<Action> bindings) {
-		super.configureActions(bindings);
-		bindings.add(AttributeTypesAction.class);
-	}
-
 	@Override
 	public Class<? extends ModelFactory> bindModelFactory() {
 		return EcoreModelFactory.class;
@@ -79,12 +74,19 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	}
 	
 	@Override
+	protected void configureClientActions(MultiBindConfig<Action> bindings) {
+		super.configureClientActions(bindings);
+		bindings.add(ReturnAttributeTypesAction.class);
+	}
+	
+	@Override
 	protected Class<? extends OperationHandlerRegistry> bindOperationHandlerRegistry() {
 		return EcoreDIOperationHandlerRegistry.class;
 	}
 
 	@Override
 	protected void configureOperationHandlers(MultiBindConfig<OperationHandler> bindings) {
+		bindings.add(CompoundOperationHandler.class);
 		bindings.add(EcoreChangeBoundsOperationHandler.class);
 		bindings.add(EcoreDeleteOperationHandler.class);
 		bindings.add(CreateClassifierNodeOperationHandler.class);
