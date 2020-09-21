@@ -10,7 +10,16 @@
  ********************************************************************************/
 import { GLSPActionDispatcher, TYPES } from "@eclipse-glsp/client/lib";
 import { inject, injectable } from "inversify";
-import { EditLabelUI, generateRequestId, RequestAction, ResponseAction, SModelRoot } from "sprotty/lib";
+import {
+    EditLabelUI,
+    generateRequestId,
+    getAbsoluteClientBounds,
+    getZoom,
+    isSizeable,
+    RequestAction,
+    ResponseAction,
+    SModelRoot
+} from "sprotty/lib";
 import { matchesKeystroke } from "sprotty/lib/utils/keyboard";
 
 export class AttributeTypesAction implements RequestAction<ReturnAttributeTypesAction> {
@@ -175,6 +184,35 @@ export class EditLabelUIAutocomplete extends EditLabelUI {
                 this.types = action.types;
             }
         });
+    }
+
+    // Override the default behavior. Let the edit control completely overlap
+    // the label node, when the label has a defined size (rather than using
+    // an arbitrary fixed width).
+    // FIXME Move to Sprotty?
+    protected setPosition(containerElement: HTMLElement): void {
+        let x = 0;
+        let y = 0;
+        let width = 100;
+        let height = 20;
+
+        if (this.label) {
+            const zoom = getZoom(this.label);
+            const bounds = getAbsoluteClientBounds(this.label, this.domHelper, this.viewerOptions);
+            x = bounds.x + (this.label.editControlPositionCorrection ? this.label.editControlPositionCorrection.x : 0) * zoom;
+            y = bounds.y + (this.label.editControlPositionCorrection ? this.label.editControlPositionCorrection.y : 0) * zoom;
+            height = (this.label.editControlDimension ? this.label.editControlDimension.height :
+                (isSizeable(this.label) ? this.label.bounds.height : height)) * zoom;
+            width = (this.label.editControlDimension ? this.label.editControlDimension.width :
+                (isSizeable(this.label) ? this.label.bounds.width : width)) * zoom;
+        }
+
+        containerElement.style.left = `${x}px`;
+        containerElement.style.top = `${y}px`;
+        containerElement.style.width = `${width}px`;
+        this.editControl.style.width = `${width}px`;
+        containerElement.style.height = `${height}px`;
+        this.editControl.style.height = `${height}px`;
     }
 
     protected isAutoCompleteEnabled(): boolean {

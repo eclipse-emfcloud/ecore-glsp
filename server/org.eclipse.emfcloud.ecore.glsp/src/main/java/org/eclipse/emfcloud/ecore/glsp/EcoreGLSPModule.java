@@ -10,8 +10,8 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
-import org.eclipse.emfcloud.ecore.glsp.actions.AttributeTypesAction;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreRequestMarkersActionHandler;
+import org.eclipse.emfcloud.ecore.glsp.actions.ReturnAttributeTypesAction;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
@@ -28,6 +28,7 @@ import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreDeleteOperationHand
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLabelEditOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
+import org.eclipse.glsp.api.action.Action;
 import org.eclipse.glsp.api.configuration.ServerConfiguration;
 import org.eclipse.glsp.api.diagram.DiagramConfiguration;
 import org.eclipse.glsp.api.factory.ModelFactory;
@@ -73,6 +74,12 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	@Override
 	protected Class<? extends ToolPaletteItemProvider> bindToolPaletteItemProvider() {
 		return EcoreToolPaletteItemProvider.class;
+	}
+	
+	@Override
+	protected void configureClientActions(MultiBindConfig<Action> bindings) {
+		super.configureClientActions(bindings);
+		bindings.add(ReturnAttributeTypesAction.class);
 	}
 	
 	@Override
