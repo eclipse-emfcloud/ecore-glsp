@@ -99,9 +99,16 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 	private List<GModelElement> createEdges(EClass eClass) {
 		List<GModelElement> children = new ArrayList<>();
 		// create reference edges
-		eClass.getEReferences().stream().map(this::create).filter(Objects::nonNull).forEach(children::add);
+		for(EReference reference: eClass.getEReferences()) {
+			GEdge edge = create(reference);
+			if(edge!=null) {
+				children.add(edge);
+				modelState.getIndex().indexGModelElement(EcoreUtil.getURI(reference).fragment().toString(), edge);
+			}
+		}
 		// create inheritance edges
 		eClass.getESuperTypes().stream().map(s -> create(eClass, s)).forEach(children::add);
+		
 		return children;
 	}
 
@@ -138,8 +145,6 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 				builder.addRoutingPoints(gPoints);
 			}
 		});
-
-		//modelState.getIndex().indexGModelElement(EcoreUtil.getURI(eReference).fragment().toString(), builder.build());
 		return builder.build();
 	}
 
