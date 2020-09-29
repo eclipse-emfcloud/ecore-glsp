@@ -20,6 +20,7 @@
 		<module>org.eclipse.emfcloud.ecore.backend-app</module>
 		<module>org.eclipse.emfcloud.ecore.glsp</module>
 		<module>org.eclipse.emfcloud.ecore.glsp-app</module>
+        <module>org.eclipse.emfcloud.ecore.modelserver</module>
 	</modules>
 
 	<build>
