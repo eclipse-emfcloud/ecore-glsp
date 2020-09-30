@@ -229,3 +229,7 @@ svg {
     background-color: DodgerBlue !important;
     color: #ffffff;
   }
+
+.sprotty-issue.sprotty-error {
+    stroke-width: 0;
+}

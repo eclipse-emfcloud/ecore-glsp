@@ -34,6 +34,7 @@ import org.eclipse.glsp.api.diagram.DiagramConfiguration;
 import org.eclipse.glsp.api.factory.ModelFactory;
 import org.eclipse.glsp.api.handler.ActionHandler;
 import org.eclipse.glsp.api.handler.OperationHandler;
+import org.eclipse.glsp.api.labeledit.LabelEditValidator;
 import org.eclipse.glsp.api.layout.ILayoutEngine;
 import org.eclipse.glsp.api.model.ModelStateProvider;
 import org.eclipse.glsp.api.provider.ToolPaletteItemProvider;
@@ -69,6 +70,11 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	@Override
 	protected Class<? extends ILayoutEngine> bindLayoutEngine() {
 		return EcoreLayoutEngine.class;
+	}
+
+	@Override
+	protected Class<? extends LabelEditValidator> bindLabelEditValidator() {
+		return EcoreLabelEditValidator.class;
 	}
 	
 	@Override

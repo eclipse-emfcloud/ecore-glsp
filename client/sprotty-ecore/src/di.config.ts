@@ -18,15 +18,16 @@ import {
     configureViewerOptions,
     ConsoleLogger,
     copyPasteContextMenuModule,
-    decorationModule,
     defaultGLSPModule,
     defaultModule,
     edgeLayoutModule,
+    executeCommandModule,
     expandModule,
     exportModule,
     fadeModule,
     glspCommandPaletteModule,
     glspContextMenuModule,
+    glspDecorationModule,
     glspEditLabelModule,
     GLSPGraph,
     glspHoverModule,
@@ -39,6 +40,7 @@ import {
     labelEditUiModule,
     layoutCommandsModule,
     LogLevel,
+    markerNavigatorModule,
     modelHintsModule,
     modelSourceModule,
     navigationModule,
@@ -64,7 +66,6 @@ import {
     viewportModule,
     zorderModule
 } from "@eclipse-glsp/client/lib";
-import executeCommandModule from "@eclipse-glsp/client/lib/features/execute/di.config";
 import { Container, ContainerModule } from "inversify";
 import { EditLabelUI } from "sprotty/lib";
 
@@ -140,11 +141,11 @@ export default (containerId: string): Container => {
     });
 
     const container = new Container();
-    container.load(decorationModule, validationModule, defaultModule, glspMouseToolModule, defaultGLSPModule, glspSelectModule, boundsModule, viewportModule, toolsModule,
-        glspHoverModule, fadeModule, exportModule, expandModule, openModule, buttonModule, modelSourceModule, labelEditModule, labelEditUiModule, glspEditLabelModule,
-        classDiagramModule, saveModule, executeCommandModule, toolFeedbackModule, modelHintsModule, glspContextMenuModule, glspServerCopyPasteModule,
-        copyPasteContextMenuModule, navigationModule, glspCommandPaletteModule, paletteModule, routingModule, edgeLayoutModule, zorderModule,
-        layoutCommandsModule);
+    container.load(validationModule, defaultModule, glspMouseToolModule, defaultGLSPModule, glspSelectModule, boundsModule, viewportModule, toolsModule,
+        glspHoverModule, fadeModule, exportModule, expandModule, openModule, buttonModule, modelSourceModule, labelEditUiModule, glspEditLabelModule,
+        executeCommandModule, toolFeedbackModule, modelHintsModule, glspContextMenuModule, glspServerCopyPasteModule,
+        glspCommandPaletteModule, paletteModule, routingModule, glspDecorationModule, edgeLayoutModule, zorderModule,
+        layoutCommandsModule, labelEditModule, saveModule, copyPasteContextMenuModule, navigationModule, markerNavigatorModule, classDiagramModule, );
 
     return container;
 
