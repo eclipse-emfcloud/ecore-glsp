@@ -1,5 +1,9 @@
 {
   "private": true,
+  "engines": {
+    "yarn": "1.0.x || >=1.2.1",
+    "node": ">=10.11.0 <13"
+  },
   "scripts": {
     "test": "yarn",
     "prepare": "lerna run prepare",
@@ -36,10 +40,10 @@
     "@theia/process": "1.4.0",
     "@theia/workspace": "1.4.0",
     "@theia/markers": "1.4.0",
-    "sprotty": "0.9.0-next.7868d74",
-    "sprotty-theia": "0.9.0-next.ad2794f",
-    "@eclipse-glsp/client": "0.8.0-next.e555d60",
-    "@eclipse-glsp/theia-integration": "0.8.0-next.4d0b27e"
+    "sprotty": "0.9.0",
+    "sprotty-theia": "0.9.0",
+    "@eclipse-glsp/client": "0.8.0-next.197cba73",
+    "@eclipse-glsp/theia-integration": "0.8.0-next.cef5529d"
   },
   "workspaces": [
     "sprotty-ecore",

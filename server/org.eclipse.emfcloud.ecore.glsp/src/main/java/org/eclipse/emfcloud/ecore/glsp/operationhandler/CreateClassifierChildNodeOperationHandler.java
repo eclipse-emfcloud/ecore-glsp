@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import static org.eclipse.glsp.api.jsonrpc.GLSPServerException.getOrThrow;
+import static org.eclipse.glsp.api.protocol.GLSPServerException.getOrThrow;
 
 import java.util.List;
 import java.util.function.Function;

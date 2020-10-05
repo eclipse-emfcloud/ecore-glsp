@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import static org.eclipse.glsp.api.jsonrpc.GLSPServerException.getOrThrow;
+import static org.eclipse.glsp.api.protocol.GLSPServerException.getOrThrow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
@@ -34,7 +35,7 @@ import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
-import org.eclipse.glsp.api.jsonrpc.GLSPServerException;
+import org.eclipse.glsp.api.protocol.GLSPServerException;
 import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.api.operation.kind.ApplyLabelEditOperation;
 import org.eclipse.glsp.graph.GModelElement;
@@ -61,9 +62,15 @@ public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyL
 								"No shape element for label with id " + editLabelOperation.getLabelId() + " found");
 		
 						if (node_semantic instanceof EClassifier) {
+							String oldRootURI = formatUriWithSlashes(EcoreUtil.getURI(node_semantic).fragment());
 							((EClassifier) node_semantic).setName(editLabelOperation.getText().trim());
 							// nameChange== uri change so we have to recreate the proxy here
+							// remove the old uri from the uri map
+							index.removeURI(shape.getSemanticElement().getUri());
 							shape.setSemanticElement(facade.createProxy(node_semantic));
+							// Rename all the uris for references from this element
+							String newRootURI = formatUriWithSlashes(shape.getSemanticElement().getUri());
+							index.updateReferenceRoot(oldRootURI, newRootURI);
 						}
 					break;
 				case Types.LABEL_INSTANCE:
@@ -94,6 +101,7 @@ public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyL
 					} else {
 						attributeName = inputText.trim();
 					}
+					index.removeURI(EcoreUtil.getURI(attribute_semantic).fragment().toString());
 					if (!inputText.isEmpty()) {
 						attribute_semantic.setName(attributeName);
 					}
@@ -102,6 +110,7 @@ public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyL
 				case Types.ENUMLITERAL:
 					EEnumLiteral literal_semantic = (EEnumLiteral) getOrThrow(index.getSemantic(editLabelOperation.getLabelId()),
 						"No semantic element for label with id " + editLabelOperation.getLabelId() + " found");
+					index.removeURI(EcoreUtil.getURI(literal_semantic).fragment().toString());
 					String text = editLabelOperation.getText().trim();
 					if (!text.isEmpty()) {
 						literal_semantic.setName(text);
@@ -113,7 +122,9 @@ public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyL
 					EReference reference_semantic = (EReference) getOrThrow(
 						index.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
+					String oldRootURI = EcoreUtil.getURI(reference_semantic.getEContainingClass()).fragment() + "/" + reference_semantic.getName();
 					reference_semantic.setName(editLabelOperation.getText().trim());
+					index.updateReferenceLabel(oldRootURI, editLabelOperation.getText().trim());
 					break;
 
 				case Types.LABEL_EDGE_MULTIPLICITY:
@@ -143,6 +154,10 @@ public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyL
 			}
 		}
 		return Optional.empty();
+	}
+
+	private String formatUriWithSlashes(String uri){
+		return uri.substring(2);
 	}
 
 	public static List<EClassifier> getAllEAttributeTypes(ResourceManager resManager) {

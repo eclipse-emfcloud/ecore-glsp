@@ -22,12 +22,14 @@ import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
+import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.CSS;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
-import org.eclipse.glsp.api.jsonrpc.GLSPServerException;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
+import org.eclipse.glsp.api.protocol.GLSPServerException;
 import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.graph.GGraph;
 import org.eclipse.glsp.graph.GLabel;
@@ -51,11 +53,11 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		classifierNodeFactory = new ClassifierNodeFactory(modelState, this);
 		labelFactory = new LabelFactory(modelState);
 		getOrCreateRoot();
-
 	}
 
 	@Override
 	public GModelElement create(EObject semanticElement) {
+		EcoreModelIndex index = modelState.getIndex();
 		GModelElement result = null;
 		if (semanticElement instanceof EClassifier) {
 			result = classifierNodeFactory.create((EClassifier) semanticElement);
@@ -69,6 +71,7 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		if (result == null) {
 			throw createFailed(semanticElement);
 		}
+		index.indexGModelElement(EcoreUtil.getURI(semanticElement).fragment().toString(), result);
 		return result;
 	}
 
@@ -96,9 +99,16 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 	private List<GModelElement> createEdges(EClass eClass) {
 		List<GModelElement> children = new ArrayList<>();
 		// create reference edges
-		eClass.getEReferences().stream().map(this::create).filter(Objects::nonNull).forEach(children::add);
+		for(EReference reference: eClass.getEReferences()) {
+			GEdge edge = create(reference);
+			if(edge!=null) {
+				children.add(edge);
+				modelState.getIndex().indexGModelElement(EcoreUtil.getURI(reference).fragment().toString(), edge);
+			}
+		}
 		// create inheritance edges
 		eClass.getESuperTypes().stream().map(s -> create(eClass, s)).forEach(children::add);
+		
 		return children;
 	}
 

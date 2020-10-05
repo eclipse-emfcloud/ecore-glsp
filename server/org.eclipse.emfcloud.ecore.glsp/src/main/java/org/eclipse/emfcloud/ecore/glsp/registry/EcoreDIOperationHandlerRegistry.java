@@ -92,4 +92,10 @@ public class EcoreDIOperationHandlerRegistry implements OperationHandlerRegistry
 	protected String deriveKey(final Operation key) {
 		return key.getClass().getName();
 	}
+
+	@Override
+	public Set<Operation> keys() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

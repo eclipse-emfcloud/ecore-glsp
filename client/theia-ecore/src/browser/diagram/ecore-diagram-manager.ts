@@ -8,7 +8,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
-import { EnableToolPaletteAction, RequestTypeHintsAction } from "@eclipse-glsp/client";
+import { EnableToolPaletteAction, InitializeClientSessionAction, RequestTypeHintsAction } from "@eclipse-glsp/client";
 import {
     GLSPDiagramManager,
     GLSPDiagramWidget,
@@ -81,6 +81,7 @@ export class EcoreDiagramWidget extends GLSPDiagramWidget {
             }
         });
 
+        this.actionDispatcher.dispatch(new InitializeClientSessionAction(this.id));
         this.actionDispatcher.dispatch(new RequestModelAction({
             sourceUri: this.options.uri.replace("file://", ""),
             needsClientLayout: `${this.viewerOptions.needsClientLayout}`,

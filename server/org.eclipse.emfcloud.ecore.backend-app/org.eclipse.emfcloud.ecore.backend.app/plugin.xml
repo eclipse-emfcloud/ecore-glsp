@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.emf.codegen.CodeGen"
+            name="Ecore GLSP Backend">
+         <property
+               name="appName"
+               value="Ecore GLSP Backend">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="create-genmodel"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.emfcloud.ecore.backend.app.GenModelApplication">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="create-ecore"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.emfcloud.ecore.backend.app.CreateEcoreApplication">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="codegen"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.emfcloud.ecore.backend.app.CodegenApplication">
+         </run>
+      </application>
+   </extension>
+
+</plugin>

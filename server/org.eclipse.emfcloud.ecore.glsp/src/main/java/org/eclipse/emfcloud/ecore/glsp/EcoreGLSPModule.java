@@ -10,7 +10,8 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
-import org.eclipse.emfcloud.ecore.glsp.actions.AttributeTypesAction;
+import org.eclipse.emfcloud.ecore.glsp.handler.EcoreRequestMarkersActionHandler;
+import org.eclipse.emfcloud.ecore.glsp.actions.ReturnAttributeTypesAction;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
@@ -33,16 +34,19 @@ import org.eclipse.glsp.api.diagram.DiagramConfiguration;
 import org.eclipse.glsp.api.factory.ModelFactory;
 import org.eclipse.glsp.api.handler.ActionHandler;
 import org.eclipse.glsp.api.handler.OperationHandler;
+import org.eclipse.glsp.api.labeledit.LabelEditValidator;
 import org.eclipse.glsp.api.layout.ILayoutEngine;
 import org.eclipse.glsp.api.model.ModelStateProvider;
 import org.eclipse.glsp.api.provider.ToolPaletteItemProvider;
 import org.eclipse.glsp.api.registry.OperationHandlerRegistry;
 import org.eclipse.glsp.server.actionhandler.ComputedBoundsActionHandler;
 import org.eclipse.glsp.server.actionhandler.OperationActionHandler;
+import org.eclipse.glsp.server.actionhandler.RequestMarkersHandler;
 import org.eclipse.glsp.server.actionhandler.SaveModelActionHandler;
 import org.eclipse.glsp.server.actionhandler.UndoRedoActionHandler;
 import org.eclipse.glsp.server.di.DefaultGLSPModule;
 import org.eclipse.glsp.server.di.MultiBindConfig;
+import org.eclipse.glsp.server.operationhandler.CompoundOperationHandler;
 import org.eclipse.glsp.server.operationhandler.LayoutOperationHandler;
 
 public class EcoreGLSPModule extends DefaultGLSPModule {
@@ -51,18 +55,13 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	protected void configureActionHandlers(MultiBindConfig<ActionHandler> bindings) {
 		super.configureActionHandlers(bindings);
 		bindings.add(EcoreGetAttributeTypesActionHandler.class);
+		bindings.rebind(RequestMarkersHandler.class, EcoreRequestMarkersActionHandler.class);
 		bindings.rebind(SaveModelActionHandler.class, EcoreSaveModelActionHandler.class);
 		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
 	}
 	
-	@Override
-	protected void configureActions(MultiBindConfig<Action> bindings) {
-		super.configureActions(bindings);
-		bindings.add(AttributeTypesAction.class);
-	}
-
 	@Override
 	public Class<? extends ModelFactory> bindModelFactory() {
 		return EcoreModelFactory.class;
@@ -72,10 +71,21 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	protected Class<? extends ILayoutEngine> bindLayoutEngine() {
 		return EcoreLayoutEngine.class;
 	}
+
+	@Override
+	protected Class<? extends LabelEditValidator> bindLabelEditValidator() {
+		return EcoreLabelEditValidator.class;
+	}
 	
 	@Override
 	protected Class<? extends ToolPaletteItemProvider> bindToolPaletteItemProvider() {
 		return EcoreToolPaletteItemProvider.class;
+	}
+	
+	@Override
+	protected void configureClientActions(MultiBindConfig<Action> bindings) {
+		super.configureClientActions(bindings);
+		bindings.add(ReturnAttributeTypesAction.class);
 	}
 	
 	@Override
@@ -85,6 +95,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 
 	@Override
 	protected void configureOperationHandlers(MultiBindConfig<OperationHandler> bindings) {
+		bindings.add(CompoundOperationHandler.class);
 		bindings.add(EcoreChangeBoundsOperationHandler.class);
 		bindings.add(EcoreDeleteOperationHandler.class);
 		bindings.add(CreateClassifierNodeOperationHandler.class);
