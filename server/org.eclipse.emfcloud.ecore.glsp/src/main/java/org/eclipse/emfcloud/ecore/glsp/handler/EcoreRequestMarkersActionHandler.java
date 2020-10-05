@@ -11,8 +11,6 @@ import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emfcloud.GenericValidation;
-import org.eclipse.emfcloud.ModelServerValidationResult;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
@@ -31,51 +29,24 @@ public class EcoreRequestMarkersActionHandler extends RequestMarkersHandler {
 
     @Override
     public List<Action> executeAction(final RequestMarkersAction action, final GraphicalModelState modelState) {
-        GenericValidation validation;
         String modeluri = modelState.getClientOptions().get(ClientOptions.SOURCE_URI);
         List<Marker> markers = new ArrayList<>();
-        try {
-            ModelServerClient modelServerClient = new ModelServerClient("http://localhost:8081/api/v1/");
-            validation = new GenericValidation(modelServerClient);
-            EcoreModelState ecoreModelState = EcoreModelState.getModelState(modelState);
-            EcoreModelServerAccess access = new EcoreModelServerAccess(modeluri, modelServerClient, ecoreModelState.getIndex());
-            access.setEcoreFacade(EcoreModelState.getEcoreFacade(modelState));
-            access.update();
-            Thread.sleep(1000);
-            validation.validate(modeluri);
-            Thread.sleep(1000);
-            markers = createMarkers(validation.recentValidationResultMap.get(modeluri), ecoreModelState);
-            
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-       return listOf(new SetMarkersAction(markers));
+        EcoreModelState ecoreModelState = EcoreModelState.getModelState(modelState);
+        markers = createMarkers(ecoreModelState);
+        return listOf(new SetMarkersAction(markers));
    }
 
-   public List<Marker> createMarkers(List<ModelServerValidationResult> validationResult, EcoreModelState ecoreModelState){
+   public List<Marker> createMarkers(EcoreModelState ecoreModelState){
         EcoreModelIndex index = ecoreModelState.getIndex();
         List<Marker> markers = new ArrayList();
-        for(ModelServerValidationResult r: validationResult){
-            Optional<GModelElement> gElement = index.getGModelElement(r.getIdentifier());
-            BasicDiagnostic diagnostic = r.getDiagnostic();
-            //Filter out non error messages
-            if(diagnostic.getData().size() > 1){
-                if(gElement.isPresent()){
-                    markers.add(new Marker(diagnostic.getMessage(), diagnostic.getMessage(), gElement.get().getId(), getMarkerKind(r.getDiagnostic().getSeverity())));
-                }else{
-                    markers.add(new Marker(diagnostic.getMessage(), diagnostic.getMessage(), ecoreModelState.getRoot().getId(), getMarkerKind(r.getDiagnostic().getSeverity())));
-                }
+        for(String id: index.allIds() ){
+            Optional<GModelElement> gElement = index.getGModelElement(id);
+            if(gElement.isPresent()) {
+            	markers.add(new Marker("Error", "Error message", gElement.get().getId(), MarkerKind.ERROR));
+            } else {
+            	markers.add(new Marker("Error", "Error message", index.getRoot().getId(), MarkerKind.ERROR));
             }
+   
         }
         return markers;
    }
