@@ -7,7 +7,7 @@
     testsDirectory="" testSuiteClass="org.eclipse.emfcloud.ecore.glsp.enotation.tests.EnotationAllTests"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
     editPluginID="org.eclipse.emfcloud.ecore.glsp.edit" editorPluginID="org.eclipse.emfcloud.ecore.glsp.edit"
-    testsPluginID="org.eclipse.emfcloud.ecore.glsp.edit" usedGenPackages="../../../../org.eclipse.glsp.graph/model/glsp-graph.genmodel#//graph"
+    testsPluginID="org.eclipse.emfcloud.ecore.glsp.edit" usedGenPackages="platform:/resource/org.eclipse.emfcloud.ecore.glsp/src/main/resources/glsp-graph.genmodel#//graph"
     operationReflection="true" importOrganizing="true">
   <foreignModel>enotation.ecore</foreignModel>
   <genPackages prefix="Enotation" basePackage="org.eclipse.emfcloud.ecore" disposableProviderFactory="true"
