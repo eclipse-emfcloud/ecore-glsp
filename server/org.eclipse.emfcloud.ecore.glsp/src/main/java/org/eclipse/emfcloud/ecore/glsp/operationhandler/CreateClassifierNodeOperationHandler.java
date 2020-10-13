@@ -24,11 +24,11 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.Operation;
-import org.eclipse.glsp.api.operation.kind.CreateNodeOperation;
 import org.eclipse.glsp.graph.GraphPackage;
-import org.eclipse.glsp.server.operationhandler.BasicOperationHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.BasicOperationHandler;
+import org.eclipse.glsp.server.operations.CreateNodeOperation;
+import org.eclipse.glsp.server.operations.Operation;
 
 import com.google.common.collect.Lists;
 
@@ -47,7 +47,7 @@ public class CreateClassifierNodeOperationHandler extends BasicOperationHandler<
 	}
 
 	@Override
-	public void executeOperation(CreateNodeOperation operation, GraphicalModelState modelState) {
+	public void executeOperation(CreateNodeOperation operation, GModelState modelState) {
 		String elementTypeId = operation.getElementTypeId();
 		EcoreEditorContext context = EcoreModelState.getEditorContext(modelState);
 		EcoreFacade facade = context.getEcoreFacade();
@@ -64,7 +64,7 @@ public class CreateClassifierNodeOperationHandler extends BasicOperationHandler<
 		diagram.getElements().add(shape);
 	}
 
-	protected void setName(EClassifier classifier, GraphicalModelState modelState) {
+	protected void setName(EClassifier classifier, GModelState modelState) {
 		Function<Integer, String> nameProvider = i -> "New" + classifier.eClass().getName() + i;
 		int nodeCounter = modelState.getIndex().getCounter(GraphPackage.Literals.GNODE, nameProvider);
 		classifier.setName(nameProvider.apply(nodeCounter));

@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import static org.eclipse.glsp.api.protocol.GLSPServerException.getOrThrow;
+import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
 
 import java.util.List;
 import java.util.function.Function;
@@ -25,11 +25,11 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.Operation;
-import org.eclipse.glsp.api.operation.kind.CreateNodeOperation;
 import org.eclipse.glsp.graph.GraphPackage;
-import org.eclipse.glsp.server.operationhandler.BasicOperationHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.BasicOperationHandler;
+import org.eclipse.glsp.server.operations.CreateNodeOperation;
+import org.eclipse.glsp.server.operations.Operation;
 
 public class CreateClassifierChildNodeOperationHandler extends BasicOperationHandler<CreateNodeOperation> {
 
@@ -45,7 +45,7 @@ public class CreateClassifierChildNodeOperationHandler extends BasicOperationHan
 	}
 
 	@Override
-	public void executeOperation(CreateNodeOperation operation, GraphicalModelState graphicalModelState) {
+	public void executeOperation(CreateNodeOperation operation, GModelState graphicalModelState) {
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 		EClassifier container = getOrThrow(modelState.getIndex().getSemantic(operation.getContainerId()),
 				EClassifier.class, "No valid container with id " + operation.getContainerId() + " found");

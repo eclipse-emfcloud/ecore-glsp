@@ -28,8 +28,8 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.protocol.GLSPServerException;
-import org.eclipse.glsp.api.utils.ClientOptions;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
+import org.eclipse.glsp.server.utils.ClientOptions;
 
 public class ResourceManager {
 	public static final String ECORE_EXTENSION = ".ecore";

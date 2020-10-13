@@ -27,29 +27,29 @@ import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreDeleteOperationHand
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLabelEditOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
-import org.eclipse.glsp.api.action.Action;
-import org.eclipse.glsp.api.configuration.ServerConfiguration;
-import org.eclipse.glsp.api.diagram.DiagramConfiguration;
-import org.eclipse.glsp.api.factory.ModelFactory;
-import org.eclipse.glsp.api.handler.ActionHandler;
-import org.eclipse.glsp.api.handler.OperationHandler;
-import org.eclipse.glsp.api.layout.ILayoutEngine;
-import org.eclipse.glsp.api.model.ModelStateProvider;
-import org.eclipse.glsp.api.provider.ToolPaletteItemProvider;
-import org.eclipse.glsp.api.registry.OperationHandlerRegistry;
-import org.eclipse.glsp.server.actionhandler.ComputedBoundsActionHandler;
-import org.eclipse.glsp.server.actionhandler.OperationActionHandler;
-import org.eclipse.glsp.server.actionhandler.SaveModelActionHandler;
-import org.eclipse.glsp.server.actionhandler.UndoRedoActionHandler;
-import org.eclipse.glsp.server.di.DefaultGLSPModule;
-import org.eclipse.glsp.server.di.MultiBindConfig;
-import org.eclipse.glsp.server.operationhandler.CompoundOperationHandler;
-import org.eclipse.glsp.server.operationhandler.LayoutOperationHandler;
+import org.eclipse.glsp.server.DefaultGLSPModule;
+import org.eclipse.glsp.server.actions.Action;
+import org.eclipse.glsp.server.actions.ActionHandler;
+import org.eclipse.glsp.server.actions.ComputedBoundsActionHandler;
+import org.eclipse.glsp.server.actions.SaveModelActionHandler;
+import org.eclipse.glsp.server.actions.UndoRedoActionHandler;
+import org.eclipse.glsp.server.diagram.DiagramConfiguration;
+import org.eclipse.glsp.server.factory.ModelFactory;
+import org.eclipse.glsp.server.features.toolpalette.ToolPaletteItemProvider;
+import org.eclipse.glsp.server.layout.ILayoutEngine;
+import org.eclipse.glsp.server.layout.ServerLayoutConfiguration;
+import org.eclipse.glsp.server.model.ModelStateProvider;
+import org.eclipse.glsp.server.operations.OperationActionHandler;
+import org.eclipse.glsp.server.operations.OperationHandler;
+import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
+import org.eclipse.glsp.server.operations.gmodel.CompoundOperationHandler;
+import org.eclipse.glsp.server.operations.gmodel.LayoutOperationHandler;
+import org.eclipse.glsp.server.utils.MultiBinding;
 
 public class EcoreGLSPModule extends DefaultGLSPModule {
 
 	@Override
-	protected void configureActionHandlers(MultiBindConfig<ActionHandler> bindings) {
+	protected void configureActionHandlers(MultiBinding<ActionHandler> bindings) {
 		super.configureActionHandlers(bindings);
 		bindings.add(EcoreGetAttributeTypesActionHandler.class);
 		bindings.rebind(SaveModelActionHandler.class, EcoreSaveModelActionHandler.class);
@@ -74,7 +74,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	}
 	
 	@Override
-	protected void configureClientActions(MultiBindConfig<Action> bindings) {
+	protected void configureClientActions(MultiBinding<Action> bindings) {
 		super.configureClientActions(bindings);
 		bindings.add(ReturnAttributeTypesAction.class);
 	}
@@ -85,7 +85,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	}
 
 	@Override
-	protected void configureOperationHandlers(MultiBindConfig<OperationHandler> bindings) {
+	protected void configureOperationHandlers(MultiBinding<OperationHandler> bindings) {
 		bindings.add(CompoundOperationHandler.class);
 		bindings.add(EcoreChangeBoundsOperationHandler.class);
 		bindings.add(EcoreDeleteOperationHandler.class);
@@ -98,7 +98,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	}
 
 	@Override
-	protected Class<? extends ServerConfiguration> bindServerConfiguration() {
+	protected Class<? extends ServerLayoutConfiguration> bindServerLayoutConfiguration() {
 		return EcoreServerConfiguration.class;
 	}
 
@@ -108,7 +108,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	}
 
 	@Override
-	protected void configureDiagramConfigurations(MultiBindConfig<DiagramConfiguration> bindings) {
+	protected void configureDiagramConfigurations(MultiBinding<DiagramConfiguration> bindings) {
 		bindings.add(EcoreDiagramConfiguration.class);
 	}
 

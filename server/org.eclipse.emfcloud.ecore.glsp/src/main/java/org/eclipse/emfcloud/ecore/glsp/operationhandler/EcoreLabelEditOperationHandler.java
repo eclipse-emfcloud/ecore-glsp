@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import static org.eclipse.glsp.api.protocol.GLSPServerException.getOrThrow;
+import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,17 +34,17 @@ import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
-import org.eclipse.glsp.api.protocol.GLSPServerException;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.kind.ApplyLabelEditOperation;
 import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.GNode;
-import org.eclipse.glsp.server.operationhandler.BasicOperationHandler;
+import org.eclipse.glsp.server.features.directediting.ApplyLabelEditOperation;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.BasicOperationHandler;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
 
 public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyLabelEditOperation> {
 
 	@Override
-	public void executeOperation(ApplyLabelEditOperation editLabelOperation, GraphicalModelState graphicalModelState) {
+	public void executeOperation(ApplyLabelEditOperation editLabelOperation, GModelState graphicalModelState) {
 		EcoreFacade facade = EcoreModelState.getEcoreFacade(graphicalModelState);
 		EcoreModelIndex index = EcoreModelState.getModelState(graphicalModelState).getIndex();
 		Optional<String> type = index.findElementByClass(editLabelOperation.getLabelId(), GModelElement.class).map(e -> e.getType());

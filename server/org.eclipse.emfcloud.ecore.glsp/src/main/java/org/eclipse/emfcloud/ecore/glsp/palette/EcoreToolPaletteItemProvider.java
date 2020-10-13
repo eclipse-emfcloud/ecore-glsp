@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
-import org.eclipse.glsp.api.action.kind.TriggerEdgeCreationAction;
-import org.eclipse.glsp.api.action.kind.TriggerNodeCreationAction;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.provider.ToolPaletteItemProvider;
-import org.eclipse.glsp.api.types.PaletteItem;
+import org.eclipse.glsp.server.actions.TriggerEdgeCreationAction;
+import org.eclipse.glsp.server.actions.TriggerNodeCreationAction;
+import org.eclipse.glsp.server.features.toolpalette.PaletteItem;
+import org.eclipse.glsp.server.features.toolpalette.ToolPaletteItemProvider;
+import org.eclipse.glsp.server.model.GModelState;
 
 import com.google.common.collect.Lists;
 
 public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 
 	@Override
-	public List<PaletteItem> getItems(Map<String, String> args, GraphicalModelState modelState) {
+	public List<PaletteItem> getItems(Map<String, String> args, GModelState modelState) {
 		System.err.println("Create palette");
 		return Lists.newArrayList(classifiers(), relations(), features());
 	}

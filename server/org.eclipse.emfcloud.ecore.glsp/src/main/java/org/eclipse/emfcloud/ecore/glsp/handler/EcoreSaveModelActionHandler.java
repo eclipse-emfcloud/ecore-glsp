@@ -13,16 +13,16 @@ package org.eclipse.emfcloud.ecore.glsp.handler;
 import java.util.List;
 
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.action.Action;
-import org.eclipse.glsp.api.action.kind.SaveModelAction;
-import org.eclipse.glsp.api.action.kind.SetDirtyStateAction;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.server.actionhandler.BasicActionHandler;
+import org.eclipse.glsp.server.actions.Action;
+import org.eclipse.glsp.server.actions.BasicActionHandler;
+import org.eclipse.glsp.server.actions.SaveModelAction;
+import org.eclipse.glsp.server.actions.SetDirtyStateAction;
+import org.eclipse.glsp.server.model.GModelState;
 
 public class EcoreSaveModelActionHandler extends BasicActionHandler<SaveModelAction> {
 
 	@Override
-	protected List<Action> executeAction(SaveModelAction action, GraphicalModelState modelState) {
+	protected List<Action> executeAction(SaveModelAction action, GModelState modelState) {
 		EcoreModelState.getResourceManager(modelState).save();
 		modelState.saveIsDone();
 		return List.of(new SetDirtyStateAction(modelState.isDirty()));

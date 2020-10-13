@@ -23,13 +23,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
-import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.graph.GModelIndex;
-import org.eclipse.glsp.server.operationhandler.DeleteOperationHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.gmodel.DeleteOperationHandler;
 
 public class EcoreDeleteOperationHandler extends DeleteOperationHandler {
 	@Override
-	protected boolean delete(String elementId, GModelIndex index, GraphicalModelState graphicalModelState) {
+	protected boolean delete(String elementId, GModelIndex index, GModelState graphicalModelState) {
 		super.delete(elementId, index, graphicalModelState);
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 		

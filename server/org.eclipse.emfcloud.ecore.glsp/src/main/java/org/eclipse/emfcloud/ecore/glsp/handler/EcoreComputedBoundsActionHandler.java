@@ -14,18 +14,18 @@ import java.util.List;
 
 import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.action.Action;
-import org.eclipse.glsp.api.action.ActionMessage;
-import org.eclipse.glsp.api.action.ActionDispatcher;
-import org.eclipse.glsp.api.action.kind.ComputedBoundsAction;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.kind.LayoutOperation;
-import org.eclipse.glsp.api.types.ElementAndBounds;
-import org.eclipse.glsp.api.utils.LayoutUtil;
 import org.eclipse.glsp.graph.GDimension;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.GPoint;
-import org.eclipse.glsp.server.actionhandler.ComputedBoundsActionHandler;
+import org.eclipse.glsp.server.actions.Action;
+import org.eclipse.glsp.server.actions.ActionDispatcher;
+import org.eclipse.glsp.server.actions.ActionMessage;
+import org.eclipse.glsp.server.actions.ComputedBoundsAction;
+import org.eclipse.glsp.server.actions.ComputedBoundsActionHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.LayoutOperation;
+import org.eclipse.glsp.server.types.ElementAndBounds;
+import org.eclipse.glsp.server.utils.LayoutUtil;
 
 import com.google.inject.Inject;
 
@@ -35,7 +35,7 @@ public class EcoreComputedBoundsActionHandler extends ComputedBoundsActionHandle
 	private ActionDispatcher actionDispatcher;
 
 	@Override
-	public List<Action> executeAction(ComputedBoundsAction computedBoundsAction, GraphicalModelState graphicalModelState) {
+	public List<Action> executeAction(ComputedBoundsAction computedBoundsAction, GModelState graphicalModelState) {
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 
 		for (ElementAndBounds element : computedBoundsAction.getBounds()) {

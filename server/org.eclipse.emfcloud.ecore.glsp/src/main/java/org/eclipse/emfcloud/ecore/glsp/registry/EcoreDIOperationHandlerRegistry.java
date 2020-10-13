@@ -12,17 +12,18 @@ package org.eclipse.emfcloud.ecore.glsp.registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.glsp.api.handler.OperationHandler;
-import org.eclipse.glsp.api.operation.Operation;
-import org.eclipse.glsp.api.registry.MapRegistry;
-import org.eclipse.glsp.api.registry.OperationHandlerRegistry;
-import org.eclipse.glsp.api.utils.ReflectionUtil;
-import org.eclipse.glsp.server.registry.DIOperationHandlerRegistry;
+import org.eclipse.glsp.server.internal.di.DIOperationHandlerRegistry;
+import org.eclipse.glsp.server.internal.util.ReflectionUtil;
+import org.eclipse.glsp.server.operations.Operation;
+import org.eclipse.glsp.server.operations.OperationHandler;
+import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
 
 import com.google.inject.Inject;
 
@@ -38,12 +39,11 @@ import com.google.inject.Inject;
  */
 public class EcoreDIOperationHandlerRegistry implements OperationHandlerRegistry {
 
-	private final MapRegistry<String, List<OperationHandler>> internalRegistry;
+	private final Map<String, List<OperationHandler>> internalRegistry;
 
 	@Inject
 	public EcoreDIOperationHandlerRegistry(Set<OperationHandler> handlers) {
-		internalRegistry = new MapRegistry<>() {
-		};
+		internalRegistry = new HashMap<>();
 		handlers.forEach(handler -> {
 			ReflectionUtil.construct(handler.getHandledOperationType())
 					.ifPresent(operation -> register(operation, handler));
@@ -54,15 +54,14 @@ public class EcoreDIOperationHandlerRegistry implements OperationHandlerRegistry
 	public boolean register(final Operation key, final OperationHandler handler) {
 		String keyStr = deriveKey(key);
 		List<OperationHandler> handlers;
-		if (!internalRegistry.hasKey(keyStr)) {
+		if (!internalRegistry.containsKey(keyStr)) {
 			handlers = new ArrayList<>();
-			internalRegistry.register(keyStr, handlers);
+			internalRegistry.put(keyStr, handlers);
 		} else {
-			Optional<List<OperationHandler>> optional = internalRegistry.get(keyStr);
-			if (! optional.isPresent()) {
+			handlers = internalRegistry.get(keyStr);
+			if (handlers == null) {
 				return false;
 			}
-			handlers = optional.get();
 		}
 		handlers.add(handler);
 		return true;
@@ -70,26 +69,32 @@ public class EcoreDIOperationHandlerRegistry implements OperationHandlerRegistry
 
 	@Override
 	public boolean deregister(final Operation key) {
-		return internalRegistry.deregister(deriveKey(key));
+		return internalRegistry.remove(deriveKey(key)) != null;
 	}
 
 	@Override
 	public boolean hasKey(final Operation key) {
-		return internalRegistry.hasKey(deriveKey(key));
+		return internalRegistry.containsKey(deriveKey(key));
 	}
 
 	@Override
 	public Optional<OperationHandler> get(final Operation key) {
-		return internalRegistry.get(deriveKey(key))
+		return Optional.ofNullable(internalRegistry.get(deriveKey(key)))
 				.flatMap(list -> list.stream().filter(handler -> handler.handles(key)).findFirst());
 	}
 
 	@Override
 	public Set<OperationHandler> getAll() {
-		return internalRegistry.getAll().stream().flatMap(Collection::stream).collect(Collectors.toSet());
+		return internalRegistry.values().stream().flatMap(Collection::stream).collect(Collectors.toSet());
 	}
 
 	protected String deriveKey(final Operation key) {
 		return key.getClass().getName();
+	}
+
+	@Override
+	public Set<Operation> keys() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
