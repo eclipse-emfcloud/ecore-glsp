@@ -21,7 +21,7 @@ import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.ChangeRoutingPointsOperation;
 import org.eclipse.glsp.server.types.ElementAndRoutingPoints;
 
-public class ChangeRoutingPointsOperationHandler extends BasicOperationHandler<ChangeRoutingPointsOperation> {
+public class EcoreChangeRoutingPointsOperationHandler extends BasicOperationHandler<ChangeRoutingPointsOperation> {
 
     @Override
     public void executeOperation(ChangeRoutingPointsOperation operation, GModelState modelState) {

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -37,9 +38,11 @@ import com.google.common.base.Preconditions;
 
 public class EcoreFacade {
 
+	private static Logger LOGGER = Logger.getLogger(EcoreFacade.class);
+
 	private final Resource semanticResource;
 	private final Resource notationResource;
-	private final EPackage ePackage;
+	private EPackage ePackage;
 
 	private boolean diagramIsNewlyCreated = false;
 
@@ -50,8 +53,7 @@ public class EcoreFacade {
 		this.semanticResource = semanticResource;
 		this.notationResource = notationResource;
 		this.modelIndex = modelIndex;
-		this.ePackage = semanticResource.getContents().stream().filter(EPackage.class::isInstance)
-				.map(EPackage.class::cast).findFirst().orElseThrow();
+		this.setEPackage();
 		EcoreUtil.resolveAll(ePackage);
 	}
 
@@ -65,6 +67,11 @@ public class EcoreFacade {
 
 	public EPackage getEPackage() {
 		return this.ePackage;
+	}
+
+	private void setEPackage() {
+		this.ePackage = semanticResource.getContents().stream().filter(EPackage.class::isInstance)
+				.map(EPackage.class::cast).findFirst().orElseThrow();
 	}
 
 	public Diagram getDiagram() {
@@ -118,6 +125,7 @@ public class EcoreFacade {
 	private Diagram createDiagram() {
 		Diagram diagram = EnotationFactory.eINSTANCE.createDiagram();
 		diagram.setSemanticElement(createProxy(ePackage));
+		notationResource.getContents().clear();
 		notationResource.getContents().add(diagram);
 		diagramIsNewlyCreated = true;
 		return diagram;
@@ -129,17 +137,34 @@ public class EcoreFacade {
 
 	}
 
-	public Shape initializeShape(EObject semanticElement) {
-		return initializeShape(semanticElement, null);
-	}
-
 	public Shape initializeShape(EObject semanticElement, GShapeElement shapeElement) {
 		Shape shape = EnotationFactory.eINSTANCE.createShape();
 		shape.setSemanticElement(createProxy(semanticElement));
 		if (shapeElement != null) {
 			updateShape(shape, shapeElement);
-
 		}
+		modelIndex.indexNotation(shape);
+		return shape;
+	}
+
+	public void createShape(Optional<GPoint> position) {
+		Shape shape = EnotationFactory.eINSTANCE.createShape();
+		shape.setPosition(position.orElse(GraphUtil.point(0, 0)));
+		diagram.getElements().add(shape);
+	}
+
+	public void initializeNotationElement(NotationElement element, EObject semanticElement) {
+		element.setSemanticElement(createProxy(semanticElement));
+		modelIndex.indexNotation(element);
+	}
+
+	public List<NotationElement> findUninitializedElements() {
+		return diagram.getElements().stream().filter(element -> element.getSemanticElement() == null)
+				.collect(Collectors.toList());
+	}
+
+	public Shape initializeShape(Shape shape, EObject semanticElement) {
+		shape.setSemanticElement(createProxy(semanticElement));
 		modelIndex.indexNotation(shape);
 		return shape;
 	}
@@ -192,10 +217,11 @@ public class EcoreFacade {
 	public void updateShape(Shape shape, GShapeElement shapeElement) {
 		if (shapeElement.getSize() != null) {
 			shape.setSize(GraphUtil.copy(shapeElement.getSize()));
-
 		}
 		if (shapeElement.getPosition() != null) {
 			shape.setPosition(GraphUtil.copy(shapeElement.getPosition()));
+		} else if (shape.getPosition() != null) {
+			shapeElement.setPosition(GraphUtil.copy(shape.getPosition()));
 		}
 	}
 
@@ -225,6 +251,18 @@ public class EcoreFacade {
 
 		}
 		return false;
+	}
+
+	public void resetSemanticResource(EObject newRoot) {
+		semanticResource.getContents().clear();
+		semanticResource.getContents().add(newRoot);
+		this.setEPackage();
+	}
+
+	public void resetNotationResource(GModelRoot gModelRoot) {
+		diagram = null;
+		getOrCreateDiagram();
+		initialize(diagram, gModelRoot);
 	}
 
 }
