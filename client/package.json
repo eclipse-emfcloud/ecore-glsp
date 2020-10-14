@@ -30,25 +30,31 @@
     "testcafe": "^1.7.1"
   },
   "resolutions": {
-    "**/@theia/core": "1.4.0",
-    "@theia/core": "1.4.0",
-    "@theia/editor": "1.4.0",
-    "@theia/filesystem": "1.4.0",
-    "@theia/messages": "1.4.0",
-    "@theia/languages": "1.4.0",
-    "@theia/monaco": "1.4.0",
-    "@theia/process": "1.4.0",
-    "@theia/workspace": "1.4.0",
-    "@theia/markers": "1.4.0",
-    "sprotty": "0.9.0",
-    "sprotty-theia": "0.9.0",
-    "@eclipse-glsp/client": "0.8.0-next.197cba73",
-    "@eclipse-glsp/theia-integration": "0.8.0-next.cef5529d"
+    "**/@theia/application-manager": "^1.4.0",
+    "**/@theia/application-package": "^1.4.0",
+    "**/@theia/core": "^1.4.0",
+    "**/@theia/editor": "^1.4.0",
+    "**/@theia/filesystem": "^1.4.0",
+    "**/@theia/languages": "^1.4.0",
+    "**/@theia/markers": "^1.4.0",
+    "**/@theia/messages": "^1.4.0",
+    "**/@theia/monaco": "^1.4.0",
+    "**/@theia/navigator": "^1.4.0",
+    "**/@theia/preferences": "^1.4.0",
+    "**/@theia/process": "^1.4.0",
+    "**/@theia/terminal": "^1.4.0",
+    "**/@theia/workspace": "^1.4.0",
+    "**/sprotty": "0.9.0",
+    "**/sprotty-theia": "0.9.0",
+    "**/@eclipse-glsp/client": "0.8.0-next.197cba73",
+    "**/@eclipse-glsp/theia-integration": "0.8.0-next.cef5529d",
+    "**/@eclipse-emfcloud/modelserver-theia": "0.8.0-next.225bc98"
   },
   "workspaces": [
+    "browser-app",
+    "ecore-server",
     "sprotty-ecore",
-    "theia-ecore",
-    "browser-app"
+    "theia-ecore"
   ],
   "dependencies": {
     "yarn": "^1.22.4"

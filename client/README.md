@@ -1,5 +1,5 @@
-# theia-ecore
-The example of how to build the Theia-based applications with the theia-ecore.
+# ecore-glsp client
+The example of how to build the Theia-based applications with the ecore-glsp.
 
 ## Getting started
 
@@ -19,7 +19,7 @@ Install yarn.
 ## Remarks regarding glsp-server start up
 You will need openjdk >= 11 on your path, as the client starts the ecore-glsp-server.
 
-Before you start the browser or electron application you have to run the `mvn clean install` on the server application. This copies a build artifact into the build folder of theia-glsp-server.
+Before you start the browser or electron application you have to run the build script `build.sh` in the root directory (this is also explained in the README file there). This copies the build artifacts into the build folder of `ecore-server` package.
 
 ## Running the browser example
 
