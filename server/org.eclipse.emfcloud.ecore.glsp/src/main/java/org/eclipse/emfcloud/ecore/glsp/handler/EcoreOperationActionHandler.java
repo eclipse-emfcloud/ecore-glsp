@@ -17,19 +17,19 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreRecordingCommand;
 import org.eclipse.emfcloud.ecore.glsp.gmodel.GModelFactory;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.action.Action;
-import org.eclipse.glsp.api.action.kind.RequestBoundsAction;
-import org.eclipse.glsp.api.action.kind.SetDirtyStateAction;
-import org.eclipse.glsp.api.handler.OperationHandler;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.Operation;
 import org.eclipse.glsp.graph.GModelRoot;
-import org.eclipse.glsp.server.actionhandler.OperationActionHandler;
+import org.eclipse.glsp.server.actions.Action;
+import org.eclipse.glsp.server.actions.RequestBoundsAction;
+import org.eclipse.glsp.server.actions.SetDirtyStateAction;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.Operation;
+import org.eclipse.glsp.server.operations.OperationActionHandler;
+import org.eclipse.glsp.server.operations.OperationHandler;
 
 public class EcoreOperationActionHandler extends OperationActionHandler {
 
 	@Override
-	public List<Action> executeAction(Operation operation, GraphicalModelState modelState) {
+	public List<Action> executeAction(Operation operation, GModelState modelState) {
 		// Disable the special handling for CreateOperation, as we don't register
 		// 1 handler per element type to create.
 		Optional<? extends OperationHandler> operationHandler = operationHandlerRegistry.get(operation);
@@ -41,7 +41,7 @@ public class EcoreOperationActionHandler extends OperationActionHandler {
 
 	@Override
 	protected List<Action> executeHandler(Operation operation, OperationHandler handler,
-			GraphicalModelState graphicalModelState) {
+			GModelState graphicalModelState) {
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 		EcoreEditorContext context = modelState.getEditorContext();
 		String label = handler.getLabel();

@@ -13,18 +13,18 @@ package org.eclipse.emfcloud.ecore.glsp.model;
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
-import org.eclipse.glsp.api.action.kind.RequestModelAction;
-import org.eclipse.glsp.api.factory.ModelFactory;
-import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.builder.impl.GGraphBuilder;
+import org.eclipse.glsp.server.actions.RequestModelAction;
+import org.eclipse.glsp.server.factory.ModelFactory;
+import org.eclipse.glsp.server.model.GModelState;
 
 public class EcoreModelFactory implements ModelFactory {
 	private static final String ROOT_ID = "sprotty";
 
 	@Override
-	public GModelRoot loadModel(RequestModelAction action, GraphicalModelState graphicalModelState) {
+	public GModelRoot loadModel(RequestModelAction action, GModelState graphicalModelState) {
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 		graphicalModelState.setClientOptions(action.getOptions());
 

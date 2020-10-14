@@ -15,17 +15,17 @@ import org.eclipse.elk.alg.layered.options.LayeredOptions;
 import org.eclipse.elk.core.options.EdgeLabelPlacement;
 import org.eclipse.elk.graph.ElkGraphElement;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.model.GraphicalModelState;
 import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GGraph;
 import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.layout.ElkLayoutEngine;
 import org.eclipse.glsp.layout.GLSPLayoutConfigurator;
+import org.eclipse.glsp.server.model.GModelState;
 
 public class EcoreLayoutEngine extends ElkLayoutEngine {
 
 	@Override
-	public void layout(GraphicalModelState modelState) {
+	public void layout(GModelState modelState) {
 		GModelElement root = modelState.getRoot();
 		if (root instanceof GGraph) {
 			GLSPLayoutConfigurator configurator = new GLSPLayoutConfigurator();

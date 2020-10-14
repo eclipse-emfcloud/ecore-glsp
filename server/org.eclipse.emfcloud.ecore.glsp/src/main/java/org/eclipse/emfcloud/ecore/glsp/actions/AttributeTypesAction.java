@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.actions;
 
-import org.eclipse.glsp.api.action.kind.RequestAction;
+import org.eclipse.glsp.server.actions.RequestAction;
 
 public class AttributeTypesAction extends RequestAction<ReturnAttributeTypesAction> {
 

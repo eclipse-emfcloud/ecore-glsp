@@ -27,7 +27,6 @@ import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.CSS;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
-import org.eclipse.glsp.api.protocol.GLSPServerException;
 import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.graph.GGraph;
 import org.eclipse.glsp.graph.GLabel;
@@ -40,6 +39,7 @@ import org.eclipse.glsp.graph.builder.impl.GGraphBuilder;
 import org.eclipse.glsp.graph.builder.impl.GLabelBuilder;
 import org.eclipse.glsp.graph.util.GConstants;
 import org.eclipse.glsp.graph.util.GraphUtil;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
 
 public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement> {
 

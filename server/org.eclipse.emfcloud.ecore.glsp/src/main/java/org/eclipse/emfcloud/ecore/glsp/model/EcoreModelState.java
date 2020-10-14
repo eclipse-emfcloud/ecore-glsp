@@ -15,29 +15,29 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.server.model.ModelStateImpl;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.model.GModelStateImpl;
 
-public class EcoreModelState extends ModelStateImpl implements GraphicalModelState {
+public class EcoreModelState extends GModelStateImpl implements GModelState {
 
 	private EcoreEditorContext editorContext;
 
-	public static EcoreModelState getModelState(GraphicalModelState state) {
+	public static EcoreModelState getModelState(GModelState state) {
 		if (!(state instanceof EcoreModelState)) {
 			throw new IllegalArgumentException("Argument must be a EcoreModelState");
 		}
 		return ((EcoreModelState) state);
 	}
 
-	public static EcoreEditorContext getEditorContext(GraphicalModelState state) {
+	public static EcoreEditorContext getEditorContext(GModelState state) {
 		return getModelState(state).getEditorContext();
 	}
 
-	public static ResourceManager getResourceManager(GraphicalModelState modelState) {
+	public static ResourceManager getResourceManager(GModelState modelState) {
 		return getEditorContext(modelState).getResourceManager();
 	}
 
-	public static EcoreFacade getEcoreFacade(GraphicalModelState modelState) {
+	public static EcoreFacade getEcoreFacade(GModelState modelState) {
 		return getEditorContext(modelState).getEcoreFacade();
 	}
 

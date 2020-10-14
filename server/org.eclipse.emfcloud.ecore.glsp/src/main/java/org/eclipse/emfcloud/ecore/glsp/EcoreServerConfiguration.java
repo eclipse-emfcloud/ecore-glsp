@@ -10,10 +10,10 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
-import org.eclipse.glsp.api.configuration.ServerConfiguration;
-import org.eclipse.glsp.api.layout.ServerLayoutKind;
+import org.eclipse.glsp.server.layout.ServerLayoutConfiguration;
+import org.eclipse.glsp.server.layout.ServerLayoutKind;
 
-public class EcoreServerConfiguration implements ServerConfiguration {
+public class EcoreServerConfiguration implements ServerLayoutConfiguration {
 
 	@Override
 	public ServerLayoutKind getLayoutKind() {

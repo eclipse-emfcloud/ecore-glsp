@@ -10,7 +10,7 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import static org.eclipse.glsp.api.protocol.GLSPServerException.getOrThrow;
+import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
 
 import java.util.List;
 
@@ -24,11 +24,11 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.Operation;
-import org.eclipse.glsp.api.operation.kind.CreateEdgeOperation;
 import org.eclipse.glsp.graph.GEdge;
-import org.eclipse.glsp.server.operationhandler.BasicOperationHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.BasicOperationHandler;
+import org.eclipse.glsp.server.operations.CreateEdgeOperation;
+import org.eclipse.glsp.server.operations.Operation;
 
 import com.google.common.collect.Lists;
 
@@ -46,7 +46,7 @@ public class CreateEcoreEdgeOperationHandler extends BasicOperationHandler<Creat
 	}
 
 	@Override
-	public void executeOperation(CreateEdgeOperation operation, GraphicalModelState modelState) {
+	public void executeOperation(CreateEdgeOperation operation, GModelState modelState) {
 		String elementTypeId = operation.getElementTypeId();
 
 		EcoreEditorContext context = EcoreModelState.getEditorContext(modelState);

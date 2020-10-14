@@ -12,7 +12,7 @@ package org.eclipse.emfcloud.ecore.glsp.actions;
 
 import java.util.List;
 
-import org.eclipse.glsp.api.action.kind.ResponseAction;
+import org.eclipse.glsp.server.actions.ResponseAction;
 
 public class ReturnAttributeTypesAction extends ResponseAction {
 

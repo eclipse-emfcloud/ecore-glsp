@@ -15,16 +15,16 @@ import java.util.List;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.kind.ChangeRoutingPointsOperation;
-import org.eclipse.glsp.api.types.ElementAndRoutingPoints;
 import org.eclipse.glsp.graph.GPoint;
-import org.eclipse.glsp.server.operationhandler.BasicOperationHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.BasicOperationHandler;
+import org.eclipse.glsp.server.operations.ChangeRoutingPointsOperation;
+import org.eclipse.glsp.server.types.ElementAndRoutingPoints;
 
 public class ChangeRoutingPointsOperationHandler extends BasicOperationHandler<ChangeRoutingPointsOperation> {
 
     @Override
-    public void executeOperation(ChangeRoutingPointsOperation operation, GraphicalModelState modelState) {
+    public void executeOperation(ChangeRoutingPointsOperation operation, GModelState modelState) {
         EcoreModelIndex index = EcoreModelState.getModelState(modelState).getIndex();
         rerouteEdge(operation, index);
     }

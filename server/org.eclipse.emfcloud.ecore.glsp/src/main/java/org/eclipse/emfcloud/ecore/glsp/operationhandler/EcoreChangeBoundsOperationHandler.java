@@ -13,17 +13,17 @@ package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.api.model.GraphicalModelState;
-import org.eclipse.glsp.api.operation.kind.ChangeBoundsOperation;
-import org.eclipse.glsp.api.types.ElementAndBounds;
 import org.eclipse.glsp.graph.GDimension;
 import org.eclipse.glsp.graph.GPoint;
-import org.eclipse.glsp.server.operationhandler.BasicOperationHandler;
+import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.operations.BasicOperationHandler;
+import org.eclipse.glsp.server.operations.ChangeBoundsOperation;
+import org.eclipse.glsp.server.types.ElementAndBounds;
 
 public class EcoreChangeBoundsOperationHandler extends BasicOperationHandler<ChangeBoundsOperation> {
 
 	@Override
-	public void executeOperation(ChangeBoundsOperation changeBoundsOperation, GraphicalModelState graphicalModelState) {
+	public void executeOperation(ChangeBoundsOperation changeBoundsOperation, GModelState graphicalModelState) {
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 		applyBounds(changeBoundsOperation, modelState.getIndex());
 	}
