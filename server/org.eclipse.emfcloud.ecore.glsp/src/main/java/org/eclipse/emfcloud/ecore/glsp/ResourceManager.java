@@ -134,11 +134,9 @@ public class ResourceManager {
 		return resourceSet.createResource(URI.createFileURI(path));
 	}
 
-	public void save() {
+	public void saveNotationResource() {
 		try {
-			ecoreFacade.getSemanticResource().save(Collections.EMPTY_MAP);
 			ecoreFacade.getNotationResource().save(Collections.EMPTY_MAP);
-			handleSaveErrors(ecoreFacade.getSemanticResource());
 			handleSaveErrors(ecoreFacade.getNotationResource());
 		} catch (IOException e) {
 			throw new GLSPServerException("Could not save notation resource", e);

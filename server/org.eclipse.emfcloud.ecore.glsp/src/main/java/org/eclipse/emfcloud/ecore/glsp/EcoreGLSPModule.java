@@ -18,11 +18,11 @@ import org.eclipse.emfcloud.ecore.glsp.handler.EcoreSaveModelActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreUndoRedoActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelFactory;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelStateProvider;
-import org.eclipse.emfcloud.ecore.glsp.operationhandler.ChangeRoutingPointsOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.CreateClassifierChildNodeOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.CreateClassifierNodeOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.CreateEcoreEdgeOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreChangeBoundsOperationHandler;
+import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreChangeRoutingPointsOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreDeleteOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLabelEditOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
@@ -45,7 +45,10 @@ import org.eclipse.glsp.server.model.ModelStateProvider;
 import org.eclipse.glsp.server.operations.OperationActionHandler;
 import org.eclipse.glsp.server.operations.OperationHandler;
 import org.eclipse.glsp.server.operations.OperationHandlerRegistry;
+import org.eclipse.glsp.server.operations.gmodel.ChangeBoundsOperationHandler;
+import org.eclipse.glsp.server.operations.gmodel.ChangeRoutingPointsHandler;
 import org.eclipse.glsp.server.operations.gmodel.CompoundOperationHandler;
+import org.eclipse.glsp.server.operations.gmodel.DeleteOperationHandler;
 import org.eclipse.glsp.server.operations.gmodel.LayoutOperationHandler;
 import org.eclipse.glsp.server.protocol.GLSPServer;
 import org.eclipse.glsp.server.utils.MultiBinding;
@@ -93,13 +96,13 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	protected void configureOperationHandlers(MultiBinding<OperationHandler> bindings) {
 		super.configureOperationHandlers(bindings);
 		bindings.add(CompoundOperationHandler.class);
-		bindings.add(EcoreChangeBoundsOperationHandler.class);
-		bindings.add(EcoreDeleteOperationHandler.class);
+		bindings.rebind(ChangeBoundsOperationHandler.class, EcoreChangeBoundsOperationHandler.class);
+		bindings.rebind(DeleteOperationHandler.class, EcoreDeleteOperationHandler.class);
 		bindings.add(CreateClassifierNodeOperationHandler.class);
 		bindings.add(CreateEcoreEdgeOperationHandler.class);
 		bindings.add(CreateClassifierChildNodeOperationHandler.class);
 		bindings.add(EcoreLabelEditOperationHandler.class);
-		bindings.add(ChangeRoutingPointsOperationHandler.class);
+		bindings.rebind(ChangeRoutingPointsHandler.class, EcoreChangeRoutingPointsOperationHandler.class);
 		bindings.add(LayoutOperationHandler.class);
 	}
 

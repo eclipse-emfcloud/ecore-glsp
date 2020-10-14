@@ -16,11 +16,7 @@ import java.util.function.Function;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emfcloud.ecore.enotation.Diagram;
-import org.eclipse.emfcloud.ecore.enotation.Shape;
-import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
@@ -29,12 +25,18 @@ import org.eclipse.glsp.graph.GraphPackage;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.CreateNodeOperation;
 import org.eclipse.glsp.server.operations.Operation;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
 
 import com.google.common.collect.Lists;
 
-public class CreateClassifierNodeOperationHandler extends ModelServerAwareBasicOperationHandler<CreateNodeOperation> {
+public class CreateClassifierNodeOperationHandler
+		extends ModelServerAwareBasicCreateOperationHandler<CreateNodeOperation> {
 
-	private List<String> handledElementTypeIds = Lists.newArrayList(Types.ECLASS, Types.ENUM, Types.INTERFACE,
+	public CreateClassifierNodeOperationHandler() {
+		super(handledElementTypeIds);
+	}
+
+	private static List<String> handledElementTypeIds = Lists.newArrayList(Types.ECLASS, Types.ENUM, Types.INTERFACE,
 			Types.ABSTRACT, Types.DATATYPE);
 
 	@Override
@@ -49,20 +51,17 @@ public class CreateClassifierNodeOperationHandler extends ModelServerAwareBasicO
 	@Override
 	public void executeOperation(CreateNodeOperation operation, GModelState modelState,
 			EcoreModelServerAccess modelAccess) throws Exception {
-		String elementTypeId = operation.getElementTypeId();
-		EcoreEditorContext context = EcoreModelState.getEditorContext(modelState);
-		EcoreFacade facade = context.getEcoreFacade();
-		EPackage ePackage = facade.getEPackage();
-		EClassifier eClassifier = createClassifier(elementTypeId);
 
+		EClassifier eClassifier = createClassifier(operation.getElementTypeId());
 		setName(eClassifier, modelState);
-		ePackage.getEClassifiers().add(eClassifier);
-		Diagram diagram = facade.getDiagram();
-		Shape shape = facade.initializeShape(eClassifier);
-		if (operation.getLocation() != null) {
-			operation.getLocation().ifPresent(shape::setPosition);
+
+		EcoreFacade facade = EcoreModelState.getEcoreFacade(modelState);
+		facade.createShape(operation.getLocation());
+
+		if (!modelAccess.addEClassifier(EcoreModelState.getModelState(modelState), eClassifier)) {
+			throw new GLSPServerException(
+					"Could not execute create operation on eClassifier: " + eClassifier.getName());
 		}
-		diagram.getElements().add(shape);
 	}
 
 	protected void setName(EClassifier classifier, GModelState modelState) {
@@ -72,7 +71,7 @@ public class CreateClassifierNodeOperationHandler extends ModelServerAwareBasicO
 	}
 
 	private EClassifier createClassifier(String elementTypeId) {
-		if (elementTypeId.equals((Types.ENUM))) {
+		if (elementTypeId.equals(Types.ENUM)) {
 			return EcoreFactory.eINSTANCE.createEEnum();
 		} else if (elementTypeId.equals(Types.DATATYPE)) {
 			EDataType dataType = EcoreFactory.eINSTANCE.createEDataType();
@@ -92,7 +91,7 @@ public class CreateClassifierNodeOperationHandler extends ModelServerAwareBasicO
 
 	@Override
 	public String getLabel() {
-		return "Create ecore edge";
+		return "Create ecore classifier";
 	}
 
 }
