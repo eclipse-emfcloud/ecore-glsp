@@ -8,14 +8,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { EcoreLanguage } from "@eclipse-emfcloud/theia-ecore/lib/common/ecore-language";
 import { BaseGLSPServerContribution } from "@eclipse-glsp/theia-integration/lib/node";
 import { IConnection } from "@theia/languages/lib/node";
 import { inject, injectable, optional } from "inversify";
 import * as net from "net";
 import { createSocketConnection } from "vscode-ws-jsonrpc/lib/server";
 
-import { EcoreLanguage } from "../common/ecore-language";
-import { GLSPLaunchOptions, GLSPLaunchOptionsSymb } from "./glsp-server-launcher";
+import { GLSPLaunchOptions } from "./glsp-server-launcher";
 
 @injectable()
 export class EcoreGLServerContribution extends BaseGLSPServerContribution {
@@ -31,7 +31,7 @@ export class EcoreGLServerContribution extends BaseGLSPServerContribution {
             "**/*.ecorediagram"
         ]
     };
-    @inject(GLSPLaunchOptionsSymb) @optional() protected readonly launchOptions: GLSPLaunchOptions;
+    @inject(GLSPLaunchOptions) @optional() protected readonly launchOptions: GLSPLaunchOptions;
 
     start(clientConnection: IConnection): void {
         const socketPort = this.launchOptions.serverPort;
