@@ -23,7 +23,7 @@ Before you start the browser or electron application you have to run the `mvn cl
 
 ## Running the browser example
 
-    yarn rebuild:browser
+    yarn
     cd browser-app
     yarn start
 
@@ -31,7 +31,7 @@ Open http://localhost:3000 in the browser. You may use the example workspace in 
 
 ## Running the Electron example
 
-    yarn rebuild:electron
+    yarn
     cd electron-app
     yarn start
 
