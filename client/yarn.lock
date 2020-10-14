@@ -876,16 +876,24 @@
     node-fetch "2.6.1"
     ws "7.1.1"
 
-"@eclipse-glsp/client@0.8.0-next.197cba73", "@eclipse-glsp/client@next":
-  version "0.8.0-next.197cba73"
-  resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.8.0-next.197cba73.tgz#99b53bdd5e798fd78e8286efd5c8c3f8e0df418b"
-  integrity sha512-wLUmrSOJqbXBypGyZx9Kw84sayOKni4nNbu9pK314Ng37GqzCsGMnoPoQKRzYjUZ7s3WLn1Yiojw8+Y8B0KbiA==
+"@eclipse-glsp/client@0.8.0-next.5c0863ff", "@eclipse-glsp/client@next":
+  version "0.8.0-next.5c0863ff"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/client/-/client-0.8.0-next.5c0863ff.tgz#3233f52f09f647a50bf4d688206cf85e8e7e4331"
+  integrity sha512-FEKd/R8AftAVMPZLt88kug46IIaX08Cv4u9cR8rgsCo6rWldM3/+h5W1JKrGJq7t66s94IjSRbRbAUZQ1qeYFQ==
   dependencies:
-    "@eclipse-glsp/protocol" "0.8.0-next.197cba73"
+    "@eclipse-glsp/protocol" "0.8.0-next.5c0863ff"
     autocompleter "5.1.0"
     sprotty "0.9.0"
 
-"@eclipse-glsp/protocol@0.8.0-next.197cba73", "@eclipse-glsp/protocol@next":
+"@eclipse-glsp/protocol@0.8.0-next.5c0863ff":
+  version "0.8.0-next.5c0863ff"
+  resolved "https://registry.yarnpkg.com/@eclipse-glsp/protocol/-/protocol-0.8.0-next.5c0863ff.tgz#6b86b1be7e0019cbd8d771f204f68f7f8f09079b"
+  integrity sha512-yAgP3mJJuaHKJdFnptPyGloLoP6Md2AICF+I/w5ZiSgP1syaJAM7jYo7eJ1ZRYJwxTFw7VAm8GS2f1iCNRMXYQ==
+  dependencies:
+    uuid "7.0.3"
+    vscode-ws-jsonrpc "0.2.0"
+
+"@eclipse-glsp/protocol@next":
   version "0.8.0-next.197cba73"
   resolved "https://registry.yarnpkg.com/@eclipse-glsp/protocol/-/protocol-0.8.0-next.197cba73.tgz#7acc288769168881a72a8205dc2e64b6dd757a77"
   integrity sha512-aQpWg2lUTEUfBMmKk4RYsN0KcnBAtviDx+3CyMAFWncap16yJT4hkYA10g5fz101P9YPx9NfiJDdPO6nr6WIIQ==

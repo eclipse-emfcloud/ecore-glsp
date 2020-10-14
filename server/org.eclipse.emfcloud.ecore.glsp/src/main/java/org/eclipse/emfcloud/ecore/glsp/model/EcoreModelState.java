@@ -17,14 +17,19 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.model.GModelStateImpl;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
+import org.eclipse.glsp.server.utils.ClientOptions;
 
 public class EcoreModelState extends GModelStateImpl implements GModelState {
 
 	private EcoreEditorContext editorContext;
+	private EcoreModelServerAccess modelServerAccess;
+
+	public static final String WORKSPACE_ROOT_OPTION = "workspaceRoot";
 
 	public static EcoreModelState getModelState(GModelState state) {
 		if (!(state instanceof EcoreModelState)) {
-			throw new IllegalArgumentException("Argument must be a EcoreModelState");
+			throw new IllegalArgumentException("Argument must be a ModelServer aware EcoreModelState");
 		}
 		return ((EcoreModelState) state);
 	}
@@ -41,6 +46,10 @@ public class EcoreModelState extends GModelStateImpl implements GModelState {
 		return getEditorContext(modelState).getEcoreFacade();
 	}
 
+	public EcoreFacade getEcoreFacade() {
+		return editorContext.getEcoreFacade();
+	}
+
 	public EcoreEditorContext getEditorContext() {
 		return editorContext;
 	}
@@ -48,6 +57,26 @@ public class EcoreModelState extends GModelStateImpl implements GModelState {
 	public void setEditorContext(EcoreEditorContext editorContext) {
 		this.editorContext = editorContext;
 		setCommandStack((BasicCommandStack) editorContext.getResourceManager().getEditingDomain().getCommandStack());
+	}
+
+	public static EcoreModelServerAccess getModelServerAccess(GModelState state) {
+		return getModelState(state).getModelServerAccess();
+	}
+
+	public void setModelServerAccess(EcoreModelServerAccess modelServerAccess) {
+		this.modelServerAccess = modelServerAccess;
+	}
+
+	public EcoreModelServerAccess getModelServerAccess() {
+		return modelServerAccess;
+	}
+
+	public String getModelUri() {
+		String sourceURI = ClientOptions.getValue(getClientOptions(), ClientOptions.SOURCE_URI)
+				.orElseThrow(() -> new GLSPServerException("No source uri given to load model!"));
+		String workspaceRoot = ClientOptions.getValue(getClientOptions(), WORKSPACE_ROOT_OPTION)
+				.orElseThrow(() -> new GLSPServerException("No workspaceUri given to load model!"));
+		return sourceURI.replace(workspaceRoot.replaceFirst("file://", ""), "").replaceFirst("/", "");
 	}
 
 	@Override
