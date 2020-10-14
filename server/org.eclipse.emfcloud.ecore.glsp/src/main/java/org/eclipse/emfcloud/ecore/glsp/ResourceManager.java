@@ -13,10 +13,12 @@ package org.eclipse.emfcloud.ecore.glsp;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
@@ -28,14 +30,16 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
+import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
 
 public class ResourceManager {
 	public static final String ECORE_EXTENSION = ".ecore";
 	public static final String NOTATION_EXTENSION = ".enotation";
+	private static final String FORMAT_XMI = "xmi";
 
-	private static Logger LOG = Logger.getLogger(ResourceManager.class);
+	private static Logger LOGGER = Logger.getLogger(ResourceManager.class);
 
 	private ResourceSet resourceSet;
 	private String baseSourceUri;
@@ -51,7 +55,7 @@ public class ResourceManager {
 
 		this.baseSourceUri = sourceURI.substring(0, sourceURI.lastIndexOf('.'));
 		this.resourceSet = setupResourceSet();
-		createEcoreFacade(modelState.getIndex());
+		createEcoreFacade(modelState);
 	}
 
 	protected ResourceSet setupResourceSet() {
@@ -64,22 +68,25 @@ public class ResourceManager {
 	}
 
 	public EditingDomain getEditingDomain() {
-		return this.editingDomain;
+		return editingDomain;
 	}
 
 	public EcoreFacade getEcoreFacade() {
 		return ecoreFacade;
 	}
 
-	protected EcoreFacade createEcoreFacade(EcoreModelIndex modelIndex) {
+	protected EcoreFacade createEcoreFacade(EcoreModelState modelState) {
 		try {
-			Resource semanticResource = loadResource(convertToFile(getSemanticURI()));
+			ModelServerClient client = modelState.getModelServerAccess().getModelServerClient();
+			EObject root = client.get(getSemanticURI(), FORMAT_XMI).thenApply(res -> res.body()).get();
+
+			Resource semanticResource = loadResource(convertToFile(getSemanticURI()), root);
 			Resource notationResource = loadResource(convertToFile(getNotationURI()));
-			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelIndex);
+			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelState.getIndex());
 			return ecoreFacade;
-		} catch (IOException e) {
-			LOG.error(e);
-			throw new GLSPServerException("Error during mode loading", e);
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			LOGGER.error(e);
+			throw new GLSPServerException("Error during model loading", e);
 		}
 	}
 
@@ -107,10 +114,19 @@ public class ResourceManager {
 		return resource;
 	}
 
+	private Resource loadResource(File file, EObject root) throws IOException {
+		Resource resource = createResource(file.getAbsolutePath());
+		resource.getContents().clear();
+		resource.getContents().add(root);
+		configureResource(resource);
+		return resource;
+	}
+
 	private void configureResource(Resource resource) {
 		if (resource instanceof XMLResource) {
-			XMLResource xmlResource = (XMLResource)resource;
-			xmlResource.getDefaultSaveOptions().put(XMLResource.OPTION_PROCESS_DANGLING_HREF, XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
+			XMLResource xmlResource = (XMLResource) resource;
+			xmlResource.getDefaultSaveOptions().put(XMLResource.OPTION_PROCESS_DANGLING_HREF,
+					XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 		}
 	}
 
@@ -133,14 +149,14 @@ public class ResourceManager {
 		if (resource.getErrors().isEmpty()) {
 			return;
 		}
-		
-		LOG.error("Some errors have been found while saving "+resource.getURI().lastSegment()+":");
+
+		LOGGER.error("Some errors have been found while saving " + resource.getURI().lastSegment() + ":");
 		for (Diagnostic d : resource.getErrors()) {
 			if (d instanceof Exception) {
-				LOG.error(d.getMessage(), (Exception) d);
+				LOGGER.error(d.getMessage(), (Exception) d);
 			}
 		}
-	
+
 	}
 
 }
