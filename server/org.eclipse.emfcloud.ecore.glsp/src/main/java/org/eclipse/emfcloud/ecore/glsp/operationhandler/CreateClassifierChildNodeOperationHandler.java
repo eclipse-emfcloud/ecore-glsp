@@ -23,15 +23,16 @@ import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.glsp.graph.GraphPackage;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.CreateNodeOperation;
 import org.eclipse.glsp.server.operations.Operation;
 
-public class CreateClassifierChildNodeOperationHandler extends BasicOperationHandler<CreateNodeOperation> {
+public class CreateClassifierChildNodeOperationHandler
+		extends ModelServerAwareBasicOperationHandler<CreateNodeOperation> {
 
 	private List<String> handledElementTypeIds = List.of(Types.ATTRIBUTE, Types.OPERATION, Types.ENUMLITERAL);
 
@@ -45,7 +46,8 @@ public class CreateClassifierChildNodeOperationHandler extends BasicOperationHan
 	}
 
 	@Override
-	public void executeOperation(CreateNodeOperation operation, GModelState graphicalModelState) {
+	public void executeOperation(CreateNodeOperation operation, GModelState graphicalModelState,
+			EcoreModelServerAccess modelAccess) throws Exception {
 		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 		EClassifier container = getOrThrow(modelState.getIndex().getSemantic(operation.getContainerId()),
 				EClassifier.class, "No valid container with id " + operation.getContainerId() + " found");
