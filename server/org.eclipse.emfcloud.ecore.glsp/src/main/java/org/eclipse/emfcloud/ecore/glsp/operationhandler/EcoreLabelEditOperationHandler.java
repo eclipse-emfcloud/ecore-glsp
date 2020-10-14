@@ -31,6 +31,7 @@ import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
@@ -38,100 +39,102 @@ import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.GNode;
 import org.eclipse.glsp.server.features.directediting.ApplyLabelEditOperation;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 
-public class EcoreLabelEditOperationHandler extends BasicOperationHandler<ApplyLabelEditOperation> {
+public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperationHandler<ApplyLabelEditOperation> {
 
 	@Override
-	public void executeOperation(ApplyLabelEditOperation editLabelOperation, GModelState graphicalModelState) {
+	public void executeOperation(ApplyLabelEditOperation editLabelOperation, GModelState graphicalModelState,
+			EcoreModelServerAccess modelAccess) throws Exception {
 		EcoreFacade facade = EcoreModelState.getEcoreFacade(graphicalModelState);
 		EcoreModelIndex index = EcoreModelState.getModelState(graphicalModelState).getIndex();
-		Optional<String> type = index.findElementByClass(editLabelOperation.getLabelId(), GModelElement.class).map(e -> e.getType());
+		Optional<String> type = index.findElementByClass(editLabelOperation.getLabelId(), GModelElement.class)
+				.map(e -> e.getType());
 		if (type.isPresent()) {
-			switch (type.get()) { 
-				case Types.LABEL_NAME:
-						GNode node = getOrThrow(index.findElementByClass(editLabelOperation.getLabelId(), GNode.class), 
-							"No parent Node for element with id " + editLabelOperation.getLabelId() + " found");
-						
-						EObject node_semantic = getOrThrow(index.getSemantic(node),
-							"No semantic element for labelContainer with id " + node.getId() + " found");
-		
-						Shape shape = getOrThrow(index.getNotation(node_semantic), Shape.class,
-								"No shape element for label with id " + editLabelOperation.getLabelId() + " found");
-		
-						if (node_semantic instanceof EClassifier) {
-							((EClassifier) node_semantic).setName(editLabelOperation.getText().trim());
-							// nameChange== uri change so we have to recreate the proxy here
-							shape.setSemanticElement(facade.createProxy(node_semantic));
-						}
-					break;
-				case Types.LABEL_INSTANCE:
-					node = getOrThrow(index.findElementByClass(editLabelOperation.getLabelId(), GNode.class), 
-							"No parent Node for element with id " + editLabelOperation.getLabelId() + " found");
+			switch (type.get()) {
+			case Types.LABEL_NAME:
+				GNode node = getOrThrow(index.findElementByClass(editLabelOperation.getLabelId(), GNode.class),
+						"No parent Node for element with id " + editLabelOperation.getLabelId() + " found");
 
-					node_semantic = getOrThrow(index.getSemantic(node),
-							"No semantic element for labelContainer with id " + node.getId() + " found");
-					if (node_semantic instanceof EClassifier) {
-						((EClassifier) node_semantic).setInstanceClassName(editLabelOperation.getText().trim());
-					}
-					break;
-				case Types.ATTRIBUTE:
-					EAttribute attribute_semantic = (EAttribute) getOrThrow(index.getSemantic(editLabelOperation.getLabelId()),
+				EObject node_semantic = getOrThrow(index.getSemantic(node),
+						"No semantic element for labelContainer with id " + node.getId() + " found");
+
+				Shape shape = getOrThrow(index.getNotation(node_semantic), Shape.class,
+						"No shape element for label with id " + editLabelOperation.getLabelId() + " found");
+
+				if (node_semantic instanceof EClassifier) {
+					((EClassifier) node_semantic).setName(editLabelOperation.getText().trim());
+					// nameChange== uri change so we have to recreate the proxy here
+					shape.setSemanticElement(facade.createProxy(node_semantic));
+				}
+				break;
+			case Types.LABEL_INSTANCE:
+				node = getOrThrow(index.findElementByClass(editLabelOperation.getLabelId(), GNode.class),
+						"No parent Node for element with id " + editLabelOperation.getLabelId() + " found");
+
+				node_semantic = getOrThrow(index.getSemantic(node),
+						"No semantic element for labelContainer with id " + node.getId() + " found");
+				if (node_semantic instanceof EClassifier) {
+					((EClassifier) node_semantic).setInstanceClassName(editLabelOperation.getText().trim());
+				}
+				break;
+			case Types.ATTRIBUTE:
+				EAttribute attribute_semantic = (EAttribute) getOrThrow(
+						index.getSemantic(editLabelOperation.getLabelId()),
 						"No semantic element for label with id " + editLabelOperation.getLabelId() + " found");
 
-					String inputText = editLabelOperation.getText();
-					String attributeName;
-					if (inputText.contains(":")) {
-						String[] split = inputText.split(":");
-						attributeName = split[0].trim();
-		
-						Optional<EClassifier> datatype = parseStringToEType(split[1].trim(),
-								EcoreModelState.getResourceManager(graphicalModelState));
-						if (datatype.isPresent()) {
-							attribute_semantic.setEType(datatype.get());
-						}
-					} else {
-						attributeName = inputText.trim();
-					}
-					if (!inputText.isEmpty()) {
-						attribute_semantic.setName(attributeName);
-					}
-					break;
+				String inputText = editLabelOperation.getText();
+				String attributeName;
+				if (inputText.contains(":")) {
+					String[] split = inputText.split(":");
+					attributeName = split[0].trim();
 
-				case Types.ENUMLITERAL:
-					EEnumLiteral literal_semantic = (EEnumLiteral) getOrThrow(index.getSemantic(editLabelOperation.getLabelId()),
+					Optional<EClassifier> datatype = parseStringToEType(split[1].trim(),
+							EcoreModelState.getResourceManager(graphicalModelState));
+					if (datatype.isPresent()) {
+						attribute_semantic.setEType(datatype.get());
+					}
+				} else {
+					attributeName = inputText.trim();
+				}
+				if (!inputText.isEmpty()) {
+					attribute_semantic.setName(attributeName);
+				}
+				break;
+
+			case Types.ENUMLITERAL:
+				EEnumLiteral literal_semantic = (EEnumLiteral) getOrThrow(
+						index.getSemantic(editLabelOperation.getLabelId()),
 						"No semantic element for label with id " + editLabelOperation.getLabelId() + " found");
-					String text = editLabelOperation.getText().trim();
-					if (!text.isEmpty()) {
-						literal_semantic.setName(text);
-					}
-					break;
+				String text = editLabelOperation.getText().trim();
+				if (!text.isEmpty()) {
+					literal_semantic.setName(text);
+				}
+				break;
 
-				case Types.LABEL_EDGE_NAME:
-					String edgeId = EcoreEdgeUtil.getEdgeId(editLabelOperation.getLabelId());
-					EReference reference_semantic = (EReference) getOrThrow(
-						index.getSemantic(edgeId),
+			case Types.LABEL_EDGE_NAME:
+				String edgeId = EcoreEdgeUtil.getEdgeId(editLabelOperation.getLabelId());
+				EReference reference_semantic = (EReference) getOrThrow(index.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
-					reference_semantic.setName(editLabelOperation.getText().trim());
-					break;
+				reference_semantic.setName(editLabelOperation.getText().trim());
+				break;
 
-				case Types.LABEL_EDGE_MULTIPLICITY:
-					edgeId = EcoreEdgeUtil.getEdgeId(editLabelOperation.getLabelId());
-					reference_semantic = (EReference) getOrThrow(
-						index.getSemantic(edgeId),
+			case Types.LABEL_EDGE_MULTIPLICITY:
+				edgeId = EcoreEdgeUtil.getEdgeId(editLabelOperation.getLabelId());
+				reference_semantic = (EReference) getOrThrow(index.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
-					Pattern pattern = Pattern.compile("\\s*\\[\\s*(\\d+)\\s*\\.+\\s*(\\*|\\d+|\\-1)\\s*\\]\\s*");
-						Matcher matcher = pattern.matcher(editLabelOperation.getText());
-						if (matcher.matches()) {
-							String lowerBound = matcher.group(1);
-							String upperBound = matcher.group(2);
-							reference_semantic.setLowerBound((lowerBound.equals("*")) ? -1 : Integer.valueOf(lowerBound));
-							reference_semantic.setUpperBound((upperBound.equals("*")) ? -1 : Integer.valueOf(upperBound));
-						} else {
-							throw new GLSPServerException("Multiplicity of reference with id " + editLabelOperation.getLabelId() + " has a wrong input format", new IllegalArgumentException());
-						}
-					break;
+				Pattern pattern = Pattern.compile("\\s*\\[\\s*(\\d+)\\s*\\.+\\s*(\\*|\\d+|\\-1)\\s*\\]\\s*");
+				Matcher matcher = pattern.matcher(editLabelOperation.getText());
+				if (matcher.matches()) {
+					String lowerBound = matcher.group(1);
+					String upperBound = matcher.group(2);
+					reference_semantic.setLowerBound((lowerBound.equals("*")) ? -1 : Integer.valueOf(lowerBound));
+					reference_semantic.setUpperBound((upperBound.equals("*")) ? -1 : Integer.valueOf(upperBound));
+				} else {
+					throw new GLSPServerException("Multiplicity of reference with id " + editLabelOperation.getLabelId()
+							+ " has a wrong input format", new IllegalArgumentException());
+				}
+				break;
 			}
 		}
 	}
