@@ -16,7 +16,7 @@ Note: to build and run the Ecore GLSP Server, you need Java with version >= 11.
   * mvn install -U
 
 * Run:
-  * Start the client as it is described in [client readme](https://github.com/eclipsesource/ecore-glsp/blob/master/client/README.md). The backend is automatically launched by the project theia-glsp-server
+  * Start the client as it is described in [client readme](https://github.com/eclipse-emfcloud/ecore-glsp/blob/master/client/README.md). The backend is automatically launched by the project theia-glsp-server
   * If you want to start the backend manually - execute the Java main class: com.eclipsesource.glsp.ecore.EcoreServerLauncher
   	For this to work with the client, you have to remove the dependency on theia-glsp-server in the browser-app's package.json
 
