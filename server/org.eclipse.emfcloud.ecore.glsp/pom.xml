@@ -9,7 +9,7 @@
 		<repository>
 			<id>sonatype</id>
 			<name>Sonatype</name>
-			<url>https://oss.sonatype.org/content/groups/public</url>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 	<properties>
