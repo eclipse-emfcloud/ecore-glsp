@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.emfcloud.ecore.modelserver.feature"
+      label="Ecore GLSP Modelserver Feature"
+      version="1.0.0.qualifier"
+      provider-name="Eclipse EMF.Cloud Project">
+
+   <description url="https://github.com/eclipse-emfcloud/ecore-glsp">
+      Ecore GLSP Modelserver Application, for creating and editing Ecore Diagrams.
+   </description>
+
+   <copyright url="https://github.com/eclipse-emfcloud/ecore-glsp">
+      Copyright (c) 2020 EclipseSource and others.
+ 
+  This program and the accompanying materials are made available under the
+  terms of the Eclipse Public License v. 2.0 which is available at
+  https://www.eclipse.org/legal/epl-2.0, or the MIT License which is
+  available at https://opensource.org/licenses/MIT.
+ 
+  SPDX-License-Identifier: EPL-2.0 OR MIT
+   </copyright>
+
+   <license url="">
+      EPL-2.0 or MIT
+   </license>
+
+   <includes
+         id="org.eclipse.core.runtime.feature"
+         version="0.0.0"/>
+
+   <requires>
+      <import plugin="org.eclipse.equinox.app" version="1.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emfcloud.ecore.modelserver" version="0.0.2" match="greaterOrEqual"/>
+      <import plugin="org.apache.log4j" version="1.2.15" match="compatible"/>
+      <import plugin="org.apache.commons.io" version="2.6.0" match="compatible"/>
+      <import plugin="com.google.inject" version="3.0.0" match="greaterOrEqual"/>
+      <import plugin="com.google.guava"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.emf.ecore.xmi"/>
+      <import plugin="org.eclipse.emfcloud.modelserver.client"/>
+      <import plugin="org.eclipse.emfcloud.modelserver.common"/>
+      <import plugin="org.eclipse.emfcloud.modelserver.edit" version="0.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.emfcloud.modelserver.emf"/>
+      <import plugin="org.eclipse.emfcloud.modelserver.lib" version="0.7.0" match="greaterOrEqual"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.eclipse.emfcloud.ecore.modelserver.app"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.emfcloud.ecore.modelserver"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
