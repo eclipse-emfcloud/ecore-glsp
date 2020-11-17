@@ -1,0 +1,14 @@
+target "Ecore GLSP Codegen" with requirements source 
+
+// Target platform for the EMF Backend Application (EMF, Codegen)
+
+location "http://download.eclipse.org/releases/2020-06" {
+	org.eclipse.emf.ecore.feature.group [2.22.0,3.0.0)
+	org.eclipse.emf.common.feature.group [2.19.0,3.0.0)
+	org.eclipse.emf.codegen.ecore.feature.group [2.22.0,3.0.0)
+	org.eclipse.core.runtime.feature.feature.group [1.2.900,2.0.0)
+	org.eclipse.emf.codegen.feature.group [2.20.0,3.0.0)
+	org.eclipse.equinox.executable.feature.group [3.8.800,4.0.0)
+	com.ibm.icu [64.2.0,65.0.0)
+}
+

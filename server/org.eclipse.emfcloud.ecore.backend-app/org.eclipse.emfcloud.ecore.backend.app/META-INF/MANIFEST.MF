@@ -7,3 +7,4 @@ Automatic-Module-Name: ecore.glsp.backend.app
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.equinox.app,
  org.eclipse.emf.codegen.ecore;bundle-version="2.20.0"
+Export-Package: org.eclipse.emfcloud.ecore.backend.app

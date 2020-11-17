@@ -5,8 +5,8 @@
 
 	<parent>
 		<groupId>org.eclipse.emfcloud.ecore</groupId>
-		<artifactId>ecore-backend-apps</artifactId>
-		<version>1.0.0</version>
+		<artifactId>org.eclipse.emfcloud.ecore.backend-app</artifactId>
+		<version>1.0</version>
 	</parent>
 
 	<artifactId>org.eclipse.emfcloud.ecore.backend.app</artifactId>

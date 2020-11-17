@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.emfcloud.ecore.glsp.app.ecore-glsp-server"
+            name="Ecore GLSP Server">
+         <property
+               name="appName"
+               value="Ecore GLSP Server">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="ecore-glsp-server"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.eclipse.emfcloud.ecore.glsp.app.ServerApplication">
+         </run>
+      </application>
+   </extension>
+
+</plugin>

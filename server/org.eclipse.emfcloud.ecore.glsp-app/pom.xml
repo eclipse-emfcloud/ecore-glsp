@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eclipse.emfcloud.ecore</groupId>
+	<artifactId>org.eclipse.emfcloud.ecore.glsp-app</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0</version>
+	
+	<parent>
+		<groupId>org.eclipse.emfcloud.ecore</groupId>
+		<artifactId>org.eclipse.emfcloud.ecore.parent</artifactId>	
+		<version>1.0</version>
+	</parent>
+
+	<properties>
+		<tycho-version>1.6.0</tycho-version>
+	</properties>
+
+	<modules>
+		<module>org.eclipse.emfcloud.ecore.glsp.app</module>
+		<module>org.eclipse.emfcloud.ecore.glsp.feature</module>
+		<module>org.eclipse.emfcloud.ecore.glsp.product</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
