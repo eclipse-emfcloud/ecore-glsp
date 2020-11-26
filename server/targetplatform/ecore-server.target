@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Ecore GLSP Server" sequenceNumber="1606313644">
+<target name="Ecore GLSP Server" sequenceNumber="1606318838">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.glsp.server" version="0.8.0.202010130847"/>
-      <unit id="org.eclipse.glsp.graph" version="0.8.0.202010130847"/>
+      <unit id="org.eclipse.glsp.feature.feature.group" version="0.8.0.202010130847"/>
       <unit id="org.eclipse.glsp.layout" version="0.8.0.202010130847"/>
       <repository location="https://download.eclipse.org/glsp/server/p2/nightly/0.8/0.8.0.202010130847/"/>
     </location>
@@ -40,11 +39,7 @@
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20200529191137/repository/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emfcloud.modelserver.client" version="0.7.0.202011251312"/>
-      <unit id="org.eclipse.emfcloud.modelserver.common" version="0.7.0.202011251312"/>
-      <unit id="org.eclipse.emfcloud.modelserver.emf" version="0.7.0.202011251312"/>
-      <unit id="org.eclipse.emfcloud.modelserver.edit" version="0.7.0.202011251312"/>
-      <unit id="org.eclipse.emfcloud.modelserver.lib" version="0.7.0.202011251312"/>
+      <unit id="org.eclipse.emfcloud.modelserver.feature.feature.group" version="0.7.0.202011251312"/>
       <repository location="https://download.eclipse.org/emfcloud/modelserver/p2/nightly/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
