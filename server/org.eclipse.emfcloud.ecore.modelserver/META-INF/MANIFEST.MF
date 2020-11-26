@@ -6,7 +6,6 @@ Automatic-Module-Name: org.eclipse.emfcloud.ecore.modelserver
 Bundle-Version: 0.0.2.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
-Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: 
  org.apache.log4j;bundle-version="[1.2.15,2.0.0)",
