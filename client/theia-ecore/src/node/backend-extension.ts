@@ -8,17 +8,18 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { LaunchOptions } from "@eclipse-emfcloud/modelserver-theia";
 import { GLSPServerContribution } from "@eclipse-glsp/theia-integration/lib/node";
 import { ConnectionHandler, JsonRpcConnectionHandler } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node";
 import { ContainerModule, injectable } from "inversify";
-import { join } from "path";
+import { join, resolve } from "path";
 
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreFileGenServer } from "./ecore-file-generation";
-import { EcoreGLServerContribution } from "./ecore-glsp-server-contribution";
+import { EcoreGLSPServerContribution } from "./ecore-glsp-server-contribution";
 import { findEquinoxLauncher } from "./equinox";
-import { GLSPLaunchOptions, GLSPLaunchOptionsSymb, GLSPServerLauncher } from "./glsp-server-launcher";
+import { GLSPLaunchOptions, GLSPServerLauncher } from "./glsp-server-launcher";
 
 @injectable()
 export class EcoreGlspLaunchOptions implements GLSPLaunchOptions {
@@ -28,9 +29,27 @@ export class EcoreGlspLaunchOptions implements GLSPLaunchOptions {
     serverPort = 5007;
 }
 
-export default new ContainerModule(bind => {
-    bind(GLSPLaunchOptionsSymb).to(EcoreGlspLaunchOptions).inSingletonScope();
-    bind(GLSPServerContribution).to(EcoreGLServerContribution).inSingletonScope();
+@injectable()
+export class EcoreModelServerLaunchOptions implements LaunchOptions {
+    baseURL = "api/v1/";
+    serverPort = 8081;
+    hostname = "localhost";
+    jarPath = findEquinoxLauncher(join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.modelserver.product-1.0.0"));
+    additionalArgs = [
+        "--errorsOnly",
+        `-r=${resolve(join(__dirname, "..", "..", "..", "workspace"))}`
+    ];
+}
+
+export default new ContainerModule((bind, _unbind, isBound, rebind) => {
+    if (isBound(LaunchOptions)) {
+        rebind(LaunchOptions).to(EcoreModelServerLaunchOptions).inSingletonScope();
+    } else {
+        bind(LaunchOptions).to(EcoreModelServerLaunchOptions).inSingletonScope();
+    }
+
+    bind(GLSPLaunchOptions).to(EcoreGlspLaunchOptions).inSingletonScope();
+    bind(GLSPServerContribution).to(EcoreGLSPServerContribution).inSingletonScope();
     bind(EcoreFileGenServer).toSelf().inSingletonScope();
     bind(BackendApplicationContribution).toService(EcoreFileGenServer);
     bind(ConnectionHandler).toDynamicValue(ctx =>

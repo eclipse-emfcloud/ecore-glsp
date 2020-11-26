@@ -3,7 +3,6 @@
   "name": "browser-app",
   "version": "0.2.0",
   "dependencies": {
-    "@eclipse-emfcloud/ecore-server": "^0.1.0",
     "@eclipse-emfcloud/theia-ecore": "^0.2.0",
     "@theia/core": "latest",
     "@theia/editor": "latest",

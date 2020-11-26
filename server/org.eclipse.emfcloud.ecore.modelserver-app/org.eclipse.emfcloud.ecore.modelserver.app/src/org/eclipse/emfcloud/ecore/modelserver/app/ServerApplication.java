@@ -12,7 +12,8 @@ public class ServerApplication implements IApplication {
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		String[] args = getArgs(context);
-		EcoreModelServerLauncher.main(args);	
+		EcoreModelServerLauncher.main(args);
+		System.in.read();
 		return null;
 	}
 

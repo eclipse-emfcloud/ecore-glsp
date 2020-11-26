@@ -20,6 +20,7 @@
     "url": "https://github.com/eclipse-emfcloud/ecore-glsp.git"
   },
   "dependencies": {
+    "@eclipse-emfcloud/modelserver-theia": "next",
     "@eclipse-emfcloud/sprotty-ecore": "0.2.0",
     "@eclipse-glsp/theia-integration": "next",
     "@theia/core": "latest"
@@ -38,7 +39,8 @@
   },
   "theiaExtensions": [
     {
-      "frontend": "lib/browser/frontend-extension"
+      "frontend": "lib/browser/frontend-extension",
+      "backend": "lib/node/backend-extension"
     }
   ]
 }

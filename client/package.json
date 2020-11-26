@@ -52,7 +52,6 @@
   },
   "workspaces": [
     "browser-app",
-    "ecore-server",
     "sprotty-ecore",
     "theia-ecore"
   ],
