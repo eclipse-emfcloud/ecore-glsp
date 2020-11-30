@@ -6,4 +6,41 @@
   <eClassifiers xsi:type="ecore:EClass" name="NewEClass1" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass0s" eType="//NewEClass0" eOpposite="//NewEClass0/neweclass1s"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass2" eSuperTypes="//NewEClass3"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass3" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="NewEEnum4">
+    <eLiterals name="red"/>
+    <eLiterals name="orange"/>
+    <eLiterals name="yellow"/>
+    <eLiterals name="green"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass5" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass6" eSuperTypes="//NewEClass5"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="NewEDataType7" instanceClassName="java.lang.Object"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass8" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass9">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text2" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text3" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text4" lowerBound="1">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass10">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass11s" eType="//NewEClass11" eOpposite="//NewEClass11/neweclass10s"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass11">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass10s" eType="//NewEClass10" eOpposite="//NewEClass10/neweclass11s"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass12">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="testreference" upperBound="-1" eType="//NewEClass8" containment="true" resolveProxies="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass13"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass14" abstract="true"/>
 </ecore:EPackage>

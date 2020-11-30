@@ -19,15 +19,22 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.emfcloud.modelserver.client.XmiToEObjectSubscriptionListener;
 import org.eclipse.emfcloud.modelserver.command.CCommand;
+import org.eclipse.emfcloud.modelserver.command.CCompoundCommand;
 import org.eclipse.emfcloud.modelserver.command.CommandKind;
 import org.eclipse.emfcloud.modelserver.common.codecs.DecodingException;
 import org.eclipse.glsp.graph.GModelRoot;
@@ -56,22 +63,24 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 		LOGGER.debug("Incremental update from model server received: " + command);
 		Resource commandResource = null;
 		try {
-			// execute command on semantic resource
 			EcoreEditorContext editorContext = modelState.getEditorContext();
 			EditingDomain editingDomain = editorContext.getResourceManager().getEditingDomain();
 			commandResource = createCommandResource(editingDomain, command);
-			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
-			editingDomain.getCommandStack().execute(cmd);
 
-			// update notation resource
 			EcoreFacade ecoreFacade = editorContext.getEcoreFacade();
-			if (command.getType() == CommandKind.ADD) {
-				// TODO always getting first element is not ideal, maybe you have a better idea
-				EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
-				NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
-				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+
+			if (command.getType() == CommandKind.COMPOUND) {
+				if (command instanceof CCompoundCommand) {
+					((CCompoundCommand) command).getCommands().forEach(c -> {
+						if (c.getType() == CommandKind.REMOVE) {
+							executeRemoveCommand(c, editingDomain, ecoreFacade);
+						}
+					});
+				}
+			} else if (command.getType() == CommandKind.ADD) {
+				executeAddCommand(command, editingDomain, ecoreFacade);
 			} else if (command.getType() == CommandKind.REMOVE) {
-				// TODO
+				executeRemoveCommand(command, editingDomain, ecoreFacade);
 			}
 
 			GModelRoot gmodelRoot = EcoreModelState.getEditorContext(modelState).getGModelFactory()
@@ -80,13 +89,66 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 
 			actionDispatcher.dispatch(modelState.getClientId(), new RequestBoundsAction(gmodelRoot));
 
-		} catch (DecodingException ex) {
-			LOGGER.error("Could not decode command: " + command, ex);
-			throw new RuntimeException(ex);
 		} finally {
 			if (commandResource != null) {
 				commandResource.getResourceSet().getResources().remove(commandResource);
 			}
+		}
+	}
+
+	private void executeAddCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
+		try {
+			// Update semantic resource
+			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
+			editingDomain.getCommandStack().execute(cmd);
+		} catch (DecodingException ex) {
+			LOGGER.error("Could not decode command: " + command, ex);
+			throw new RuntimeException(ex);
+		}
+
+		// TODO always getting first element is not ideal, maybe you have a better idea
+		EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
+		NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
+		ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+	}
+
+	private void executeRemoveCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
+		EObject semanticElement = null;
+		if (!command.getDataValues().isEmpty()) {
+			String elementId = command.getDataValues().get(0);
+			semanticElement = ecoreFacade.getSemanticResource().getEObject(elementId);
+		} else if (!command.getIndices().isEmpty()) {
+			int indexToRemove = command.getIndices().get(0);
+			EObject owner = command.getOwner();
+			if (owner instanceof EPackage) {
+				semanticElement = ((EPackage) owner).getEClassifiers().get(indexToRemove);
+			} else if (owner instanceof EEnum) {
+				semanticElement = ((EEnum) owner).getELiterals().get(indexToRemove);
+			} else if (owner instanceof EClass) {
+				if (command.getFeature().equals("eSuperTypes")) {
+					semanticElement = ((EClass) owner).getESuperTypes().get(indexToRemove);
+				} else if (command.getFeature().equals("eStructuralFeatures")) {
+					semanticElement = ((EClass) owner).getEStructuralFeatures().get(indexToRemove);
+					if (semanticElement instanceof EReference) {
+						EReference eOpposite = ((EReference) semanticElement).getEOpposite();
+						if (eOpposite != null) {
+							String stringid = EcoreEdgeUtil.getStringId((EReference) semanticElement);
+							modelState.getIndex().getBidirectionalReferences().remove(stringid);
+						}
+					}
+				}
+			}
+		}
+		Optional<NotationElement> notation = modelState.getIndex().getNotation(semanticElement);
+		notation.ifPresent(EcoreUtil::delete);
+
+		try {
+			// Update semantic resource
+			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
+			editingDomain.getCommandStack().execute(cmd);
+		} catch (DecodingException ex) {
+			LOGGER.error("Could not decode command: " + command, ex);
+			throw new RuntimeException(ex);
 		}
 	}
 

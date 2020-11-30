@@ -15,8 +15,6 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.modelserver;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.eclipse.emfcloud.modelserver.emf.launch.ModelServerLauncher;
 
 import com.google.common.collect.Lists;
@@ -24,9 +22,8 @@ import com.google.common.collect.Lists;
 public class EcoreModelServerLauncher {
 
 	public static void main(String[] args) {
-		ModelServerLauncher.configureLogger();
-		Logger.getRootLogger().setLevel(Level.DEBUG);
 		final ModelServerLauncher launcher = new ModelServerLauncher(args);
+		ModelServerLauncher.configureLogger();
 		launcher.addEPackageConfigurations(Lists.newArrayList(EcorePackageConfiguration.class));
 		launcher.start();
 	}
