@@ -3,22 +3,22 @@
   "name": "browser-app",
   "version": "0.2.0",
   "dependencies": {
-    "@theia/core": "^1.4.0",
-    "@theia/filesystem": "^1.4.0",
-    "@theia/workspace": "^1.4.0",
-    "@theia/preferences": "^1.4.0",
-    "@theia/navigator": "^1.4.0",
-    "@theia/process": "^1.4.0",
-    "@theia/terminal": "^1.4.0",
-    "@theia/editor": "^1.4.0",
-    "@theia/languages": "^1.4.0",
-    "@theia/markers": "^1.4.0",
-    "@theia/monaco": "^1.4.0",
-    "@theia/messages": "^1.4.0",
-    "@eclipse-emfcloud/theia-ecore": "^0.2.0"
+    "@eclipse-emfcloud/theia-ecore": "^0.2.0",
+    "@theia/core": "latest",
+    "@theia/editor": "latest",
+    "@theia/filesystem": "latest",
+    "@theia/languages": "latest",
+    "@theia/markers": "latest",
+    "@theia/messages": "latest",
+    "@theia/monaco": "latest",
+    "@theia/navigator": "latest",
+    "@theia/preferences": "latest",
+    "@theia/process": "latest",
+    "@theia/terminal": "latest",
+    "@theia/workspace": "latest"
   },
   "devDependencies": {
-    "@theia/cli": "^1.4.0"
+    "@theia/cli": "latest"
   },
   "scripts": {
     "prepare": "theia build --mode development",

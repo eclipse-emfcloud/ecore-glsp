@@ -16,7 +16,7 @@ import { RawProcess, RawProcessFactory } from "@theia/process/lib/node/raw-proce
 import * as cp from "child_process";
 import { inject, injectable } from "inversify";
 
-export const GLSPLaunchOptionsSymb = Symbol.for("LaunchOptions");
+export const GLSPLaunchOptions = Symbol.for("LaunchOptions");
 export interface GLSPLaunchOptions {
     isRunning: boolean;
     serverPort: number;
@@ -27,14 +27,18 @@ export interface GLSPLaunchOptions {
 
 @injectable()
 export class GLSPServerLauncher implements BackendApplicationContribution {
-    @inject(GLSPLaunchOptionsSymb) protected readonly launchOptions: GLSPLaunchOptions;
+    @inject(GLSPLaunchOptions) protected readonly launchOptions: GLSPLaunchOptions;
     @inject(RawProcessFactory) protected readonly processFactory: RawProcessFactory;
     @inject(ProcessManager) protected readonly processManager: ProcessManager;
     @inject(ILogger) private readonly logger: ILogger;
 
     initialize(): void {
-        if (!this.launchOptions.isRunning && !this.start()) {
-            this.logError("Error during model server startup");
+        if (!this.launchOptions.isRunning) {
+            if (!this.start()) {
+                this.logError("Error during GLSP server startup");
+            }
+        } else {
+            this.logInfo("GLSP Server is already running");
         }
     }
 
@@ -83,13 +87,13 @@ export class GLSPServerLauncher implements BackendApplicationContribution {
 
     protected logError(data: string | Buffer): void {
         if (data) {
-            this.logger.error(`ModelServerBackendContribution: ${data}`);
+            this.logger.error(`GLSPServerBackendContribution: ${data}`);
         }
     }
 
     protected logInfo(data: string | Buffer): void {
         if (data) {
-            this.logger.info(`ModelServerBackendContribution: ${data}`);
+            this.logger.info(`GLSPServerBackendContribution: ${data}`);
         }
     }
 

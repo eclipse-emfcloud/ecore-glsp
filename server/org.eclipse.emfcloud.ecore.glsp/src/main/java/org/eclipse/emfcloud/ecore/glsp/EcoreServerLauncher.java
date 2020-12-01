@@ -10,9 +10,10 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
-import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.eclipse.elk.alg.layered.options.LayeredMetaDataProvider;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.glsp.layout.ElkLayoutEngine;
@@ -27,14 +28,12 @@ public class EcoreServerLauncher {
 	
 	public static void main(String[] args) {
 		int port = getPort(args);
-		
+		configureLogger();
 		EcorePackage.eINSTANCE.eClass();
 		ElkLayoutEngine.initialize(new LayeredMetaDataProvider());
-		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(Level.DEBUG);
 		GLSPServerLauncher launcher = new DefaultGLSPServerLauncher(new EcoreGLSPModule());
 		launcher.start("localhost", port);
-		
 	}
 
 	private static int getPort(String[] args) {
@@ -45,5 +44,13 @@ public class EcoreServerLauncher {
 		}
 		LOG.info("The server port was not specified; using default port 5007");
 		return DEFAULT_PORT;
+	}
+	
+	public static void configureLogger() {
+		Logger root = Logger.getRootLogger();
+		if (!root.getAllAppenders().hasMoreElements()) {
+			root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
+		}
+		root.setLevel(Level.DEBUG);
 	}
 }

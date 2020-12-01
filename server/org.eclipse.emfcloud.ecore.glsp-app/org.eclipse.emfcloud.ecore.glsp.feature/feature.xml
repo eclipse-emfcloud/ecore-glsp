@@ -42,7 +42,6 @@
       <import plugin="org.eclipse.emf.edit" version="2.16.0" match="compatible"/>
       <import plugin="javax.inject"/>
       <import plugin="org.eclipse.equinox.app" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emfcloud.ecore.glsp" version="0.0.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin

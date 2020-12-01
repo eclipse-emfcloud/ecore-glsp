@@ -20,11 +20,11 @@ import { ContainerModule, interfaces } from "inversify";
 import { DiagramConfiguration, DiagramManager, DiagramManagerProvider } from "sprotty-theia/lib";
 
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
+import { EcoreCommandContribution } from "./command-contribution";
 import { EcoreDiagramConfiguration } from "./diagram/ecore-diagram-configuration";
 import { EcoreDiagramManager } from "./diagram/ecore-diagram-manager";
 import { EcoreGLSPDiagramClient } from "./diagram/ecore-glsp-diagram-client";
-import { EcoreGLSPClientContribution } from "./ecore-glsp--contribution";
-import { EcoreCommandContribution } from "./EcoreCommandContribution";
+import { EcoreGLSPClientContribution } from "./glsp-client-contribution";
 
 export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind, isBound: interfaces.IsBound, rebind: interfaces.Rebind) => {
     bind(EcoreGLSPClientContribution).toSelf().inSingletonScope();

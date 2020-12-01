@@ -15,10 +15,10 @@ import * as net from "net";
 import { createSocketConnection } from "vscode-ws-jsonrpc/lib/server";
 
 import { EcoreLanguage } from "../common/ecore-language";
-import { GLSPLaunchOptions, GLSPLaunchOptionsSymb } from "./glsp-server-launcher";
+import { GLSPLaunchOptions } from "./glsp-server-launcher";
 
 @injectable()
-export class EcoreGLServerContribution extends BaseGLSPServerContribution {
+export class EcoreGLSPServerContribution extends BaseGLSPServerContribution {
 
     readonly id = EcoreLanguage.Id;
     readonly name = EcoreLanguage.Name;
@@ -31,7 +31,7 @@ export class EcoreGLServerContribution extends BaseGLSPServerContribution {
             "**/*.ecorediagram"
         ]
     };
-    @inject(GLSPLaunchOptionsSymb) @optional() protected readonly launchOptions: GLSPLaunchOptions;
+    @inject(GLSPLaunchOptions) @optional() protected readonly launchOptions: GLSPLaunchOptions;
 
     start(clientConnection: IConnection): void {
         const socketPort = this.launchOptions.serverPort;

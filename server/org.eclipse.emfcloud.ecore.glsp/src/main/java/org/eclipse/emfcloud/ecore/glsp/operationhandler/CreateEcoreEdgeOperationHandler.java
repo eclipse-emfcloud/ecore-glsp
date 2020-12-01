@@ -22,17 +22,17 @@ import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.CreateEdgeOperation;
 import org.eclipse.glsp.server.operations.Operation;
 
 import com.google.common.collect.Lists;
 
-public class CreateEcoreEdgeOperationHandler extends BasicOperationHandler<CreateEdgeOperation> {
+public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperationHandler<CreateEdgeOperation> {
 	private List<String> handledElementTypeIds = Lists.newArrayList(Types.REFERENCE, Types.COMPOSITION,
 			Types.INHERITANCE, Types.BIDIRECTIONAL_REFERENCE, Types.BIDIRECTIONAL_COMPOSITION);
 
@@ -46,7 +46,8 @@ public class CreateEcoreEdgeOperationHandler extends BasicOperationHandler<Creat
 	}
 
 	@Override
-	public void executeOperation(CreateEdgeOperation operation, GModelState modelState) {
+	public void executeOperation(CreateEdgeOperation operation, GModelState modelState,
+			EcoreModelServerAccess modelAccess) throws Exception {
 		String elementTypeId = operation.getElementTypeId();
 
 		EcoreEditorContext context = EcoreModelState.getEditorContext(modelState);

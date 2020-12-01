@@ -17,6 +17,7 @@ import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreRecordingCommand;
 import org.eclipse.emfcloud.ecore.glsp.gmodel.GModelFactory;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
+import org.eclipse.emfcloud.ecore.glsp.operationhandler.ModelserverAwareOperationHandler;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.RequestBoundsAction;
@@ -40,17 +41,22 @@ public class EcoreOperationActionHandler extends OperationActionHandler {
 	}
 
 	@Override
-	protected List<Action> executeHandler(Operation operation, OperationHandler handler,
-			GModelState graphicalModelState) {
-		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
-		EcoreEditorContext context = modelState.getEditorContext();
-		String label = handler.getLabel();
-		EcoreRecordingCommand command = new EcoreRecordingCommand(context, label,
-				() -> handler.execute(operation, modelState));
-		modelState.execute(command);
-		GModelRoot newRoot = new GModelFactory(modelState).create();
+	protected List<Action> executeHandler(Operation operation, OperationHandler handler, GModelState gModelState) {
+		if (handler instanceof ModelserverAwareOperationHandler) {
+			handler.execute(operation, gModelState);
+		} else {
+			// TODO leave that for now or trigger a full update for not-modelserveraware-handlers
+			EcoreModelState modelState = EcoreModelState.getModelState(gModelState);
+			EcoreEditorContext context = modelState.getEditorContext();
+			String label = handler.getLabel();
+			EcoreRecordingCommand command = new EcoreRecordingCommand(context, label,
+					() -> handler.execute(operation, modelState));
+			modelState.execute(command);
+			GModelRoot newRoot = new GModelFactory(modelState).create();
 
-		return List.of(new RequestBoundsAction(newRoot), new SetDirtyStateAction(modelState.isDirty()));
+			return List.of(new RequestBoundsAction(newRoot), new SetDirtyStateAction(modelState.isDirty()));
+		}
+		return none();
 	}
 
 }
