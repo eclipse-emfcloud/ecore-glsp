@@ -23,7 +23,7 @@
   "scripts": {
     "prepare": "theia build --mode development",
     "start": "theia start",
-    "start:debug": "theia start --loglevel=debug --root=../workspace",
+    "start:debug": "theia start --loglevel=debug --root=../../workspace",
     "watch": "theia build --watch --mode development"
   },
   "theia": {

@@ -52,8 +52,8 @@
   },
   "workspaces": [
     "browser-app",
-    "sprotty-ecore",
-    "theia-ecore"
+    "configs",
+    "packages/*/"
   ],
   "dependencies": {
     "yarn": "^1.22.4"

@@ -1,0 +1,17 @@
+{
+  "extends": "./configs/base.tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@eclipse-emfcloud/sprotty-ecore": [
+        "packages/sprotty-ecore/src/*"
+      ],
+      "@eclipse-emfcloud/theia-ecore": [
+        "packages/theia-ecore/src/*"
+      ],
+    }
+  },
+  "include": [
+    "packages/*/src"
+  ]
+}
