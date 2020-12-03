@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EGenericType;
@@ -107,12 +108,24 @@ public class EcoreModelServerAccess {
 		return this.edit(addCommand);
 	}
 
+	private Command createRemoveEStructuralFeatureCommand(EcoreModelState modelState,
+			EStructuralFeature eStructuralFeature) {
+		EditingDomain editingDomain = EcoreModelState.getEditorContext(modelState).getResourceManager()
+				.getEditingDomain();
+		int index = eStructuralFeature.getEContainingClass().getEStructuralFeatures().indexOf(eStructuralFeature);
+		return RemoveCommand.create(editingDomain, eStructuralFeature.getEContainingClass(),
+				EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES, index);
+	}
+
+	public boolean removeEAttribute(EcoreModelState modelState, EAttribute eAttribute) {
+		return this.edit(createRemoveEStructuralFeatureCommand(modelState, eAttribute));
+	}
+
 	public boolean removeEReference(EcoreModelState modelState, EReference eReference) {
 		EReference eOpposite = eReference.getEOpposite();
-		EReference feature = EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES;
 		if (eOpposite != null) {
-			Command removeCommand = createRemoveCommand(modelState, eReference, feature);
-			Command removeOppositeCommand = createRemoveCommand(modelState, eOpposite, feature);
+			Command removeCommand = createRemoveEStructuralFeatureCommand(modelState, eReference);
+			Command removeOppositeCommand = createRemoveEStructuralFeatureCommand(modelState, eOpposite);
 			CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
 			compoundCommand.setType(CommandKind.COMPOUND);
 			try {
@@ -123,12 +136,19 @@ public class EcoreModelServerAccess {
 			}
 			return this.editCompound(compoundCommand);
 		}
-		return this.remove(modelState, eReference, feature);
+		return this.edit(createRemoveEStructuralFeatureCommand(modelState, eReference));
+	}
+
+	private Command createRemoveEClassifierCommand(EcoreModelState modelState, EClassifier eClassifier) {
+		EditingDomain editingDomain = EcoreModelState.getEditorContext(modelState).getResourceManager()
+				.getEditingDomain();
+		int index = eClassifier.getEPackage().getEClassifiers().indexOf(eClassifier);
+		return RemoveCommand.create(editingDomain, eClassifier.getEPackage(),
+				EcorePackage.Literals.EPACKAGE__ECLASSIFIERS, index);
 	}
 
 	public boolean removeEClassifier(EcoreModelState modelState, EClassifier eClassifier) {
-		Command removeEClassifierCommand = createRemoveCommand(modelState, eClassifier,
-				EcorePackage.Literals.EPACKAGE__ECLASSIFIERS);
+		Command removeEClassifierCommand = createRemoveEClassifierCommand(modelState, eClassifier);
 
 		Collection<Setting> usages = UsageCrossReferencer.find(eClassifier, eClassifier.eResource().getResourceSet());
 		if (!usages.isEmpty()) {
@@ -143,21 +163,23 @@ public class EcoreModelServerAccess {
 
 			for (Setting setting : usages) {
 				EObject eObject = setting.getEObject();
-				if (setting.getEStructuralFeature().isChangeable() && eObject instanceof EStructuralFeature) {
-					Command removeCommand = createRemoveCommand(modelState, eObject,
-							EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES);
-					try {
-						compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
-					} catch (EncodingException e) {
-						return false;
-					}
-				} else if (setting.getEStructuralFeature().isChangeable() && eObject instanceof EGenericType) {
-					Command removeCommand = createRemoveCommand(modelState, eObject,
-							EcorePackage.Literals.ECLASS__ESUPER_TYPES);
-					try {
-						compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
-					} catch (EncodingException e) {
-						return false;
+				if (setting.getEStructuralFeature().isChangeable() && eObject.eContainer() instanceof EClass) {
+					if (eObject instanceof EStructuralFeature) {
+						Command removeCommand = createRemoveEStructuralFeatureCommand(modelState,
+								(EStructuralFeature) eObject);
+						try {
+							compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
+						} catch (EncodingException e) {
+							return false;
+						}
+					} else if (eObject instanceof EGenericType) {
+						Command removeCommand = createRemoveEGenericTypeCommand(modelState, (EGenericType) eObject,
+								(EClass) eObject.eContainer());
+						try {
+							compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
+						} catch (EncodingException e) {
+							return false;
+						}
 					}
 				}
 			}
@@ -167,23 +189,28 @@ public class EcoreModelServerAccess {
 		}
 	}
 
-	public boolean removeEAttribute(EcoreModelState modelState, EAttribute eAttribute) {
-		return this.remove(modelState, eAttribute, EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES);
+	private Command createRemoveEEnumLiteralCommand(EcoreModelState modelState, EEnumLiteral eEnumLiteral) {
+		EditingDomain editingDomain = EcoreModelState.getEditorContext(modelState).getResourceManager()
+				.getEditingDomain();
+		int index = eEnumLiteral.getEEnum().getELiterals().indexOf(eEnumLiteral);
+		return RemoveCommand.create(editingDomain, eEnumLiteral.getEEnum(), EcorePackage.Literals.EENUM__ELITERALS,
+				index);
 	}
 
 	public boolean removeEEnumLiteral(EcoreModelState modelState, EEnumLiteral eEnumLiteral) {
-		return this.remove(modelState, eEnumLiteral, EcorePackage.Literals.EENUM__ELITERALS);
+		return this.edit(createRemoveEEnumLiteralCommand(modelState, eEnumLiteral));
 	}
 
-	private boolean remove(EcoreModelState modelState, EObject element, EReference feature) {
-		return this.edit(createRemoveCommand(modelState, element, feature));
-	}
-
-	private Command createRemoveCommand(EcoreModelState modelState, EObject element, EReference feature) {
+	private Command createRemoveEGenericTypeCommand(EcoreModelState modelState, EGenericType eGenericType,
+			EClass eContainer) {
 		EditingDomain editingDomain = EcoreModelState.getEditorContext(modelState).getResourceManager()
 				.getEditingDomain();
-		int index = element.eContainer().eContents().indexOf(element);
-		return RemoveCommand.create(editingDomain, element.eContainer(), feature, index);
+		int index = eContainer.getEGenericSuperTypes().indexOf(eGenericType);
+		return RemoveCommand.create(editingDomain, eContainer, EcorePackage.Literals.ECLASS__ESUPER_TYPES, index);
+	}
+
+	public boolean removeESuperType(EcoreModelState modelState, EGenericType eGenericType, EClass eContainer) {
+		return this.edit(createRemoveEGenericTypeCommand(modelState, eGenericType, eContainer));
 	}
 
 	private boolean editCompound(CCompoundCommand compoundCommand) {

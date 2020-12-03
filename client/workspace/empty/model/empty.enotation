@@ -29,7 +29,7 @@
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEEnum4"/>
     <position x="676.0" y="423.0"/>
-    <size width="158.609375" height="144.0"/>
+    <size width="158.609375" height="167.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEClass5"/>
@@ -83,12 +83,29 @@
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEClass13"/>
-    <position x="982.0" y="505.0"/>
+    <position x="898.0" y="505.0"/>
     <size width="167.484375" height="43.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEClass14"/>
     <position x="1105.0" y="602.0"/>
     <size width="167.484375" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//NewEClass15"/>
+    <position x="825.0" y="671.0"/>
+    <size width="167.484375" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//NewEClass15/testreference"/>
+    <bendPoints x="875.7421875" y="688.5"/>
+    <bendPoints x="1185.2421875" y="688.5"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//NewEClass12/containment"/>
+  </elements>
+  <elements xsi:type="enotation:Edge">
+    <semanticElement uri="//NewEClass15/reference"/>
+    <bendPoints x="1188.7421875" y="691.5"/>
   </elements>
 </enotation:Diagram>
