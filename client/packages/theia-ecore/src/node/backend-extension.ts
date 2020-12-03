@@ -37,7 +37,7 @@ export class EcoreModelServerLaunchOptions implements LaunchOptions {
     jarPath = findEquinoxLauncher(join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.modelserver.product-1.0.0"));
     additionalArgs = [
         "--errorsOnly",
-        `-r=${resolve(join(__dirname, "..", "..", "..", "workspace"))}`
+        `-r=${resolve(join(__dirname, "..", "..", "..", "..", "workspace"))}`
     ];
 }
 
