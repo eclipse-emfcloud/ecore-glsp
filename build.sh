@@ -50,7 +50,7 @@ done
 if [ "$buildBackend" == "true" ]; then
   echo "$(date +"[%T.%3N]") Build backend products"
   cd server/
-  mvn clean install -Pfatjar -U
+  mvn clean install -U
   cd ../
 fi
 
