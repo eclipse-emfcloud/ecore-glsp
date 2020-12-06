@@ -23,22 +23,5 @@ public class EcoreEdgeUtil {
 	public static String getEdgeId(String labelId) {
 		return labelId.split("_")[0];
 	}
-	
-	/**
-	*	Returns whether a graphic element ID resembles a generalization edge.
-	*	If edges are created for ESuperTypes, the graphic element IDs of the two involved classes are merged with a "_".
-	*	@see org.eclipse.emfcloud.ecore.glsp.gmodel.GModelFactory#create(org.eclipse.emf.ecore.EClass, org.eclipse.emf.ecore.EClass)
-	*/
-	public static boolean isGeneralizationEdge(String graphicElementId) {
-		return graphicElementId.contains("_");
-	}
-	
-	public static String getBaseClassId(String graphicElementId) {
-		return graphicElementId.split("_")[0];
-	}
-	
-	public static String getSuperClassId(String graphicElementId) {
-		return graphicElementId.split("_")[1];
-	}
 
 }
