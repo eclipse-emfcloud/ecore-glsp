@@ -24,14 +24,12 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
-import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.emfcloud.modelserver.client.XmiToEObjectSubscriptionListener;
 import org.eclipse.emfcloud.modelserver.command.CCommand;
 import org.eclipse.emfcloud.modelserver.command.CCompoundCommand;
@@ -106,7 +104,7 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			throw new RuntimeException(ex);
 		}
 
-		// TODO always getting first element is not ideal, maybe you have a better idea
+		// Initialize notation element
 		EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
 		NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
 		ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
@@ -125,20 +123,13 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			} else if (owner instanceof EEnum) {
 				semanticElement = ((EEnum) owner).getELiterals().get(indexToRemove);
 			} else if (owner instanceof EClass) {
-				if (command.getFeature().equals("eSuperTypes")) {
-					semanticElement = ((EClass) owner).getESuperTypes().get(indexToRemove);
-				} else if (command.getFeature().equals("eStructuralFeatures")) {
+				if (command.getFeature().equals("eStructuralFeatures")) {
 					semanticElement = ((EClass) owner).getEStructuralFeatures().get(indexToRemove);
-					if (semanticElement instanceof EReference) {
-						EReference eOpposite = ((EReference) semanticElement).getEOpposite();
-						if (eOpposite != null) {
-							String stringid = EcoreEdgeUtil.getStringId((EReference) semanticElement);
-							modelState.getIndex().getBidirectionalReferences().remove(stringid);
-						}
-					}
 				}
 			}
 		}
+
+		// Update notation resource
 		Optional<NotationElement> notation = modelState.getIndex().getNotation(semanticElement);
 		notation.ifPresent(EcoreUtil::delete);
 
