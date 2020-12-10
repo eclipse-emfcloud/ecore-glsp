@@ -17,19 +17,20 @@ package org.eclipse.emfcloud.ecore.glsp;
 
 import java.util.Optional;
 
-import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
 
 import com.google.inject.Singleton;
 
 @Singleton
 public class ModelServerClientProvider {
-	private ModelServerClient modelServerClient;
+	private ModelServerClientApi<EObject> modelServerClient;
 
-	public Optional<ModelServerClient> get() {
+	public Optional<ModelServerClientApi<EObject>> get() {
 		return Optional.ofNullable(modelServerClient);
 	}
 
-	public void setModelServerClient(ModelServerClient modelServerClient) {
+	public void setModelServerClient(ModelServerClientApi<EObject> modelServerClient) {
 		this.modelServerClient = modelServerClient;
 	}
 

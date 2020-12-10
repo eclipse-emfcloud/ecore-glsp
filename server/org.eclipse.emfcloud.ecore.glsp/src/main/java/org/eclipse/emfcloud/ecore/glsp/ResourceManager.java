@@ -30,7 +30,7 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
+import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
 
@@ -77,7 +77,7 @@ public class ResourceManager {
 
 	protected EcoreFacade createEcoreFacade(EcoreModelState modelState) {
 		try {
-			ModelServerClient client = modelState.getModelServerAccess().getModelServerClient();
+			ModelServerClientApi<EObject> client = modelState.getModelServerAccess().getModelServerClient();
 			EObject root = client.get(getSemanticURI(), FORMAT_XMI).thenApply(res -> res.body()).get();
 
 			Resource semanticResource = loadResource(convertToFile(getSemanticURI()), root);
