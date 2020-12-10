@@ -13,11 +13,12 @@ package org.eclipse.emfcloud.ecore.glsp.model;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.ModelServerClientProvider;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
+import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
 import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
 import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GModelRoot;
@@ -51,7 +52,7 @@ public class EcoreModelFactory implements ModelFactory {
 			LOGGER.error("No source uri given to load model, return empty model.");
 			return createEmptyRoot();
 		}
-		Optional<ModelServerClient> modelServerClient = modelServerClientProvider.get();
+		Optional<ModelServerClientApi<EObject>> modelServerClient = modelServerClientProvider.get();
 		if (modelServerClient.isEmpty()) {
 			LOGGER.error("Connection to modelserver has not been initialized, return empty model");
 			return createEmptyRoot();

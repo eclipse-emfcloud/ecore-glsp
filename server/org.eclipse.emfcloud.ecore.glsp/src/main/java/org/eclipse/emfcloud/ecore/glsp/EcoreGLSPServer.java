@@ -11,7 +11,9 @@
 package org.eclipse.emfcloud.ecore.glsp;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
+import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
 import org.eclipse.emfcloud.modelserver.client.Response;
 import org.eclipse.glsp.server.jsonrpc.DefaultGLSPServer;
 
@@ -33,7 +35,7 @@ public class EcoreGLSPServer extends DefaultGLSPServer<EcoreInitializeOptions> {
 			LOGGER.debug(String.format("[%s] Pinging modelserver", options.getTimestamp()));
 
 			try {
-				ModelServerClient client = new ModelServerClient(options.getModelServerURL());
+				ModelServerClientApi<EObject> client = new ModelServerClient(options.getModelServerURL());
 				boolean alive = client.ping().thenApply(Response<Boolean>::body).get();
 				if (alive) {
 					modelServerClientProvider.setModelServerClient(client);
