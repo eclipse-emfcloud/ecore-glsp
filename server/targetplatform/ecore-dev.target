@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Ecore GLSP Dev" sequenceNumber="1607599725">
+<target name="Ecore GLSP Dev" sequenceNumber="1610111524">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.glsp.feature.feature.group" version="0.8.0.202010130847"/>
@@ -9,11 +9,11 @@
       <repository location="https://download.eclipse.org/glsp/server/p2/nightly/0.8/0.8.0.202010130847/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.elk.core" version="0.6.0"/>
-      <unit id="org.eclipse.elk.graph" version="0.6.0"/>
-      <unit id="org.eclipse.elk.graph.text" version="0.6.0"/>
-      <unit id="org.eclipse.elk.alg.layered" version="0.6.0"/>
-      <repository location="https://download.eclipse.org/elk/updates/releases/0.6.0/"/>
+      <unit id="org.eclipse.elk.core" version="0.7.0"/>
+      <unit id="org.eclipse.elk.graph" version="0.7.0"/>
+      <unit id="org.eclipse.elk.graph.text" version="0.7.0"/>
+      <unit id="org.eclipse.elk.alg.layered" version="0.7.0"/>
+      <repository location="https://download.eclipse.org/elk/updates/releases/0.7.0/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
@@ -30,11 +30,11 @@
       <unit id="org.hamcrest" version="1.1.0.v20090501071000"/>
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="javax.servlet" version="3.1.0.v201410161800"/>
-      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20200529191137/repository/"/>
+      <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20200831200620/repository/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emfcloud.modelserver.feature.feature.group" version="0.7.0.202012091509"/>
-      <repository location="https://download.eclipse.org/emfcloud/modelserver/p2/nightly/"/>
+      <unit id="org.eclipse.emfcloud.modelserver.feature.feature.group" version="0.7.0.202101081124"/>
+      <repository location="https://download.eclipse.org/emfcloud/modelserver/p2/nightly/0.7/0.7.0.202101081124/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.emfjson.jackson" version="0.0.0"/>
@@ -42,21 +42,18 @@
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.jetty.server" version="9.4.34.v20201102"/>
-      <unit id="org.eclipse.jetty.servlet" version="9.4.34.v20201102"/>
-      <unit id="org.eclipse.jetty.websocket.javax.websocket" version="9.4.34.v20201102"/>
-      <unit id="org.eclipse.jetty.websocket.server" version="9.4.34.v20201102"/>
       <repository location="https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.34.v20201102/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
-      <unit id="org.eclipse.emf.ecore.feature.group" version="2.22.0.v20200519-1135"/>
-      <unit id="org.eclipse.emf.common.feature.group" version="2.19.0.v20200324-0932"/>
-      <unit id="org.eclipse.emf.codegen.ecore.feature.group" version="2.22.0.v20200324-0947"/>
-      <unit id="org.eclipse.core.runtime.feature.feature.group" version="1.2.900.v20200525-1407"/>
-      <unit id="org.eclipse.emf.codegen.feature.group" version="2.20.0.v20200324-0932"/>
-      <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.800.v20200514-1529"/>
-      <unit id="com.ibm.icu" version="64.2.0.v20190507-1337"/>
+      <unit id="org.eclipse.emf.ecore.feature.group" version="2.23.0.v20200630-0516"/>
+      <unit id="org.eclipse.emf.common.feature.group" version="2.20.0.v20200822-0801"/>
+      <unit id="org.eclipse.emf.codegen.ecore.feature.group" version="2.23.0.v20200701-0840"/>
+      <unit id="org.eclipse.core.runtime.feature.feature.group" version="1.2.1000.v20200828-1034"/>
+      <unit id="org.eclipse.emf.codegen.feature.group" version="2.21.0.v20200708-0547"/>
+      <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.900.v20200819-0940"/>
+      <unit id="com.ibm.icu" version="67.1.0.v20200706-1749"/>
       <unit id="org.eclipse.emf.edit" version="2.16.0.v20190920-0401"/>
-      <repository location="http://download.eclipse.org/releases/2020-06"/>
+      <repository location="http://download.eclipse.org/releases/2020-09"/>
     </location>
   </locations>
 </target>
