@@ -7,21 +7,21 @@ location "https://download.eclipse.org/glsp/server/p2/nightly/0.8/0.8.0.20201013
 	org.eclipse.glsp.layout [0.8.0,0.9.0)
 }
 
-location "https://download.eclipse.org/elk/updates/releases/0.6.0/" {
-	org.eclipse.elk.core [0.6.0,1.0.0)
-	org.eclipse.elk.graph [0.6.0,1.0.0)
-	org.eclipse.elk.graph.text [0.6.0,1.0.0)
-	org.eclipse.elk.alg.layered [0.6.0,1.0.0)
+location "https://download.eclipse.org/elk/updates/releases/0.7.0/" {
+	org.eclipse.elk.core [0.7.0,1.0.0)
+	org.eclipse.elk.graph [0.7.0,1.0.0)
+	org.eclipse.elk.graph.text [0.7.0,1.0.0)
+	org.eclipse.elk.alg.layered [0.7.0,1.0.0)
 }
 
-location "http://download.eclipse.org/releases/2020-06" {
+location "http://download.eclipse.org/releases/2020-09" {
 	// Transitive dependencies + Eclipse Product
 	org.eclipse.emf.edit [2.16.0,3.0.0)
 	org.eclipse.equinox.executable.feature.group [3.8.600,4.0.0)
 	org.eclipse.core.runtime.feature.feature.group [1.2.900,2.0.0)
 }
 
-location "https://download.eclipse.org/tools/orbit/downloads/drops/R20200529191137/repository/" {
+location "https://download.eclipse.org/tools/orbit/downloads/drops/R20200831200620/repository/" {
 	// Transitive dependencies
 	org.apache.log4j [1.2.15,2.0.0)
 	com.google.gson [2.7.0,2.7.1)
@@ -39,7 +39,7 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R202005291911
 	javax.servlet [3.1.0,4.0.0)
 }
 
-location "https://download.eclipse.org/emfcloud/modelserver/p2/nightly/" {
+location "https://download.eclipse.org/emfcloud/modelserver/p2/nightly/0.7/0.7.0.202101081124/" {
 	org.eclipse.emfcloud.modelserver.feature.feature.group [0.7.0,0.8.0)
 }
 
@@ -49,7 +49,4 @@ location "http://ghillairet.github.io/p2" {
 
 location "https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.34.v20201102/" {
 	org.eclipse.jetty.server
-	org.eclipse.jetty.servlet
-	org.eclipse.jetty.websocket.javax.websocket
-	org.eclipse.jetty.websocket.server
 }
