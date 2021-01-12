@@ -31,7 +31,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
+import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
 import org.eclipse.emfcloud.modelserver.client.NotificationSubscriptionListener;
 import org.eclipse.emfcloud.modelserver.command.CCommand;
 import org.eclipse.emfcloud.modelserver.command.CCommandFactory;
@@ -51,11 +51,11 @@ public class EcoreModelServerAccess {
 
 	private String modelUri;
 
-	private ModelServerClient modelServerClient;
+	private ModelServerClientApi<EObject> modelServerClient;
 	private NotificationSubscriptionListener<EObject> subscriptionListener;
 	private CommandCodec commandCodec;
 
-	public EcoreModelServerAccess(final String modelUri, final ModelServerClient modelServerClient,
+	public EcoreModelServerAccess(final String modelUri, final ModelServerClientApi<EObject> modelServerClient,
 			final CommandCodec commandCodec) {
 		Preconditions.checkNotNull(modelServerClient);
 		this.modelUri = modelUri;
@@ -67,7 +67,7 @@ public class EcoreModelServerAccess {
 		return commandCodec;
 	}
 
-	public ModelServerClient getModelServerClient() {
+	public ModelServerClientApi<EObject> getModelServerClient() {
 		return modelServerClient;
 	}
 
