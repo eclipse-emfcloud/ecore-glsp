@@ -121,18 +121,54 @@ public class EcoreModelServerAccess {
 	public boolean setOpposite(EcoreModelState modelState, EReference eReference, EReference opposite) {
 		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getEReference_EOpposite(), opposite);
 	}
+	
+	public boolean setInstanceName(EcoreModelState modelState, EClassifier eClassifier, String name) {
+		return this.set(modelState, eClassifier, EcorePackage.eINSTANCE.getEClassifier_InstanceClassName(), name);
+	}
+	
+	public boolean setName(EcoreModelState modelState, EClassifier eClassifier, String name) {
+		return this.set(modelState, eClassifier, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	}
+	
+	public boolean setAttributeName(EcoreModelState modelState, EAttribute eAttribute, String name) {
+		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	}
+	
+	public boolean setAttributeType(EcoreModelState modelState, EAttribute eAttribute, EClassifier type) {
+		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getEAttribute_EAttributeType(), type);
+	}
+	
+	public boolean setLiteralName(EcoreModelState modelState, EEnumLiteral eEnumLiteral, String literal) {
+		return this.set(modelState, eEnumLiteral, EcorePackage.eINSTANCE.getENamedElement_Name(), literal);
+	}
+	
+	public boolean setAttributeType(EcoreModelState modelState, EAttribute eAttribute, EAttribute type) {
+		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getEAttribute_EAttributeType(), type);
+	}
+	
+	public boolean setEdgeName(EcoreModelState modelState, EReference eReference, String name) {
+		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	}
+	
+	public boolean setLowerMultiplicity(EcoreModelState modelState, EReference eReference, int multiplicity) {
+		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getETypedElement_LowerBound(), multiplicity);
+	}
+	
+	public boolean setUpperMultiplicity(EcoreModelState modelState, EReference eReference, int multiplicity) {
+		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getETypedElement_UpperBound(), multiplicity);
+	}
 
-	private boolean add(EcoreModelState modelState, EObject owner, Object feature, EObject newEObject) {
+	private boolean add(EcoreModelState modelState, EObject owner, EReference feature, Object addObject) {
 		Command addCommand = AddCommand.create(
 				EcoreModelState.getEditorContext(modelState).getResourceManager().getEditingDomain(), owner, feature,
-				newEObject);
+				addObject);
 		return this.edit(addCommand);
 	}
 	
-	private boolean set(EcoreModelState modelState, EObject owner, Object feature, EObject newEObject) {
+	private boolean set(EcoreModelState modelState, EObject owner, EStructuralFeature feature, Object setObject) {
 		Command setCommand = SetCommand.create(
 				EcoreModelState.getEditorContext(modelState).getResourceManager().getEditingDomain(), owner, feature,
-				newEObject);
+				setObject);
 		return this.edit(setCommand);
 	}
 

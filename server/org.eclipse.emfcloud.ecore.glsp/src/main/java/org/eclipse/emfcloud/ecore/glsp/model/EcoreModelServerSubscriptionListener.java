@@ -106,9 +106,11 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 		}
 
 		// Initialize notation element
-		EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
-		NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
-		ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+		if(command.getObjectValues().get(0) instanceof EClassifier) {
+			EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
+			NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
+			ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+		}
 	}
 
 	private void executeRemoveCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
