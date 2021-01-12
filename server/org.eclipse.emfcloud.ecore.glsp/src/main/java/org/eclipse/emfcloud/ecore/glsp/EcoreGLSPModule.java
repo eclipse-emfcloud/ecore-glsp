@@ -38,6 +38,7 @@ import org.eclipse.glsp.server.actions.SaveModelActionHandler;
 import org.eclipse.glsp.server.actions.UndoRedoActionHandler;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.factory.ModelFactory;
+import org.eclipse.glsp.server.features.directediting.ApplyLabelEditOperationHandler;
 import org.eclipse.glsp.server.features.toolpalette.ToolPaletteItemProvider;
 import org.eclipse.glsp.server.layout.ILayoutEngine;
 import org.eclipse.glsp.server.layout.ServerLayoutConfiguration;
@@ -101,7 +102,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.add(CreateClassifierNodeOperationHandler.class);
 		bindings.add(CreateEcoreEdgeOperationHandler.class);
 		bindings.add(CreateClassifierChildNodeOperationHandler.class);
-		bindings.add(EcoreLabelEditOperationHandler.class);
+		bindings.rebind(ApplyLabelEditOperationHandler.class, EcoreLabelEditOperationHandler.class);
 		bindings.rebind(ChangeRoutingPointsHandler.class, EcoreChangeRoutingPointsOperationHandler.class);
 		bindings.add(LayoutOperationHandler.class);
 	}
