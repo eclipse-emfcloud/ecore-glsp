@@ -83,7 +83,7 @@ public class EcoreModelServerAccess {
 	public void subscribe(NotificationSubscriptionListener<EObject> subscriptionListener) {
 		LOGGER.debug("EcoreModelServerAccess - subscribe");
 		this.subscriptionListener = subscriptionListener;
-		this.modelServerClient.subscribe(modelUri, subscriptionListener, "xmi");
+		this.modelServerClient.subscribe(modelUri, subscriptionListener, FORMAT_XMI);
 	}
 
 	public void unsubscribe() {
