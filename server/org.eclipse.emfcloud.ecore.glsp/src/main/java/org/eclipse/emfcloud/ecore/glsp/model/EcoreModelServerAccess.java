@@ -150,15 +150,15 @@ public class EcoreModelServerAccess {
 		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
 	}
 	
-	public boolean setLowerMultiplicity(EcoreModelState modelState, EReference eReference, int multiplicity) {
-		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getETypedElement_LowerBound(), multiplicity);
+	public boolean setLowerMultiplicity(EcoreModelState modelState, EStructuralFeature eStructuralFeature, int multiplicity) {
+		return this.set(modelState, eStructuralFeature, EcorePackage.eINSTANCE.getETypedElement_LowerBound(), multiplicity);
 	}
 	
-	public boolean setUpperMultiplicity(EcoreModelState modelState, EReference eReference, int multiplicity) {
-		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getETypedElement_UpperBound(), multiplicity);
+	public boolean setUpperMultiplicity(EcoreModelState modelState, EStructuralFeature eStructuralFeature, int multiplicity) {
+		return this.set(modelState, eStructuralFeature, EcorePackage.eINSTANCE.getETypedElement_UpperBound(), multiplicity);
 	}
 
-	private boolean add(EcoreModelState modelState, EObject owner, EReference feature, Object addObject) {
+	private boolean add(EcoreModelState modelState, EObject owner, EReference feature, EObject addObject) {
 		Command addCommand = AddCommand.create(
 				EcoreModelState.getEditorContext(modelState).getResourceManager().getEditingDomain(), owner, feature,
 				addObject);
