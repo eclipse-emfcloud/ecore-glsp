@@ -61,17 +61,20 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 		Diagram diagram = facade.getDiagram();
 
 		if (elementTypeId.equals(Types.INHERITANCE)) {
-			sourceEclass.getESuperTypes().add(targetEClass);
+			modelAccess.addSuperType(EcoreModelState.getModelState(modelState), targetEClass, sourceEclass);
 		} else {
 			EReference reference = createReference(sourceEclass, targetEClass,
 					elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION) ? Types.COMPOSITION : elementTypeId);
+			modelAccess.addEReference(EcoreModelState.getModelState(modelState), reference, sourceEclass);
 
 			if (elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE)
 					|| elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION)) {
 				EReference opposite = createReference(targetEClass, sourceEclass, elementTypeId);
-				reference.setEOpposite(opposite);
-				opposite.setEOpposite(reference);
-
+				modelAccess.addEReference(EcoreModelState.getModelState(modelState), opposite, targetEClass);
+				
+				modelAccess.setOpposite(EcoreModelState.getModelState(modelState), reference, opposite);
+				modelAccess.setOpposite(EcoreModelState.getModelState(modelState), opposite, reference);
+				
 				if (elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE)) {
 					NotationElement sourceNotationElement = modelIndex.getNotation(sourceEclass).get();
 					NotationElement targeNotationElement = modelIndex.getNotation(targetEClass).get();
@@ -87,9 +90,6 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 					}
 				}
 			}
-			GEdge edge = getOrThrow(context.getGModelFactory().create(reference, GEdge.class),
-					" No viewmodel factory found for element: " + reference);
-			diagram.getElements().add(facade.initializeEdge(reference, edge));
 		}
 	}
 
@@ -100,7 +100,6 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 		if (elementTypeId.equals(Types.COMPOSITION)) {
 			reference.setContainment(true);
 		}
-		source.getEStructuralFeatures().add(reference);
 		return reference;
 
 	}

@@ -30,6 +30,7 @@ import org.eclipse.glsp.graph.GraphPackage;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.CreateNodeOperation;
 import org.eclipse.glsp.server.operations.Operation;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
 
 public class CreateClassifierChildNodeOperationHandler
 		extends ModelServerAwareBasicOperationHandler<CreateNodeOperation> {
@@ -55,11 +56,17 @@ public class CreateClassifierChildNodeOperationHandler
 		if (elementTypeId.equals(Types.ATTRIBUTE) && container instanceof EClass) {
 			EAttribute attribute = createEAttribute(modelState);
 			modelState.getIndex().add(attribute);
-			((EClass) container).getEStructuralFeatures().add(attribute);
+			if (!modelAccess.addEAttribute(EcoreModelState.getModelState(modelState), attribute, container)) {
+				throw new GLSPServerException(
+						"Could not execute create operation on EAttribute: " + attribute.getName());
+			}
 		} else if (elementTypeId.contentEquals(Types.ENUMLITERAL) && container instanceof EEnum) {
 			EEnumLiteral literal = createEEnumLiteral(modelState);
 			modelState.getIndex().add(literal);
-			((EEnum) container).getELiterals().add(literal);
+			if (!modelAccess.addEEnumLiteral(EcoreModelState.getModelState(modelState), literal, (EEnum) container)) {
+				throw new GLSPServerException(
+						"Could not execute create operation on EEnumLiteral: " + literal.getName());
+			}
 		}
 
 	}

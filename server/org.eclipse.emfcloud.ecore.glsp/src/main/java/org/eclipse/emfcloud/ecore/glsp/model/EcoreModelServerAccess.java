@@ -18,6 +18,7 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
@@ -29,6 +30,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
@@ -97,15 +99,77 @@ public class EcoreModelServerAccess {
 	}
 
 	public boolean addEClassifier(EcoreModelState modelState, EClassifier newEClassifier) {
-		return this.add(modelState, getEPackage(modelState), EcorePackage.Literals.EPACKAGE__ECLASSIFIERS,
-				newEClassifier);
+		return this.add(modelState, getEPackage(modelState), EcorePackage.eINSTANCE.getEPackage_EClassifiers(), newEClassifier);
+	}
+	
+	public boolean addSuperType(EcoreModelState modelState, EClassifier superType, EClassifier parent) {
+		return this.add(modelState, parent, EcorePackage.eINSTANCE.getEClass_ESuperTypes(), superType);
+	}
+	
+	public boolean addEReference(EcoreModelState modelState, EReference newEReference, EClassifier parent) {
+		return this.add(modelState, parent, EcorePackage.eINSTANCE.getEClass_EStructuralFeatures(), newEReference);
+	}
+	
+	public boolean addEAttribute(EcoreModelState modelState, EAttribute newEAttribute, EClassifier parent) {
+		return this.add(modelState, parent, EcorePackage.eINSTANCE.getEClass_EStructuralFeatures(), newEAttribute);
+	}
+	
+	public boolean addEEnumLiteral(EcoreModelState modelState, EEnumLiteral newEEnumLiteral, EEnum parent) {
+		return this.add(modelState, parent, EcorePackage.eINSTANCE.getEEnum_ELiterals(), newEEnumLiteral);
+	}
+	
+	public boolean setOpposite(EcoreModelState modelState, EReference eReference, EReference opposite) {
+		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getEReference_EOpposite(), opposite);
+	}
+	
+	public boolean setInstanceName(EcoreModelState modelState, EClassifier eClassifier, String name) {
+		return this.set(modelState, eClassifier, EcorePackage.eINSTANCE.getEClassifier_InstanceClassName(), name);
+	}
+	
+	public boolean setName(EcoreModelState modelState, EClassifier eClassifier, String name) {
+		return this.set(modelState, eClassifier, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	}
+	
+	public boolean setAttributeName(EcoreModelState modelState, EAttribute eAttribute, String name) {
+		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	}
+	
+	public boolean setAttributeType(EcoreModelState modelState, EAttribute eAttribute, EClassifier type) {
+		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getEAttribute_EAttributeType(), type);
+	}
+	
+	public boolean setLiteralName(EcoreModelState modelState, EEnumLiteral eEnumLiteral, String literal) {
+		return this.set(modelState, eEnumLiteral, EcorePackage.eINSTANCE.getENamedElement_Name(), literal);
+	}
+	
+	public boolean setAttributeType(EcoreModelState modelState, EAttribute eAttribute, EAttribute type) {
+		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getEAttribute_EAttributeType(), type);
+	}
+	
+	public boolean setEdgeName(EcoreModelState modelState, EReference eReference, String name) {
+		return this.set(modelState, eReference, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	}
+	
+	public boolean setLowerMultiplicity(EcoreModelState modelState, EStructuralFeature eStructuralFeature, int multiplicity) {
+		return this.set(modelState, eStructuralFeature, EcorePackage.eINSTANCE.getETypedElement_LowerBound(), multiplicity);
+	}
+	
+	public boolean setUpperMultiplicity(EcoreModelState modelState, EStructuralFeature eStructuralFeature, int multiplicity) {
+		return this.set(modelState, eStructuralFeature, EcorePackage.eINSTANCE.getETypedElement_UpperBound(), multiplicity);
 	}
 
-	private boolean add(EcoreModelState modelState, EObject owner, EReference feature, EObject element) {
+	private boolean add(EcoreModelState modelState, EObject owner, EReference feature, EObject addObject) {
 		Command addCommand = AddCommand.create(
 				EcoreModelState.getEditorContext(modelState).getResourceManager().getEditingDomain(), owner, feature,
-				element);
+				addObject);
 		return this.edit(addCommand);
+	}
+	
+	private boolean set(EcoreModelState modelState, EObject owner, EStructuralFeature feature, Object setObject) {
+		Command setCommand = SetCommand.create(
+				EcoreModelState.getEditorContext(modelState).getResourceManager().getEditingDomain(), owner, feature,
+				setObject);
+		return this.edit(setCommand);
 	}
 
 	private Command createRemoveCommand(EcoreModelState modelState, EObject owner, EStructuralFeature feature,

@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -63,9 +64,10 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 						"No shape element for label with id " + editLabelOperation.getLabelId() + " found");
 
 				if (node_semantic instanceof EClassifier) {
-					((EClassifier) node_semantic).setName(editLabelOperation.getText().trim());
-					// nameChange== uri change so we have to recreate the proxy here
-					shape.setSemanticElement(facade.createProxy(node_semantic));
+					if (!modelAccess.setName(EcoreModelState.getModelState(graphicalModelState), (EClassifier) node_semantic, editLabelOperation.getText().trim())) {
+						throw new GLSPServerException(
+								"Could not rename node to: " + editLabelOperation.getText().trim());
+					}
 				}
 				break;
 			case Types.LABEL_INSTANCE:
@@ -74,8 +76,9 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 
 				node_semantic = getOrThrow(index.getSemantic(node),
 						"No semantic element for labelContainer with id " + node.getId() + " found");
-				if (node_semantic instanceof EClassifier) {
-					((EClassifier) node_semantic).setInstanceClassName(editLabelOperation.getText().trim());
+				if (!modelAccess.setInstanceName(EcoreModelState.getModelState(graphicalModelState), (EClassifier) node_semantic, editLabelOperation.getText().trim())) {
+					throw new GLSPServerException(
+							"Could not rename node to: " + editLabelOperation.getText().trim());
 				}
 				break;
 			case Types.ATTRIBUTE:
@@ -92,13 +95,19 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 					Optional<EClassifier> datatype = parseStringToEType(split[1].trim(),
 							EcoreModelState.getResourceManager(graphicalModelState));
 					if (datatype.isPresent()) {
-						attribute_semantic.setEType(datatype.get());
+						if (!modelAccess.setAttributeType(EcoreModelState.getModelState(graphicalModelState), attribute_semantic, datatype.get())) {
+							throw new GLSPServerException(
+									"Could not change type to: " + datatype.get().toString());
+						}
 					}
 				} else {
 					attributeName = inputText.trim();
 				}
 				if (!inputText.isEmpty()) {
-					attribute_semantic.setName(attributeName);
+					if (!modelAccess.setAttributeName(EcoreModelState.getModelState(graphicalModelState), attribute_semantic, attributeName)) {
+						throw new GLSPServerException(
+								"Could not rename node to: " + editLabelOperation.getText().trim());
+					}
 				}
 				break;
 
@@ -108,7 +117,10 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 						"No semantic element for label with id " + editLabelOperation.getLabelId() + " found");
 				String text = editLabelOperation.getText().trim();
 				if (!text.isEmpty()) {
-					literal_semantic.setName(text);
+					if (!modelAccess.setLiteralName(EcoreModelState.getModelState(graphicalModelState), literal_semantic, editLabelOperation.getText().trim())) {
+						throw new GLSPServerException(
+								"Could not rename node to: " + editLabelOperation.getText().trim());
+					}
 				}
 				break;
 
@@ -116,7 +128,10 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 				String edgeId = EcoreEdgeUtil.getEdgeId(editLabelOperation.getLabelId());
 				EReference reference_semantic = (EReference) getOrThrow(index.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
-				reference_semantic.setName(editLabelOperation.getText().trim());
+				if (!modelAccess.setEdgeName(EcoreModelState.getModelState(graphicalModelState), reference_semantic, editLabelOperation.getText().trim())) {
+					throw new GLSPServerException(
+							"Could not rename edge to: " + editLabelOperation.getText().trim());
+				}
 				break;
 
 			case Types.LABEL_EDGE_MULTIPLICITY:
@@ -128,8 +143,16 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 				if (matcher.matches()) {
 					String lowerBound = matcher.group(1);
 					String upperBound = matcher.group(2);
-					reference_semantic.setLowerBound((lowerBound.equals("*")) ? -1 : Integer.valueOf(lowerBound));
-					reference_semantic.setUpperBound((upperBound.equals("*")) ? -1 : Integer.valueOf(upperBound));
+					int lower = (lowerBound.equals("*")) ? -1 : Integer.valueOf(lowerBound);
+					int upper = (upperBound.equals("*")) ? -1 : Integer.valueOf(upperBound);
+					if (!modelAccess.setLowerMultiplicity(EcoreModelState.getModelState(graphicalModelState), reference_semantic, lower)) {
+						throw new GLSPServerException(
+								"Could not change lowerBound to: " + lower);
+					}
+					if (!modelAccess.setUpperMultiplicity(EcoreModelState.getModelState(graphicalModelState), reference_semantic, upper)) {
+						throw new GLSPServerException(
+								"Could not rename edge to: " + upper);
+					}
 				} else {
 					throw new GLSPServerException("Multiplicity of reference with id " + editLabelOperation.getLabelId()
 							+ " has a wrong input format", new IllegalArgumentException());
