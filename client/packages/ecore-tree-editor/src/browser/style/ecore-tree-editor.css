@@ -1,0 +1,85 @@
+.theia-tree-editor-form {
+    display: flex;
+}
+
+.theia-tree-editor-form>.jsonforms-container {
+    flex-grow: 1;
+    max-width: 960px;
+    /* Half the width of a full hd display. */
+    border-left: lightgray;
+    border-left-width: 1px;
+    border-left-style: solid
+}
+
+#ecore-tree-editor>div>div.p-Widget.theia-tree-editor-form.p-SplitPanel-child>div>div>div:nth-child(1) {
+    text-transform: uppercase;
+    font-size: var(--theia-ui-font-size2);
+    margin: 10px 5px;
+}
+
+.control>label {
+    text-transform: uppercase;
+    font-size: var(--theia-ui-font-size1) !important;
+}
+
+.theia-tree-editor-tree .theia-ExpansionToggle {
+    margin-right: -4px;
+}
+
+.ecoreimg {
+    background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    margin-right: 6px;
+}
+
+.eattribute {
+    background-image: url(../../../../sprotty-ecore/images/EAttribute.gif);
+}
+
+.eclass {
+    background-image: url(../../../../sprotty-ecore/images/EClass.gif);
+}
+
+.edatatype {
+    background-image: url(../../../../sprotty-ecore/images/EDataType.gif);
+}
+
+.eenum {
+    background-image: url(../../../../sprotty-ecore/images/EEnum.gif);
+}
+
+.eenumliteral {
+    background-image: url(../../../../sprotty-ecore/images/EEnumLiteral.gif);
+}
+
+.epackage {
+    background-image: url(../../../../sprotty-ecore/images/EPackage.gif);
+}
+
+.ereference {
+    background-image: url(../../../../sprotty-ecore/images/EReference.gif);
+}
+
+.egenericelementtype {
+    background-image: url(../../../../sprotty-ecore/images/EGenericElementType.gif);
+}
+
+.egenericsupertype {
+    background-image: url(../../../../sprotty-ecore/images/EGenericSuperType.gif);
+}
+
+.ecoremodelfile {
+    background-image: url(../../../../sprotty-ecore/images/EcoreModelFile.gif);
+    height: 16px;
+    width: 16px;
+    margin-left: -3px;
+}
+
+.p-TabBar.theia-app-centers .p-TabBar-tabIcon.ecoremodelfileTabIcon {
+    background-image: url(../../../../sprotty-ecore/images/EcoreModelFile.gif);
+    height: 16px;
+    width: 16px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
