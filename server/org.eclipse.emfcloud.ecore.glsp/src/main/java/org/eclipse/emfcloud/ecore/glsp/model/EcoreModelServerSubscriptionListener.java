@@ -15,6 +15,9 @@
  ******************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.model;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -24,11 +27,11 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.modelserver.client.XmiToEObjectSubscriptionListener;
@@ -73,6 +76,10 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 					((CCompoundCommand) command).getCommands().forEach(c -> {
 						if (c.getType() == CommandKind.REMOVE) {
 							executeRemoveCommand(c, editingDomain, ecoreFacade);
+						} else if (c.getType() == CommandKind.ADD) {
+							executeAddCommand(c, editingDomain, ecoreFacade);
+						} else if (c.getType() == CommandKind.SET) {
+							executeSetCommand(c, editingDomain, ecoreFacade);
 						}
 					});
 				}
@@ -80,6 +87,8 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 				executeAddCommand(command, editingDomain, ecoreFacade);
 			} else if (command.getType() == CommandKind.REMOVE) {
 				executeRemoveCommand(command, editingDomain, ecoreFacade);
+			} else if (command.getType() == CommandKind.SET) {
+				executeSetCommand(command, editingDomain, ecoreFacade);
 			}
 
 			GModelRoot gmodelRoot = EcoreModelState.getEditorContext(modelState).getGModelFactory()
@@ -105,11 +114,18 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			throw new RuntimeException(ex);
 		}
 
-		// Initialize notation element
-		if(command.getObjectValues().get(0) instanceof EClassifier) {
+		if (command.getObjectValues().size() > 0 && command.getObjectValues().get(0) instanceof EClassifier) {
+			// Initialize notation element
 			EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
-			NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
-			ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+			if (ecoreFacade.findUninitializedElements().size() > 0) {
+				NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
+				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+			} else if (ecoreFacade.findOldShapes(newEClassifier).size() > 0) {
+				// if element was removed via undo/redo its old shape is still here therefore we
+				// reuse it
+				NotationElement notationElement = ecoreFacade.findOldShapes(newEClassifier).get(0);
+				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+			}
 		}
 	}
 
@@ -134,7 +150,15 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 
 		// Update notation resource
 		Optional<NotationElement> notation = modelState.getIndex().getNotation(semanticElement);
-		notation.ifPresent(EcoreUtil::delete);
+		if (notation.isPresent() && notation.get() instanceof Shape) {
+			// if undo is hit the shape should be restorable therefore we create a ghost
+			// shape here
+			ecoreFacade.createShape(Optional.of(((Shape) notation.get()).getPosition()));
+			notation.ifPresent(EcoreUtil::delete);
+		}
+		// if element is removed via undo/redo the semantic element cannot be found
+		// properly therefore we keep the notation element and reuse it in case of
+		// undo/redo later
 
 		try {
 			// Update semantic resource
@@ -143,6 +167,51 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 		} catch (DecodingException ex) {
 			LOGGER.error("Could not decode command: " + command, ex);
 			throw new RuntimeException(ex);
+		}
+	}
+
+	private void executeSetCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
+		try {
+			EObject owner = command.getOwner();
+			if (owner != null && !(owner instanceof EClassifier)) {
+				// Retrieve old owner
+				EObject unresolved = (EObject) command.getOwner();
+				String changedUri = EcoreUtil.getURI(unresolved).fragment();
+				String oldUri = changedUri.substring(0, changedUri.length() - 1);
+				EObject old = ecoreFacade.getSemanticResource().getEObject(oldUri);
+				if (old != null) {
+					command.setOwner(old);
+				} else {
+					List<EObject> l = new ArrayList<>();
+					for (final Iterator<EObject> i = ecoreFacade.getEPackage().eAllContents(); i.hasNext();) {
+						final EObject eObj = i.next();
+						if (EcoreUtil.getURI(eObj).fragment().contains(changedUri)) {
+							l.add(eObj);
+						}
+					}
+					if (l.size() > 0) {
+						command.setOwner(l.get(0));
+					}
+				}
+			}
+
+			// Update semantic resource
+			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
+			editingDomain.getCommandStack().execute(cmd);
+		} catch (DecodingException ex) {
+			LOGGER.error("Could not decode command: " + command, ex);
+			throw new RuntimeException(ex);
+		}
+
+		if (command.getOwner() != null && command.getOwner() instanceof EClassifier) {
+			// Initialize notation element
+			EClassifier newEClassifier = (EClassifier) command.getOwner();
+			if (ecoreFacade.findOldShapes(newEClassifier).size() > 0) {
+				// if element was removed via undo/redo its old shape is still here therefore we
+				// reuse it
+				NotationElement notationElement = ecoreFacade.findOldShapes(newEClassifier).get(0);
+				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
+			}
 		}
 	}
 

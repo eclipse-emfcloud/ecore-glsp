@@ -10,10 +10,12 @@
       "name": "Start Browser Backend",
       "program": "${workspaceRoot}/browser-app/src-gen/backend/main.js",
       "args": [
-        "--loglevel=debug",
+        "--ECORE_GLSP=5007",
         "--port=3000",
         "--no-cluster",
-        "--ECORE_GLSP=5007"
+        "--root-dir=${workspaceRoot}/workspace",
+        "--app-project-path=${workspaceRoot}/browser-app",
+        "--loglevel=debug",
       ],
       "env": {
         "NODE_ENV": "development"

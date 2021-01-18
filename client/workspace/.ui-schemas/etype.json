@@ -1,0 +1,27 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Label",
+      "text": "EType"
+    },
+    {
+      "type": "Control",
+      "label": "EClassifier",
+      "scope": "#/properties/eClassifier",
+      "rule": {
+        "effect": "DISABLE",
+        "condition": {}
+      }
+    },
+    {
+      "type": "Control",
+      "label": "EType Parameter",
+      "scope": "#/properties/eTypeParameter",
+      "rule": {
+        "effect": "DISABLE",
+        "condition": {}
+      }
+    }
+  ]
+}
