@@ -43,6 +43,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="NewEClass13" eSuperTypes="#//NewEClass14"/>
   <eClassifiers xsi:type="ecore:EClass" name="NewEClass14" eSuperTypes="#//NewEClass13"/>
   <eClassifiers xsi:type="ecore:EClass" name="NewEClass15">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//NewEClass14"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" lowerBound="1" upperBound="3" eType="//NewEClass14"/>
   </eClassifiers>
 </ecore:EPackage>

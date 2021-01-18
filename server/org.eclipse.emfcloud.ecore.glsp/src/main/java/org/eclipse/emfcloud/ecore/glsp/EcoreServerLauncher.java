@@ -31,7 +31,6 @@ public class EcoreServerLauncher {
 		configureLogger();
 		EcorePackage.eINSTANCE.eClass();
 		ElkLayoutEngine.initialize(new LayeredMetaDataProvider());
-		Logger.getRootLogger().setLevel(Level.DEBUG);
 		GLSPServerLauncher launcher = new DefaultGLSPServerLauncher(new EcoreGLSPModule());
 		launcher.start("localhost", port);
 	}
@@ -51,6 +50,6 @@ public class EcoreServerLauncher {
 		if (!root.getAllAppenders().hasMoreElements()) {
 			root.addAppender(new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN)));
 		}
-		root.setLevel(Level.DEBUG);
+		root.setLevel(Level.INFO);
 	}
 }

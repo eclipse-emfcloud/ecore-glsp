@@ -1,0 +1,11 @@
+.properties-view-widget .control>input[type="checkbox"] {
+    margin: 7px 3px 8px 3px;
+}
+
+.properties-view-widget .vertical-layout-item>label {
+    font-size: var(--theia-ui-font-size1);
+}
+
+.vertical-layout-item {
+    height: 28px;
+}

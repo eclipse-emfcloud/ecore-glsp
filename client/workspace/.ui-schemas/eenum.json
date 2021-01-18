@@ -1,0 +1,29 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Label",
+      "text": "Classifier - EEnum"
+    },
+    {
+      "type": "Control",
+      "label": "Name",
+      "scope": "#/properties/name"
+    },
+    {
+      "type": "Control",
+      "label": "Instance Class Name",
+      "scope": "#/properties/instanceClassName"
+    },
+    {
+      "type": "Control",
+      "label": "Instance Type Name",
+      "scope": "#/properties/instanceClass"
+    },
+    {
+      "type": "Control",
+      "label": "Serializable",
+      "scope": "#/properties/serializable"
+    }
+  ]
+}

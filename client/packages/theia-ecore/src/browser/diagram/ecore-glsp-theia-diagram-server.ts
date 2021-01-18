@@ -8,6 +8,7 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { RequestSemanticUriAction } from "@eclipse-emfcloud/sprotty-ecore/lib/action-definitions";
 import {
     AttributeTypesAction,
     ReturnAttributeTypesAction
@@ -23,6 +24,7 @@ export class EcoreGLSPTheiaDiagramServer extends GLSPTheiaDiagramServer {
 
         registry.register(AttributeTypesAction.KIND, this);
         registry.register(ReturnAttributeTypesAction.KIND, this);
+        registry.register(RequestSemanticUriAction.KIND, this);
     }
 
 }

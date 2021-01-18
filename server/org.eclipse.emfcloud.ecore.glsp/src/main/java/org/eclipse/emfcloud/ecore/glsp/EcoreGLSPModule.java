@@ -11,11 +11,13 @@
 package org.eclipse.emfcloud.ecore.glsp;
 
 import org.eclipse.emfcloud.ecore.glsp.actions.ReturnAttributeTypesAction;
+import org.eclipse.emfcloud.ecore.glsp.actions.SetSemanticUriAction;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreSaveModelActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreUndoRedoActionHandler;
+import org.eclipse.emfcloud.ecore.glsp.handler.RequestSemanticUriActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelFactory;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelStateProvider;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.CreateClassifierChildNodeOperationHandler;
@@ -65,6 +67,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
 		bindings.rebind(DisposeClientSessionActionHandler.class, EcoreDisposeClientSessionActionHandler.class);
+		bindings.add(RequestSemanticUriActionHandler.class);
 	}
 
 	@Override
@@ -86,6 +89,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	protected void configureClientActions(MultiBinding<Action> bindings) {
 		super.configureClientActions(bindings);
 		bindings.add(ReturnAttributeTypesAction.class);
+		bindings.add(SetSemanticUriAction.class);
 	}
 
 	@Override

@@ -1,0 +1,24 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Label",
+      "text": "EPackage"
+    },
+    {
+      "type": "Control",
+      "label": "Name",
+      "scope": "#/properties/name"
+    },
+    {
+      "type": "Control",
+      "label": "Ns URI",
+      "scope": "#/properties/nsURI"
+    },
+    {
+      "type": "Control",
+      "label": "Ns Prefix",
+      "scope": "#/properties/nsPrefix"
+    }
+  ]
+}
