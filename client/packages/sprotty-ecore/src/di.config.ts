@@ -41,7 +41,6 @@ import {
     modelHintsModule,
     modelSourceModule,
     openModule,
-    paletteModule,
     PolylineEdgeView,
     RectangularNodeView,
     routingModule,
@@ -68,6 +67,7 @@ import { EditLabelUI } from "sprotty/lib";
 
 import { EditLabelUIAutocomplete } from "./features/edit-label-autocomplete";
 import ecoreGlspSelectModule from "./features/select/di.config";
+import ecoreToolPaletteModule from "./features/tool-palette/di.config";
 import { LabelSelectionFeedback } from "./feedback";
 import {
     ArrowEdge,
@@ -142,7 +142,7 @@ export default (containerId: string): Container => {
     container.load(decorationModule, validationModule, defaultModule, glspMouseToolModule, defaultGLSPModule, ecoreGlspSelectModule, boundsModule, viewportModule, toolsModule,
         glspHoverModule, fadeModule, exportModule, expandModule, openModule, buttonModule, modelSourceModule, labelEditModule, labelEditUiModule, glspEditLabelModule,
         classDiagramModule, saveModule, executeCommandModule, toolFeedbackModule, modelHintsModule, glspContextMenuModule, glspServerCopyPasteModule,
-        copyPasteContextMenuModule, glspCommandPaletteModule, paletteModule, routingModule, edgeLayoutModule, zorderModule,
+        copyPasteContextMenuModule, glspCommandPaletteModule, ecoreToolPaletteModule, routingModule, edgeLayoutModule, zorderModule,
         layoutCommandsModule);
 
     return container;
