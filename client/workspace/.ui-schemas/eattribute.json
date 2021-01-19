@@ -8,7 +8,11 @@
     {
       "type": "Control",
       "label": "Name",
-      "scope": "#/properties/name"
+      "scope": "#/properties/name",
+      "rule": {
+        "effect": "DISABLE",
+        "condition": {}
+      }
     },
     {
       "type": "Control",

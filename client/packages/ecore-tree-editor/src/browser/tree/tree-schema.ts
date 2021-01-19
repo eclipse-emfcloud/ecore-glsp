@@ -21,7 +21,11 @@ export const ePackageUiSchema = {
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         {
             "type": "Control",
@@ -47,7 +51,11 @@ export const eEnumLiteralUiSchema =
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         {
             "type": "Control",
@@ -73,7 +81,11 @@ export const eEnumUiSchema =
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         {
             "type": "Control",
@@ -113,7 +125,11 @@ export const eClassUiSchema =
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         {
             "type": "Control",
@@ -192,7 +208,11 @@ export const eReferenceUiSchema =
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         // {
         //     "type": "Control",
@@ -290,7 +310,11 @@ export const eAttributeUiSchema =
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         // {
         //     "type": "Control",
@@ -370,7 +394,11 @@ export const eDataTypeUiSchema =
         {
             "type": "Control",
             "label": "Name",
-            "scope": "#/properties/name"
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
         },
         {
             "type": "Control",
