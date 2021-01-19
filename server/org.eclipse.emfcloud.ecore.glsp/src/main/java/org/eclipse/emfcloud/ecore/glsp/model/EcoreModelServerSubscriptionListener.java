@@ -15,9 +15,6 @@
  ******************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -31,7 +28,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
-import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.modelserver.client.XmiToEObjectSubscriptionListener;
@@ -114,18 +110,11 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			throw new RuntimeException(ex);
 		}
 
-		if (command.getObjectValues().size() > 0 && command.getObjectValues().get(0) instanceof EClassifier) {
-			// Initialize notation element
+		// Initialize notation element
+		if (command.getObjectValues().get(0) instanceof EClassifier) {
 			EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
-			if (ecoreFacade.findUninitializedElements().size() > 0) {
-				NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
-				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
-			} else if (ecoreFacade.findOldShapes(newEClassifier).size() > 0) {
-				// if element was removed via undo/redo its old shape is still here therefore we
-				// reuse it
-				NotationElement notationElement = ecoreFacade.findOldShapes(newEClassifier).get(0);
-				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
-			}
+			NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
+			ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
 		}
 	}
 
@@ -150,15 +139,7 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 
 		// Update notation resource
 		Optional<NotationElement> notation = modelState.getIndex().getNotation(semanticElement);
-		if (notation.isPresent() && notation.get() instanceof Shape) {
-			// if undo is hit the shape should be restorable therefore we create a ghost
-			// shape here
-			ecoreFacade.createShape(Optional.of(((Shape) notation.get()).getPosition()));
-			notation.ifPresent(EcoreUtil::delete);
-		}
-		// if element is removed via undo/redo the semantic element cannot be found
-		// properly therefore we keep the notation element and reuse it in case of
-		// undo/redo later
+		notation.ifPresent(EcoreUtil::delete);
 
 		try {
 			// Update semantic resource
@@ -172,28 +153,9 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 
 	private void executeSetCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
 		try {
-			EObject owner = command.getOwner();
-			if (owner != null && !(owner instanceof EClassifier)) {
-				// Retrieve old owner
-				EObject unresolved = (EObject) command.getOwner();
-				String changedUri = EcoreUtil.getURI(unresolved).fragment();
-				String oldUri = changedUri.substring(0, changedUri.length() - 1);
-				EObject old = ecoreFacade.getSemanticResource().getEObject(oldUri);
-				if (old != null) {
-					command.setOwner(old);
-				} else {
-					List<EObject> l = new ArrayList<>();
-					for (final Iterator<EObject> i = ecoreFacade.getEPackage().eAllContents(); i.hasNext();) {
-						final EObject eObj = i.next();
-						if (EcoreUtil.getURI(eObj).fragment().contains(changedUri)) {
-							l.add(eObj);
-						}
-					}
-					if (l.size() > 0) {
-						command.setOwner(l.get(0));
-					}
-				}
-			}
+			// FIXME If owner is unknown (i.e. if name is changed, we cannot grasp the owner
+			// at the moment as the semantic uri was changed) the command cannot be
+			// executed.
 
 			// Update semantic resource
 			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
@@ -203,16 +165,8 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			throw new RuntimeException(ex);
 		}
 
-		if (command.getOwner() != null && command.getOwner() instanceof EClassifier) {
-			// Initialize notation element
-			EClassifier newEClassifier = (EClassifier) command.getOwner();
-			if (ecoreFacade.findOldShapes(newEClassifier).size() > 0) {
-				// if element was removed via undo/redo its old shape is still here therefore we
-				// reuse it
-				NotationElement notationElement = ecoreFacade.findOldShapes(newEClassifier).get(0);
-				ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
-			}
-		}
+		// If semantic resource was updated correctly, notation resource will be updated
+		// via the RequestBoundsAction in the onIncrementalUpdate method
 	}
 
 	private Resource createCommandResource(EditingDomain editingDomain, CCommand command) {
