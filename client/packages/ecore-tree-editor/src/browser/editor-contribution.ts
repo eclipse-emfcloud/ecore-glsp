@@ -31,6 +31,7 @@ export class TreeContribution extends BaseTreeEditorContribution {
 
     readonly id = TreeEditorWidget.WIDGET_ID;
     readonly label = MasterTreeWidget.WIDGET_LABEL;
+    readonly iconClass = "ecoremodelfile";
 
     canHandle(uri: URI): number {
         if (uri.path.ext === ".ecore") {

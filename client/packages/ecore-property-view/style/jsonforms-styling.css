@@ -1,11 +1,63 @@
-.properties-view-widget .control>input[type="checkbox"] {
-    margin: 7px 3px 8px 3px;
+:root {
+    --jsonforms-property-view-line-height: 28px;
+    --jsonforms-property-view-label-width: 250px;
 }
 
 .properties-view-widget .vertical-layout-item>label {
     font-size: var(--theia-ui-font-size1);
 }
 
-.vertical-layout-item {
-    height: 28px;
+.jsonforms-property-view .vertical-layout .vertical-layout-item {
+    height: var(--jsonforms-property-view-line-height);
+}
+
+.jsonforms-property-view .vertical-layout {
+    display: table !important;
+    table-layout: auto;
+    width: 100%;
+    padding-right: 0;
+}
+
+.jsonforms-property-view .vertical-layout>* {
+    display: table-row;
+    width: 100%;
+}
+
+.jsonforms-property-view .vertical-layout-item .control {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.jsonforms-property-view .control>label {
+    text-transform: inherit !important;
+    font-size: var(--theia-ui-font-size1) !important;
+    display: flex;
+    width: var(--jsonforms-property-view-label-width);
+    flex: none;
+}
+
+.jsonforms-property-view .control>input {
+    display: flex;
+    height: var(--jsonforms-property-view-line-height);
+    background: var(--theia-textCodeBlock-background) !important;
+    flex-basis: 100% !important;
+    flex-shrink: 1 !important;
+    flex-grow: 0 !important;
+}
+
+.jsonforms-property-view .control>input[disabled] {
+    opacity: 0.5;
+}
+
+.jsonforms-property-view .control>input[type="checkbox"] {
+    display: flex !important;
+    flex: none !important;
+}
+
+.jsonforms-property-view .control>.validation {
+    display: inline-block;
+    position: relative;
+    padding-right: 10px;
+    font-size: var(--theia-ui-font-size1);
 }

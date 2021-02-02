@@ -40,6 +40,8 @@ import { DiagramWidget, DiagramWidgetOptions, TheiaFileSaver } from "sprotty-the
 import { EcoreLanguage } from "../../common/ecore-language";
 import { EcoreGLSPDiagramClient } from "./ecore-glsp-diagram-client";
 
+export const ECORE_DIAGRAM_ICON_CLASS = "fa fa-project-diagram";
+
 export interface EcoreDiagramWidgetOptions extends DiagramWidgetOptions, GLSPWidgetOptions {
     workspaceRoot: string;
 }
@@ -47,7 +49,7 @@ export interface EcoreDiagramWidgetOptions extends DiagramWidgetOptions, GLSPWid
 @injectable()
 export class EcoreDiagramManager extends GLSPDiagramManager {
     readonly diagramType = EcoreLanguage.DiagramType;
-    readonly iconClass = "fa fa-project-diagram";
+    readonly iconClass = ECORE_DIAGRAM_ICON_CLASS;
     readonly label = EcoreLanguage.Label + " Editor";
 
     private _diagramConnector: GLSPTheiaSprottyConnector;

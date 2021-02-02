@@ -3,6 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@eclipse-emfcloud/ecore-glsp-common": [
+        "packages/common/src/*"
+      ],
       "@eclipse-emfcloud/ecore-property-view": [
         "packages/ecore-property-view/src/*"
       ],
