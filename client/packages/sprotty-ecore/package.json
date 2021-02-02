@@ -18,6 +18,7 @@
     "url": "https://github.com/eclipse-emfcloud/ecore-glsp.git"
   },
   "dependencies": {
+    "@eclipse-emfcloud/ecore-glsp-common": "0.0.1",
     "@eclipse-glsp/client": "next",
     "reflect-metadata": "^0.1.10"
   },

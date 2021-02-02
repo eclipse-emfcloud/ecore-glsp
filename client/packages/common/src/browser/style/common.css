@@ -1,0 +1,81 @@
+/********************************************************************************
+ * Copyright (c) 2021 EclipseSource and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0, or the MIT License which is
+ * available at https://opensource.org/licenses/MIT.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR MIT
+ ********************************************************************************/
+
+.p-Menu-itemIcon.fa.fa-project-diagram {
+    font-size: smaller;
+}
+
+.p-Menu-itemIcon.fa.fa-project-diagram:before {
+    font-family: "Font Awesome 5 Free";
+}
+
+.p-Menu-itemIcon.ecoremodelfile {
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ecoreimg {
+    background-size: 16px 16px;
+    height: 16px;
+    width: 16px;
+    margin-right: 6px;
+}
+
+.eattribute {
+    background-image: url(../../../resources/icons/EAttribute.gif);
+}
+
+.eclass {
+    background-image: url(../../../resources/icons/EClass.gif);
+}
+
+.edatatype {
+    background-image: url(../../../resources/icons/EDataType.gif);
+}
+
+.eenum {
+    background-image: url(../../../resources/icons/EEnum.gif);
+}
+
+.eenumliteral {
+    background-image: url(../../../resources/icons/EEnumLiteral.gif);
+}
+
+.epackage {
+    background-image: url(../../../resources/icons/EPackage.gif);
+}
+
+.ereference {
+    background-image: url(../../../resources/icons/EReference.gif);
+}
+
+.egenericelementtype {
+    background-image: url(../../../resources/icons/EGenericElementType.gif);
+}
+
+.egenericsupertype {
+    background-image: url(../../../resources/icons/EGenericSuperType.gif);
+}
+
+.ecoremodelfile {
+    background-image: url(../../../resources/icons/EcoreModelFile.gif);
+    height: 16px;
+    width: 16px;
+    margin-left: -3px;
+}
+
+.p-TabBar.theia-app-centers .p-TabBar-tabIcon.ecoremodelfileTabIcon {
+    background-image: url(../../../resources/icons/EcoreModelFile.gif);
+    height: 16px;
+    width: 16px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+}

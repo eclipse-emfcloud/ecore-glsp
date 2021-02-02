@@ -15,7 +15,7 @@ import { FileStat } from "@theia/filesystem/lib/common";
 import { injectable } from "inversify";
 
 @injectable()
-export class TreeLabelProviderContribution implements LabelProviderContribution {
+export class EcoreTreeLabelProviderContribution implements LabelProviderContribution {
     canHandle(uri: object): number {
         let toCheck: any = uri;
         if (FileStat.is(toCheck)) {
@@ -34,6 +34,4 @@ export class TreeLabelProviderContribution implements LabelProviderContribution 
     getIcon(): string {
         return "ecoremodelfile";
     }
-
-    // We don't need to specify getName() nor getLongName() because the default uri label provider is responsible for them
 }

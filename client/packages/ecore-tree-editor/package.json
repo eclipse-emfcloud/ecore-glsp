@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "@eclipse-emfcloud/modelserver-theia": "next",
+    "@eclipse-emfcloud/ecore-glsp-common": "0.0.1",
     "@theia/core": "latest",
     "@theia/editor": "latest",
     "@theia/filesystem": "latest",

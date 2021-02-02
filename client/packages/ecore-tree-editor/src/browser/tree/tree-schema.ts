@@ -158,15 +158,6 @@ export const eClassUiSchema =
             "type": "Control",
             "label": "Interface",
             "scope": "#/properties/interface"
-        },
-        {
-            "type": "Control",
-            "label": "Instance Type Name",
-            "scope": "#/properties/instanceClass",
-            "rule": {
-                "effect": RuleEffect.DISABLE,
-                "condition": {}
-            }
         }
         // {
         //     "type": "VerticalLayout",

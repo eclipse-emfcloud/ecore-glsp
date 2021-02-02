@@ -163,12 +163,6 @@ public class EcoreFacade {
 		return diagram.getElements().stream().filter(element -> element.getSemanticElement() == null)
 				.collect(Collectors.toList());
 	}
-	
-	public List<NotationElement> findOldShapes(EClassifier eClassifier) {
-		return diagram.getElements().stream()
-				.filter(element -> element.getSemanticElement().getUri().contains(eClassifier.getName()))
-				.collect(Collectors.toList());
-	}
 
 	public Shape initializeShape(Shape shape, EObject semanticElement) {
 		shape.setSemanticElement(createProxy(semanticElement));

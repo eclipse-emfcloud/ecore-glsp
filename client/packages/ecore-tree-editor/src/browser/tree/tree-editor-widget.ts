@@ -75,6 +75,14 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
             }
         });
 
+        this.loadModel();
+
+        this.modelServerClient.subscribe(this.modelIDToRequest);
+        // see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
+        window.onbeforeunload = () => this.dispose();
+    }
+
+    protected loadModel(oldSelectedPath: string[] = []): void {
         this.modelServerClient.get(this.modelIDToRequest).then(response => {
             if (response.statusCode === 200) {
                 if (isEqual(this.instanceData, response.body)) {
@@ -83,7 +91,13 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
                 this.instanceData = response.body;
                 this.treeWidget
                     .setData({ error: false, data: this.instanceData })
-                    .then(() => this.treeWidget.selectFirst());
+                    .then(() => {
+                        if (oldSelectedPath) {
+                            this.treeWidget.select(oldSelectedPath);
+                        } else {
+                            this.treeWidget.selectFirst();
+                        }
+                    });
                 return;
             }
             this.treeWidget.setData({ error: !!response.statusMessage });
@@ -98,26 +112,32 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
             this.instanceData = undefined;
             return;
         });
-        this.modelServerClient.subscribe(this.modelIDToRequest);
-        // see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload
-        window.onbeforeunload = () => this.dispose();
+    }
+
+    protected getOldSelectedPath(): string[] {
+        const paths: string[] = [];
+        if (!this.selectedNode) {
+            return paths;
+        }
+        paths.push(this.selectedNode.name);
+        let parent = this.selectedNode.parent;
+        while (parent) {
+            /* @ts-ignore */
+            paths.push(parent.name);
+            parent = parent.parent;
+        }
+        paths.splice(paths.length - 1, 1);
+        return paths;
     }
 
     protected applyCommand(command: ModelServerCommand): void {
         switch (command.type) {
-            case "add": {
-                this.addNodeViaCommand(command);
-                break;
-            }
-            case "remove": {
-                this.removeNodeViaCommand(command);
-                break;
-            }
-            case "set": {
-                this.setNodeDataViaCommand(command);
-                break;
-            }
+            case "add":     // this.addNodeViaCommand(command);
+            case "remove":  // this.removeNodeViaCommand(command);
+            case "set":     // this.setNodeDataViaCommand(command);
             default:
+                // #FIXME
+                this.loadModel(this.getOldSelectedPath());
                 break;
         }
     }
@@ -210,19 +230,17 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
             $ref: this.getOwnerRef(parentNode.jsonforms.data.eClass === EcoreModel.Type.EPackage ? "/" : "//" + parentNode.name),
             /* @ts-ignore */
             eClass: parentNode.jsonforms.data.eClass
-
-            // $ref:'file:/home/nina/Clients/OpenSource/emfcloud/ecore-glsp-fork/client/workspace/empty/model/empty.ecore#/'
-            // eClass:'http://www.eclipse.org/emf/2002/Ecore#//EPackage'
         };
     }
 
     protected deleteNode(node: Readonly<TreeEditor.Node>): void {
-        const removeCommand = ModelServerCommandUtil.createRemoveCommand(
-            this.getOwner(node),
-            node.jsonforms.property,
-            node.jsonforms.index ? [Number(node.jsonforms.index)] : []
-        );
-        this.modelServerClient.edit(this.modelIDToRequest, removeCommand);
+        // TODO
+        // const removeCommand = ModelServerCommandUtil.createRemoveCommand(
+        //     this.getOwner(node),
+        //     node.jsonforms.property,
+        //     node.jsonforms.index ? [Number(node.jsonforms.index)] : []
+        // );
+        // this.modelServerClient.edit(this.modelIDToRequest, removeCommand);
     }
 
     protected addNode({ node, type, property }: AddCommandProperty): void {

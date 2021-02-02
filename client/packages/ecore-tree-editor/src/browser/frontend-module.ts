@@ -19,7 +19,6 @@ import URI from "@theia/core/lib/common/uri";
 import { ContainerModule } from "inversify";
 
 import { TreeContribution } from "./editor-contribution";
-import { TreeLabelProviderContribution } from "./label-provider-contribution";
 import { TreeEditorWidget } from "./tree/tree-editor-widget";
 import { TreeLabelProvider } from "./tree/tree-label-provider";
 import { TreeModelService } from "./tree/tree-model-service";
@@ -27,18 +26,13 @@ import { TreeNodeFactory } from "./tree/tree-node-factory";
 
 export default new ContainerModule(bind => {
     // Bind Theia IDE contributions for the tree editor
-    bind(LabelProviderContribution).to(TreeLabelProviderContribution);
     bind(OpenHandler).to(TreeContribution);
     bind(MenuContribution).to(TreeContribution);
     bind(CommandContribution).to(TreeContribution);
     bind(LabelProviderContribution).to(TreeLabelProvider);
     // bind services to themselves because we use them outside of the editor widget, too.
-    bind(TreeModelService)
-        .toSelf()
-        .inSingletonScope();
-    bind(TreeLabelProvider)
-        .toSelf()
-        .inSingletonScope();
+    bind(TreeModelService).toSelf().inSingletonScope();
+    bind(TreeLabelProvider).toSelf().inSingletonScope();
     bind<WidgetFactory>(WidgetFactory).toDynamicValue(context => ({
         id: TreeEditorWidget.WIDGET_ID,
         createWidget: (options: NavigatableWidgetOptions) => {
