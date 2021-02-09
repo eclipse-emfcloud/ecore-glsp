@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -73,6 +72,10 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 					((CCompoundCommand) command).getCommands().forEach(c -> {
 						if (c.getType() == CommandKind.REMOVE) {
 							executeRemoveCommand(c, editingDomain, ecoreFacade);
+						} else if (c.getType() == CommandKind.ADD) {
+							executeAddCommand(c, editingDomain, ecoreFacade);
+						} else if (c.getType() == CommandKind.SET) {
+							executeSetCommand(c, editingDomain, ecoreFacade);
 						}
 					});
 				}
@@ -80,6 +83,8 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 				executeAddCommand(command, editingDomain, ecoreFacade);
 			} else if (command.getType() == CommandKind.REMOVE) {
 				executeRemoveCommand(command, editingDomain, ecoreFacade);
+			} else if (command.getType() == CommandKind.SET) {
+				executeSetCommand(command, editingDomain, ecoreFacade);
 			}
 
 			GModelRoot gmodelRoot = EcoreModelState.getEditorContext(modelState).getGModelFactory()
@@ -106,7 +111,7 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 		}
 
 		// Initialize notation element
-		if(command.getObjectValues().get(0) instanceof EClassifier) {
+		if (command.getObjectValues().get(0) instanceof EClassifier) {
 			EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
 			NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
 			ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
@@ -144,6 +149,24 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			LOGGER.error("Could not decode command: " + command, ex);
 			throw new RuntimeException(ex);
 		}
+	}
+
+	private void executeSetCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
+		try {
+			// FIXME If owner is unknown (i.e. if name is changed, we cannot grasp the owner
+			// at the moment as the semantic uri was changed) the command cannot be
+			// executed.
+
+			// Update semantic resource
+			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
+			editingDomain.getCommandStack().execute(cmd);
+		} catch (DecodingException ex) {
+			LOGGER.error("Could not decode command: " + command, ex);
+			throw new RuntimeException(ex);
+		}
+
+		// If semantic resource was updated correctly, notation resource will be updated
+		// via the RequestBoundsAction in the onIncrementalUpdate method
 	}
 
 	private Resource createCommandResource(EditingDomain editingDomain, CCommand command) {

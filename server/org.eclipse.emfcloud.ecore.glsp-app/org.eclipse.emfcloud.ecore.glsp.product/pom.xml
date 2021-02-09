@@ -34,12 +34,12 @@
 				<version>1.8</version>
 				<executions>
 					<execution>
-						<id>Copy Jar to client/theia-ecore</id>
+						<id>Copy Jar to client/packages/theia-ecore</id>
 						<phase>package</phase>
 						<configuration>
 							<target>
-								<delete dir="../../../client/theia-ecore/build/${project.artifactId}-${project.version}" />
-								<copy todir="../../../client/theia-ecore/build/${project.artifactId}-${project.version}">
+								<delete dir="../../../client/packages/theia-ecore/build/${project.artifactId}-${project.version}" />
+								<copy todir="../../../client/packages/theia-ecore/build/${project.artifactId}-${project.version}">
 									<fileset dir="target/products/${project.artifactId}/linux/gtk/x86_64" includes="**/*" />
 								</copy>
 							</target>

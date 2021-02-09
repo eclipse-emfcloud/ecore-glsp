@@ -1,0 +1,38 @@
+{
+  "type": "VerticalLayout",
+  "elements": [
+    {
+      "type": "Label",
+      "text": "Classifier - EDataType"
+    },
+    {
+      "type": "Control",
+      "label": "Name",
+      "scope": "#/properties/name",
+      "rule": {
+        "effect": "DISABLE",
+        "condition": {}
+      }
+    },
+    {
+      "type": "Control",
+      "label": "Instance Class Name",
+      "scope": "#/properties/instanceClassName"
+    },
+    {
+      "type": "Control",
+      "label": "Instance Type Name",
+      "scope": "#/properties/instanceClass"
+    },
+    {
+      "type": "Control",
+      "label": "Default Value",
+      "scope": "#/properties/defaultValue"
+    },
+    {
+      "type": "Control",
+      "label": "Serializable",
+      "scope": "#/properties/serializable"
+    }
+  ]
+}

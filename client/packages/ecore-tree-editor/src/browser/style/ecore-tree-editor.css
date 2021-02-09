@@ -1,0 +1,41 @@
+:root {
+    --theia-tree-editor-form-line-height: 28px;
+}
+
+.theia-tree-editor-form {
+    display: flex;
+}
+
+.theia-tree-editor-form>.jsonforms-container {
+    flex-grow: 1;
+    max-width: 960px;
+    /* Half the width of a full hd display. */
+    border-left: lightgray;
+    border-left-width: 1px;
+    border-left-style: solid
+}
+
+#ecore-tree-editor>div>div.p-Widget.theia-tree-editor-form.p-SplitPanel-child>div>div>div:nth-child(1) {
+    text-transform: uppercase;
+    font-size: var(--theia-ui-font-size2);
+    margin: 10px 5px;
+}
+
+.theia-tree-editor-form .control>label {
+    font-size: var(--theia-ui-font-size1) !important;
+}
+
+.theia-tree-editor-tree .theia-ExpansionToggle {
+    margin-right: -4px;
+}
+
+.theia-tree-editor-form .control>input {
+    background: var(--theia-textCodeBlock-background) !important;
+    height: var(--theia-tree-editor-form-line-height);
+}
+
+.theia-tree-editor-form .control>.validation {
+    font-size: var(--theia-ui-font-size1);
+    font-family: var(--theia-ui-font-family);
+    text-align: right;
+}

@@ -4,6 +4,9 @@
   "version": "0.2.0",
   "dependencies": {
     "@eclipse-emfcloud/theia-ecore": "^0.2.0",
+    "@ndoschek/property-view": "file:../ext-packages/ndoschek-property-view-0.0.2-n21.tgz",
+    "@eclipse-emfcloud/ecore-property-view": "0.0.1",
+    "@eclipse-emfcloud/ecore-tree-editor": "0.0.1",
     "@theia/core": "latest",
     "@theia/editor": "latest",
     "@theia/filesystem": "latest",
@@ -23,7 +26,7 @@
   "scripts": {
     "prepare": "theia build --mode development",
     "start": "theia start",
-    "start:debug": "theia start --loglevel=debug --root=../workspace",
+    "start:debug": "theia start --loglevel=debug --root=../../workspace",
     "watch": "theia build --watch --mode development"
   },
   "theia": {

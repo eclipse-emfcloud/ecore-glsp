@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -190,6 +191,11 @@ public class EcoreFacade {
 	public SemanticProxy createProxy(EObject eObject) {
 		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
 		proxy.setResolvedElement(eObject);
+		// #FIXME this causes us a lot of troubles regarding the setting of attributes
+		// and so on... we should try to make use of the previous format that was
+		// "@<feature-name>[.<index>]" from the String
+		// org.eclipse.emf.ecore.InternalEObject.eURIFragmentSegment(EStructuralFeature
+		// eFeature, EObject eObject)
 		proxy.setUri(semanticResource.getURIFragment(eObject));
 		return proxy;
 	}
