@@ -48,7 +48,7 @@
     "**/sprotty-theia": "0.9.0",
     "**/@eclipse-glsp/client": "0.8.0-next.5c0863ff",
     "**/@eclipse-glsp/theia-integration": "0.8.0-next.cef5529d",
-    "**/@eclipse-emfcloud/modelserver-theia": "0.8.0-next.2a5b324",
+    "**/@eclipse-emfcloud/modelserver-theia": "0.8.0-next.5bf1df0",
     "**/@eclipse-emfcloud/theia-tree-editor": "0.7.0-next.b62e9d1",
     "**/react": "^16.12.0"
   },

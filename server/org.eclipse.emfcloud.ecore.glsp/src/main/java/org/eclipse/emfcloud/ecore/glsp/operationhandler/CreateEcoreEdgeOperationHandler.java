@@ -15,17 +15,18 @@ import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emfcloud.ecore.enotation.Diagram;
-import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emfcloud.ecore.enotation.Edge;
+import org.eclipse.emfcloud.ecore.enotation.EnotationFactory;
+import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
-import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
-import org.eclipse.glsp.graph.GEdge;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.CreateEdgeOperation;
 import org.eclipse.glsp.server.operations.Operation;
@@ -52,56 +53,76 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 
 		EcoreEditorContext context = EcoreModelState.getEditorContext(modelState);
 		EcoreModelIndex modelIndex = context.getModelState().getIndex();
-		EcoreFacade facade = context.getEcoreFacade();
-		EClass sourceEclass = getOrThrow(modelIndex.getSemantic(operation.getSourceElementId(), EClass.class),
+
+		EClass sourceEClass = getOrThrow(modelIndex.getSemantic(operation.getSourceElementId(), EClass.class),
 				"No semantic EClass found for source element with id " + operation.getSourceElementId());
 		EClass targetEClass = getOrThrow(modelIndex.getSemantic(operation.getTargetElementId(), EClass.class),
 				"No semantic EClass found for target element with id" + operation.getTargetElementId());
 
-		Diagram diagram = facade.getDiagram();
-
 		if (elementTypeId.equals(Types.INHERITANCE)) {
-			modelAccess.addSuperType(EcoreModelState.getModelState(modelState), targetEClass, sourceEclass);
-		} else {
-			EReference reference = createReference(sourceEclass, targetEClass,
-					elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION) ? Types.COMPOSITION : elementTypeId);
-			modelAccess.addEReference(EcoreModelState.getModelState(modelState), reference, sourceEclass);
+			EGenericType genericType = createGenericType(sourceEClass, targetEClass);
+			Edge inheritanceEdge = createInheritanceEdge(genericType);
+			modelAccess.addESuperType(EcoreModelState.getModelState(modelState), targetEClass, sourceEClass,
+					inheritanceEdge);
+		} else if (elementTypeId.equals(Types.REFERENCE) || elementTypeId.equals(Types.COMPOSITION)) {
+			EReference reference = createReference(sourceEClass, targetEClass, elementTypeId);
+			Edge referenceEdge = createEdge(sourceEClass, reference);
+			modelAccess.addEReference(EcoreModelState.getModelState(modelState), reference, sourceEClass,
+					referenceEdge);
+		} else if (elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE)
+				|| elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION)) {
 
-			if (elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE)
-					|| elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION)) {
-				EReference opposite = createReference(targetEClass, sourceEclass, elementTypeId);
-				modelAccess.addEReference(EcoreModelState.getModelState(modelState), opposite, targetEClass);
-				
-				modelAccess.setOpposite(EcoreModelState.getModelState(modelState), reference, opposite);
-				modelAccess.setOpposite(EcoreModelState.getModelState(modelState), opposite, reference);
-				
-				if (elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE)) {
-					NotationElement sourceNotationElement = modelIndex.getNotation(sourceEclass).get();
-					NotationElement targeNotationElement = modelIndex.getNotation(targetEClass).get();
+			EReference reference = createReference(sourceEClass, targetEClass, elementTypeId);
+			Edge referenceEdge = createEdge(sourceEClass, reference);
+			EReference opposite = createReference(targetEClass, sourceEClass, elementTypeId);
+			Edge oppositeEdge = createEdge(targetEClass, opposite);
 
-					for (NotationElement element : diagram.getElements()) {
-						if (element.equals(sourceNotationElement)) {
-							break;
-						}
-						if (element.equals(targeNotationElement)) {
-							reference = reference.getEOpposite();
-							break;
-						}
-					}
-				}
-			}
+			modelAccess.addEReferenceBidirectional(EcoreModelState.getModelState(modelState), reference, opposite,
+					sourceEClass, targetEClass, referenceEdge, oppositeEdge,
+					elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE));
 		}
 	}
 
-	private EReference createReference(EClass source, EClass target, String elementTypeId) {
+	protected String getSemanticProxyUri(EGenericType genericType) {
+		return EcoreUtil.getURI(genericType).fragment();
+	}
+
+	protected EGenericType createGenericType(EClass sourceClass, EClass superClass) {
+		EGenericType genericType = EcoreFactory.eINSTANCE.createEGenericType();
+		genericType.setEClassifier(superClass);
+		sourceClass.getEGenericSuperTypes().add(genericType);
+		return genericType;
+	}
+	
+	protected Edge createInheritanceEdge(EGenericType genericType) {
+		Edge inheritanceEdge = EnotationFactory.eINSTANCE.createEdge();
+		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
+		proxy.setUri(getSemanticProxyUri(genericType));
+		inheritanceEdge.setSemanticElement(proxy);
+		return inheritanceEdge;
+	}
+
+	protected String getSemanticProxyUri(EClass source, EReference eReference) {
+		String sourceUri = EcoreUtil.getURI(source).fragment();
+		return sourceUri + "/" + eReference.getName();
+	}
+
+	protected EReference createReference(EClass source, EClass target, String elementTypeId) {
 		EReference reference = EcoreFactory.eINSTANCE.createEReference();
 		reference.setEType(target);
 		reference.setName(target.getName().toLowerCase() + "s");
-		if (elementTypeId.equals(Types.COMPOSITION)) {
+		if (elementTypeId.equals(Types.COMPOSITION) || elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION)) {
 			reference.setContainment(true);
 		}
 		return reference;
+	}
 
+	protected Edge createEdge(EClass source, EReference eReference) {
+		Edge edge = EnotationFactory.eINSTANCE.createEdge();
+		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
+		proxy.setUri(getSemanticProxyUri(source, eReference));
+		edge.setSemanticElement(proxy);
+		return edge;
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public class EcoreModelFactory implements ModelFactory {
 		modelServerAccess
 				.subscribe(new EcoreModelServerSubscriptionListener(modelState, modelServerAccess, actionDispatcher));
 
-		EcoreEditorContext editorContext = new EcoreEditorContext(modelState);
+		EcoreEditorContext editorContext = new EcoreEditorContext(modelState, modelServerAccess);
 		modelState.setEditorContext(editorContext);
 
 		EcoreFacade ecoreFacade = editorContext.getEcoreFacade();

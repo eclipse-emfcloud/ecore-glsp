@@ -26,6 +26,7 @@ import org.eclipse.glsp.server.operations.CreateOperation;
 
 import com.google.common.collect.Lists;
 
+@SuppressWarnings("restriction")
 public abstract class ModelServerAwareBasicCreateOperationHandler<T extends CreateOperation>
 		extends BasicCreateOperationHandler<T> implements ModelserverAwareOperationHandler<T> {
 

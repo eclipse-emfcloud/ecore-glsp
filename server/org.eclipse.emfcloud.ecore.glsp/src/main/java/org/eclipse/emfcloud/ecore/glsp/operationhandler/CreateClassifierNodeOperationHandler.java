@@ -17,11 +17,14 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
+import org.eclipse.emfcloud.ecore.enotation.EnotationFactory;
+import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
+import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.glsp.graph.GraphPackage;
+import org.eclipse.glsp.graph.util.GraphUtil;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.CreateNodeOperation;
 import org.eclipse.glsp.server.operations.Operation;
@@ -55,13 +58,21 @@ public class CreateClassifierNodeOperationHandler
 		EClassifier eClassifier = createClassifier(operation.getElementTypeId());
 		setName(eClassifier, modelState);
 
-		EcoreFacade facade = EcoreModelState.getEcoreFacade(modelState);
-		facade.createShape(operation.getLocation());
+		Shape shape = EnotationFactory.eINSTANCE.createShape();
+		shape.setPosition(operation.getLocation().orElse(GraphUtil.point(0, 0)));
 
-		if (!modelAccess.addEClassifier(EcoreModelState.getModelState(modelState), eClassifier)) {
+		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
+		proxy.setUri(getSemanticProxyUri(eClassifier));
+		shape.setSemanticElement(proxy);
+
+		if (!modelAccess.addEClassifier(EcoreModelState.getModelState(modelState), eClassifier, shape)) {
 			throw new GLSPServerException(
 					"Could not execute create operation on eClassifier: " + eClassifier.getName());
 		}
+	}
+
+	protected String getSemanticProxyUri(EClassifier eClassifier) {
+		return "//" + eClassifier.getName();
 	}
 
 	protected void setName(EClassifier classifier, GModelState modelState) {

@@ -33,6 +33,14 @@
     background-image: url(../../../resources/icons/EAttribute.gif);
 }
 
+.eclassabstract {
+    background-image: url(../../../resources/icons/EClassAbstract.gif);
+}
+
+.eclassinterface {
+    background-image: url(../../../resources/icons/EClassInterface.gif);
+}
+
 .eclass {
     background-image: url(../../../resources/icons/EClass.gif);
 }

@@ -22,8 +22,8 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 
 	private PaletteItem classifiers() {
 		PaletteItem createEClass = node(Types.ECLASS, "Class", "eclass");
-		PaletteItem createAbstract = node(Types.ABSTRACT, "Abstract", "eclass");
-		PaletteItem createInterface = node(Types.INTERFACE, "Interface", "eclass");
+		PaletteItem createAbstract = node(Types.ABSTRACT, "Abstract", "eclassabstract");
+		PaletteItem createInterface = node(Types.INTERFACE, "Interface", "eclassinterface");
 		PaletteItem createEnum = node(Types.ENUM, "Enum", "eenum");
 		PaletteItem createDataType = node(Types.DATATYPE, "DataType", "edatatype");
 

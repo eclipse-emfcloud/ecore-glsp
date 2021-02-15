@@ -24,9 +24,12 @@ import { EcoreCommandContribution } from "./command-contribution";
 import { EcoreDiagramConfiguration } from "./diagram/ecore-diagram-configuration";
 import { EcoreDiagramManager } from "./diagram/ecore-diagram-manager";
 import { EcoreGLSPDiagramClient } from "./diagram/ecore-glsp-diagram-client";
+import { EcoreModelServerFrontendContribution } from "./frontend-contribution";
 import { EcoreGLSPClientContribution } from "./glsp-client-contribution";
 
 export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind, isBound: interfaces.IsBound, rebind: interfaces.Rebind) => {
+    bind(EcoreModelServerFrontendContribution).toSelf().inSingletonScope();
+    bind(FrontendApplicationContribution).toService(EcoreModelServerFrontendContribution);
     bind(EcoreGLSPClientContribution).toSelf().inSingletonScope();
     bind(GLSPClientContribution).toService(EcoreGLSPClientContribution);
     bind(EcoreGLSPDiagramClient).toSelf().inSingletonScope();

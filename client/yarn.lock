@@ -871,10 +871,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@eclipse-emfcloud/modelserver-theia@0.8.0-next.2a5b324", "@eclipse-emfcloud/modelserver-theia@next":
-  version "0.8.0-next.2a5b324"
-  resolved "https://registry.yarnpkg.com/@eclipse-emfcloud/modelserver-theia/-/modelserver-theia-0.8.0-next.2a5b324.tgz#db6633dd48cc74744309a51645e5bb6d1bd1444c"
-  integrity sha512-E0+pCUpCMYH70fPZOFOLMlU+svcpJmy+DYig9b+wccB1J/1rj4gN87yrOZFOn46IblYnmwA3hLrXgyMVWtQYSg==
+"@eclipse-emfcloud/modelserver-theia@0.8.0-next.5bf1df0", "@eclipse-emfcloud/modelserver-theia@next":
+  version "0.8.0-next.5bf1df0"
+  resolved "https://registry.yarnpkg.com/@eclipse-emfcloud/modelserver-theia/-/modelserver-theia-0.8.0-next.5bf1df0.tgz#0c70299d4d7ec90d201c9bf27f33b5bd46b529a6"
+  integrity sha512-UoQvv54TqNZUy7U4VtWwDLilj092FbzQN71cTmC+2TSKtxRKItquISxBM4/2yvMzpHdRZL4EPTivq7+OhmaAEQ==
   dependencies:
     "@theia/core" latest
     "@theia/process" latest

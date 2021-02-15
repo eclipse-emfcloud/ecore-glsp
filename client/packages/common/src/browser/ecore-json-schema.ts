@@ -286,6 +286,14 @@ export const ecoreTypeSchema = {
                 }
             },
             "additionalProperties": false
+        },
+        "egenerictype": {
+            "$id": "#egenerictype",
+            "title": "EGenericType",
+            "type": "object",
+            "properties": {
+            },
+            "additionalProperties": false
         }
     }
 };

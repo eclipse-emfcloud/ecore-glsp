@@ -29,14 +29,16 @@ import com.google.inject.Inject;
 
 /**
  * <p>
- * Temporary workaround to support Ecore CreateOperations, until https://github.com/eclipse-glsp/glsp/issues/21
- * is fixed.
+ * Temporary workaround to support Ecore CreateOperations, until
+ * https://github.com/eclipse-glsp/glsp/issues/21 is fixed.
  * </p>
  * <p>
- * The GLSP version {@link DIOperationHandlerRegistry} has special handling for CreateOperations that requires
- * 1 CreateOperationHandler per element type, which doesn't match the current Ecore GLSP structure.
+ * The GLSP version {@link DIOperationHandlerRegistry} has special handling for
+ * CreateOperations that requires 1 CreateOperationHandler per element type,
+ * which doesn't match the current Ecore GLSP structure.
  * </p>
  */
+@SuppressWarnings("restriction")
 public class EcoreDIOperationHandlerRegistry implements OperationHandlerRegistry {
 
 	private final Map<String, List<OperationHandler>> internalRegistry;

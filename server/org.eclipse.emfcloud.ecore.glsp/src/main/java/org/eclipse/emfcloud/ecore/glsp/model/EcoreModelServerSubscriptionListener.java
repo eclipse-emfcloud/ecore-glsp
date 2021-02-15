@@ -19,15 +19,12 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EClassifier;
-import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emfcloud.ecore.enotation.Edge;
+import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
+import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.modelserver.client.XmiToEObjectSubscriptionListener;
@@ -67,24 +64,10 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 
 			EcoreFacade ecoreFacade = editorContext.getEcoreFacade();
 
-			if (command.getType() == CommandKind.COMPOUND) {
-				if (command instanceof CCompoundCommand) {
-					((CCompoundCommand) command).getCommands().forEach(c -> {
-						if (c.getType() == CommandKind.REMOVE) {
-							executeRemoveCommand(c, editingDomain, ecoreFacade);
-						} else if (c.getType() == CommandKind.ADD) {
-							executeAddCommand(c, editingDomain, ecoreFacade);
-						} else if (c.getType() == CommandKind.SET) {
-							executeSetCommand(c, editingDomain, ecoreFacade);
-						}
-					});
-				}
-			} else if (command.getType() == CommandKind.ADD) {
-				executeAddCommand(command, editingDomain, ecoreFacade);
-			} else if (command.getType() == CommandKind.REMOVE) {
-				executeRemoveCommand(command, editingDomain, ecoreFacade);
-			} else if (command.getType() == CommandKind.SET) {
-				executeSetCommand(command, editingDomain, ecoreFacade);
+			if (command.getType() == CommandKind.COMPOUND && command instanceof CCompoundCommand) {
+				((CCompoundCommand) command).getCommands().forEach(c -> executeCommand(c, editingDomain, ecoreFacade));
+			} else {
+				executeCommand(command, editingDomain, ecoreFacade);
 			}
 
 			GModelRoot gmodelRoot = EcoreModelState.getEditorContext(modelState).getGModelFactory()
@@ -100,7 +83,7 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 		}
 	}
 
-	private void executeAddCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
+	private void executeCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
 		try {
 			// Update semantic resource
 			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
@@ -110,63 +93,32 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 			throw new RuntimeException(ex);
 		}
 
-		// Initialize notation element
-		if (command.getObjectValues().get(0) instanceof EClassifier) {
-			EClassifier newEClassifier = (EClassifier) command.getObjectValues().get(0);
-			NotationElement notationElement = ecoreFacade.findUninitializedElements().get(0);
-			ecoreFacade.initializeNotationElement(notationElement, newEClassifier);
-		}
-	}
-
-	private void executeRemoveCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
-		EObject semanticElement = null;
-		if (!command.getDataValues().isEmpty()) {
-			String elementId = command.getDataValues().get(0);
-			semanticElement = ecoreFacade.getSemanticResource().getEObject(elementId);
-		} else if (!command.getIndices().isEmpty()) {
-			int indexToRemove = command.getIndices().get(0);
-			EObject owner = command.getOwner();
-			if (owner instanceof EPackage) {
-				semanticElement = ((EPackage) owner).getEClassifiers().get(indexToRemove);
-			} else if (owner instanceof EEnum) {
-				semanticElement = ((EEnum) owner).getELiterals().get(indexToRemove);
-			} else if (owner instanceof EClass) {
-				if (command.getFeature().equals("eStructuralFeatures")) {
-					semanticElement = ((EClass) owner).getEStructuralFeatures().get(indexToRemove);
+		if (command.getType() == CommandKind.ADD && command.getObjectValues().size() > 0) {
+			// Initialize notation element (by resolving the semanticElement) if a new
+			// notation element is added
+			if (command.getObjectValues().get(0) instanceof Shape) {
+				Shape newShape = (Shape) command.getObjectValues().get(0);
+				EObject proxy = ecoreFacade.getSemanticResource().getEObject(newShape.getSemanticElement().getUri());
+				if (proxy != null) {
+					ecoreFacade.initializeShape(newShape, proxy);
+				}
+			} else if (command.getObjectValues().get(0) instanceof Edge) {
+				Edge newEdge = (Edge) command.getObjectValues().get(0);
+				EObject proxy = ecoreFacade.getSemanticResource().getEObject(newEdge.getSemanticElement().getUri());
+				if (proxy != null) {
+					ecoreFacade.initializeEdge(newEdge, proxy);
+				}
+			}
+		} else if (command.getType() == CommandKind.SET && command.getObjectValues().size() > 0) {
+			// Update notation element (by resolving the semanticElement) if the
+			// semanticProxy of a notation element has changed
+			if (command.getObjectValues().get(0) instanceof SemanticProxy && command.getOwner() instanceof Edge) {
+				EObject proxy = command.getObjectValues().get(0);
+				if (proxy != null) {
+					ecoreFacade.initializeEdge((Edge) command.getOwner(), proxy);
 				}
 			}
 		}
-
-		// Update notation resource
-		Optional<NotationElement> notation = modelState.getIndex().getNotation(semanticElement);
-		notation.ifPresent(EcoreUtil::delete);
-
-		try {
-			// Update semantic resource
-			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
-			editingDomain.getCommandStack().execute(cmd);
-		} catch (DecodingException ex) {
-			LOGGER.error("Could not decode command: " + command, ex);
-			throw new RuntimeException(ex);
-		}
-	}
-
-	private void executeSetCommand(CCommand command, EditingDomain editingDomain, EcoreFacade ecoreFacade) {
-		try {
-			// FIXME If owner is unknown (i.e. if name is changed, we cannot grasp the owner
-			// at the moment as the semantic uri was changed) the command cannot be
-			// executed.
-
-			// Update semantic resource
-			Command cmd = modelServerAccess.getCommandCodec().decode(editingDomain, command);
-			editingDomain.getCommandStack().execute(cmd);
-		} catch (DecodingException ex) {
-			LOGGER.error("Could not decode command: " + command, ex);
-			throw new RuntimeException(ex);
-		}
-
-		// If semantic resource was updated correctly, notation resource will be updated
-		// via the RequestBoundsAction in the onIncrementalUpdate method
 	}
 
 	private Resource createCommandResource(EditingDomain editingDomain, CCommand command) {

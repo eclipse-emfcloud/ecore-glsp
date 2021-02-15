@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -98,7 +99,7 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		// create reference edges
 		eClass.getEReferences().stream().map(this::create).filter(Objects::nonNull).forEach(children::add);
 		// create inheritance edges
-		eClass.getESuperTypes().stream().map(s -> create(eClass, s)).forEach(children::add);
+		eClass.getEGenericSuperTypes().stream().map(this::create).forEach(children::add);
 		return children;
 	}
 
@@ -190,21 +191,27 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 				.text(name).build();
 	}
 
-	public GEdge create(EClass baseClass, EClass superClass) {
-		String sourceId = toId(baseClass);
-		String targetId = toId(superClass);
-		if (sourceId.isEmpty() || sourceId.isEmpty()) {
-			return null;
-		}
-		String id = sourceId + "_" + targetId;
-		return new GEdgeBuilder(Types.INHERITANCE) //
+	public GEdge create(EGenericType genericType) {
+		String id = toId(genericType);
+		String sourceId = toId(genericType.eContainer());
+		String targetId = toId(genericType.getEClassifier());
+		GEdgeBuilder builder = new GEdgeBuilder(Types.INHERITANCE) //
 				.id(id)//
 				.addCssClass(CSS.ECORE_EDGE) //
 				.addCssClass(CSS.INHERITANCE) //
 				.sourceId(sourceId) //
 				.targetId(targetId) //
-				.routerKind(GConstants.RouterKind.MANHATTAN)//
-				.build();
+				.routerKind(GConstants.RouterKind.MANHATTAN);
+
+		modelState.getIndex().getNotation(genericType, Edge.class).ifPresent(edge -> {
+			if (edge.getBendPoints() != null) {
+				ArrayList<GPoint> gPoints = new ArrayList<>();
+				edge.getBendPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
+				builder.addRoutingPoints(gPoints);
+			}
+		});
+
+		return builder.build();
 	}
 
 	public static GLSPServerException createFailed(EObject semanticElement) {

@@ -26,6 +26,7 @@ public class EcoreLayoutEngine extends ElkLayoutEngine {
 
 	@Override
 	public void layout(GModelState modelState) {
+		
 		GModelElement root = modelState.getRoot();
 		if (root instanceof GGraph) {
 			GLSPLayoutConfigurator configurator = new GLSPLayoutConfigurator();
@@ -36,6 +37,7 @@ public class EcoreLayoutEngine extends ElkLayoutEngine {
 		}
 		EcoreFacade facade = EcoreModelState.getEcoreFacade(modelState);
 
+		// # FIXME - layouting should also be modelserveraware and no direct manipulation via facade
 		root.getChildren().stream() //
 				.forEach(facade::updateNotationElement);
 

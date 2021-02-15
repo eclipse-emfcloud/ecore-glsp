@@ -36,7 +36,10 @@
       "request": "launch",
       "url": "http://localhost:3000/",
       "sourceMaps": true,
-      "webRoot": "${workspaceRoot}/browser-app"
+      "webRoot": "${workspaceRoot}",
+      "sourceMapPathOverrides": {
+        "./src/*": "${workspaceFolder}/src/*"
+      }
     }
   ]
 }
