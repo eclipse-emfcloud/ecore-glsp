@@ -22,6 +22,7 @@ import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.Operation;
 
+@SuppressWarnings("restriction")
 public abstract class ModelServerAwareBasicOperationHandler<T extends Operation> extends BasicOperationHandler<T>
 		implements ModelserverAwareOperationHandler<T> {
 

@@ -90,6 +90,9 @@ export class EcoreCommandContribution implements CommandContribution {
                         }
                     };
 
+                    // #FIXME also create empty enotation file (and create in new folder?)
+                    // make sure resources are added to modelserver - do not use openerservice from theia to create file!
+
                     const showInput = (hint: string, prefix: string, onEnter: (result: string) => void): void => {
                         const quickOpenModel: QuickOpenModel = {
                             onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
@@ -97,7 +100,7 @@ export class EcoreCommandContribution implements CommandContribution {
                                 const suffix = "Press 'Enter' to confirm or 'Escape' to cancel.";
 
                                 dynamicItems.push(new SingleStringInputOpenItem(
-                                    `${prefix}: ${lookFor}. ${suffix}`,
+                                    `${prefix}: '${lookFor}' ${suffix}`,
                                     () => onEnter(lookFor),
                                     (mode: QuickOpenMode) => mode === QuickOpenMode.OPEN,
                                     () => false
@@ -110,9 +113,9 @@ export class EcoreCommandContribution implements CommandContribution {
                     };
 
                     showInput("Name", "Name of Ecore", nameOfEcore => {
-                        showInput("Prefix", "Prefix", prefix => {
-                            showInput("URI", "URI", ecoreUri => {
-                                createEcore(nameOfEcore, prefix, ecoreUri);
+                        showInput("NS Prefix", "NS Prefix", nsPrefix => {
+                            showInput("NS URI", "NS URI", nsURI => {
+                                createEcore(nameOfEcore, nsPrefix, nsURI);
                             });
                         });
                     });
@@ -124,7 +127,7 @@ export class EcoreCommandContribution implements CommandContribution {
                 if (parent) {
                     const parentUri = new URI(parent.uri);
 
-                    this.fileGenServer.generateGenModel(parentUri.path.toString() ,uri.path.toString(), "", "").then(() => {
+                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", "").then(() => {
                         const extensionStart = uri.displayName.lastIndexOf(".");
                         const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
                         const fileUri = new URI(genmodelPath);
@@ -159,7 +162,7 @@ export class EcoreCommandContribution implements CommandContribution {
 
                     showInput("Name", "Custom RootPackage Name", customPackageName => {
                         showInput("Output folder name (relative from project root)", "folder name", folderName => {
-                            this.fileGenServer.generateGenModel(parentUri.path.toString() ,uri.path.toString(), customPackageName, folderName).then(() => {
+                            this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName).then(() => {
                                 const extensionStart = uri.displayName.lastIndexOf(".");
                                 const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
                                 const fileUri = new URI(genmodelPath);
@@ -174,7 +177,7 @@ export class EcoreCommandContribution implements CommandContribution {
             execute: uri => this.getDirectory(uri).then(parent => {
                 if (parent) {
                     const parentUri = new URI(parent.uri);
-                    if(parentUri.parent){
+                    if (parentUri.parent) {
                         this.fileGenServer.generateCode(uri.path.toString(), parentUri.parent.path.toString()).then(() => {
                             open(this.openerService, uri);
                         });

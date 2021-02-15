@@ -13,12 +13,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { ModelServerSubscriptionService } from "@eclipse-emfcloud/modelserver-theia/lib/browser";
 import {
     ModelServerClient,
     ModelServerCommand,
     ModelServerCommandUtil,
-    ModelServerReferenceDescription
+    ModelServerCompoundCommand,
+    ModelServerReferenceDescription,
+    ModelServerSubscriptionService
 } from "@eclipse-emfcloud/modelserver-theia/lib/common";
 import { isGlspSelection } from "@eclipse-emfcloud/theia-ecore/lib/browser/selection-forwarder";
 import { JsonFormsCore } from "@jsonforms/core";
@@ -51,7 +52,7 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
 
         this.subscriptionService.onIncrementalUpdateListener(incrementalUpdate => {
             if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-                this.updateWidgetData(incrementalUpdate as ModelServerCommand);
+                this.updateWidgetData(incrementalUpdate.data);
             }
         });
     }
@@ -87,8 +88,18 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
         });
     }
 
-    protected updateWidgetData(command: ModelServerCommand): void {
+    protected updateWidgetData(command: ModelServerCommand | ModelServerCompoundCommand): void {
         const semanticUri = this.jsonFormsWidget.currentJsonFormsCore.data.semanticUri;
+        if (command.type) {
+            this.updateViaCommand(command as ModelServerCommand, semanticUri);
+        } else { // #FIXME: command.type='compound' type not set right now!
+            (command as ModelServerCompoundCommand).commands.forEach((cmd: ModelServerCommand | ModelServerCompoundCommand) => {
+                this.updateWidgetData(cmd);
+            });
+        }
+    }
+
+    protected updateViaCommand(command: ModelServerCommand, semanticUri: string): void {
         const relativeRef = this.getRelativeModelUri(command.owner.$ref.replace("file:", ""));
         if (relativeRef.split("#")[0] === this.currentModelUri && command.dataValues && relativeRef.split("#")[1] === semanticUri) {
             console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
@@ -104,6 +115,9 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
                 this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
                 this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
             }
+        } else if (relativeRef.split("#")[0] === this.currentModelUri && command.type === "remove") {
+            // clear global selection
+            this.selectionService.selection = new Object();
         }
     }
 

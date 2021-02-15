@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,8 +36,6 @@ import org.eclipse.glsp.graph.util.GraphUtil;
 import com.google.common.base.Preconditions;
 
 public class EcoreFacade {
-
-	private static Logger LOGGER = Logger.getLogger(EcoreFacade.class);
 
 	private final Resource semanticResource;
 	private final Resource notationResource;
@@ -148,22 +144,6 @@ public class EcoreFacade {
 		return shape;
 	}
 
-	public void createShape(Optional<GPoint> position) {
-		Shape shape = EnotationFactory.eINSTANCE.createShape();
-		shape.setPosition(position.orElse(GraphUtil.point(0, 0)));
-		diagram.getElements().add(shape);
-	}
-
-	public void initializeNotationElement(NotationElement element, EObject semanticElement) {
-		element.setSemanticElement(createProxy(semanticElement));
-		modelIndex.indexNotation(element);
-	}
-
-	public List<NotationElement> findUninitializedElements() {
-		return diagram.getElements().stream().filter(element -> element.getSemanticElement() == null)
-				.collect(Collectors.toList());
-	}
-
 	public Shape initializeShape(Shape shape, EObject semanticElement) {
 		shape.setSemanticElement(createProxy(semanticElement));
 		modelIndex.indexNotation(shape);
@@ -187,15 +167,16 @@ public class EcoreFacade {
 		modelIndex.indexNotation(edge);
 		return edge;
 	}
+	
+	public Edge initializeEdge(Edge edge, EObject semanticElement) {
+		edge.setSemanticElement(createProxy(semanticElement));
+		modelIndex.indexNotation(edge);
+		return edge;
+	}
 
 	public SemanticProxy createProxy(EObject eObject) {
 		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
 		proxy.setResolvedElement(eObject);
-		// #FIXME this causes us a lot of troubles regarding the setting of attributes
-		// and so on... we should try to make use of the previous format that was
-		// "@<feature-name>[.<index>]" from the String
-		// org.eclipse.emf.ecore.InternalEObject.eURIFragmentSegment(EStructuralFeature
-		// eFeature, EObject eObject)
 		proxy.setUri(semanticResource.getURIFragment(eObject));
 		return proxy;
 	}

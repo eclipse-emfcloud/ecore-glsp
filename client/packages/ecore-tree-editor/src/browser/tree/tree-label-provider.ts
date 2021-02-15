@@ -24,7 +24,9 @@ const ICON_CLASSES: Map<string, string> = new Map([
     [EcoreModel.Type.EAttribute, "ecoreimg eattribute"],
     [EcoreModel.Type.EEnumLiteral, "ecoreimg eenumliteral"],
     ["EGenericSuperType", "ecoreimg egenericsupertype"],
-    ["EGenericElementType", "ecoreimg egenericelementtype"]
+    ["EGenericElementType", "ecoreimg egenericelementtype"],
+    ["EClassAbstract", "ecoreimg eclassabstract"],
+    ["EClassInterface", "ecoreimg eclassinterface"]
 ]);
 
 /* Icon for unknown types */
@@ -57,7 +59,13 @@ export class TreeLabelProvider implements LabelProviderContribution {
                     iconClass = ICON_CLASSES.get("EGenericElementType");
                 }
             } else {
-                iconClass = ICON_CLASSES.get(element.jsonforms.data.eClass);
+                if (element.jsonforms.data.abstract) {
+                    iconClass = ICON_CLASSES.get("EClassAbstract");
+                } else if (element.jsonforms.data.interface) {
+                    iconClass = ICON_CLASSES.get("EClassInterface");
+                } else {
+                    iconClass = ICON_CLASSES.get(element.jsonforms.data.eClass);
+                }
             }
         }
 
@@ -76,7 +84,9 @@ export class TreeLabelProvider implements LabelProviderContribution {
             return name.slice(0, -2);
         } else if (data.eType) {
             const name = data.name + " : ";
-            if (data.eType.eClass.indexOf("EClass") > -1) {
+            if (data.eType.eClass.indexOf("EClass") > -1 || data.eType.eClass.indexOf("EEnum") > -1) {
+                return name.concat(data.eType.$ref.split("//")[1]);
+            } else if (data.eType.eClass.indexOf("EDataType") && data.eType.$ref.startsWith("//")) {
                 return name.concat(data.eType.$ref.split("//")[1]);
             }
             return name.concat(data.eType.$ref.split("//")[2]);
@@ -90,7 +100,9 @@ export class TreeLabelProvider implements LabelProviderContribution {
         } else if (data.name) {
             return data.name;
         } else if (EcoreEType.is(data)) {
-            if (data.eClass.indexOf("EClass") > -1) {
+            if (data.eClass.indexOf("EClass") > -1 || data.eClass.indexOf("EEnum") > -1) {
+                return data.$ref.split("//")[1];
+            } else if (data.eClass.indexOf("EDataType") && data.$ref.startsWith("//")) {
                 return data.$ref.split("//")[1];
             }
             return data.$ref.split("//")[2];

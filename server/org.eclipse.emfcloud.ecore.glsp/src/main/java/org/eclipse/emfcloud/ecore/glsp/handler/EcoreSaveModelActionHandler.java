@@ -17,7 +17,6 @@ import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.BasicActionHandler;
 import org.eclipse.glsp.server.actions.SaveModelAction;
-import org.eclipse.glsp.server.actions.SetDirtyStateAction;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 
@@ -30,11 +29,7 @@ public class EcoreSaveModelActionHandler extends BasicActionHandler<SaveModelAct
 		if (!modelServerAccess.save()) {
 			throw new GLSPServerException("Could not execute save action: " + action.toString());
 		}
-
-		EcoreModelState.getResourceManager(modelState).saveNotationResource();
-		modelState.saveIsDone();
-
-		return listOf(new SetDirtyStateAction(modelState.isDirty()));
+		return none();
 	}
 
 }

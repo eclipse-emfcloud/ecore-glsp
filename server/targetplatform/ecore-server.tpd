@@ -39,7 +39,7 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R202008312006
 	javax.servlet [3.1.0,4.0.0)
 }
 
-location "https://download.eclipse.org/emfcloud/modelserver/p2/nightly/0.7/0.7.0.202101081124/" {
+location "https://download.eclipse.org/emfcloud/modelserver/p2/nightly/0.7/0.7.0.202102011650/" {
 	org.eclipse.emfcloud.modelserver.feature.feature.group [0.7.0,0.8.0)
 }
 

@@ -234,6 +234,10 @@ svg {
     color: #ffffff;
 }
 
+.tool-palette {
+    width: 200px !important;
+}
+
 .ecore-tool-button {
     display: flex;
 }

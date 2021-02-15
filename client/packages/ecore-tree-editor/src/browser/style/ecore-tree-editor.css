@@ -39,3 +39,8 @@
     font-family: var(--theia-ui-font-family);
     text-align: right;
 }
+
+.theia-tree-editor-tree .node-buttons {
+    /* #FIXME this is only temporary as we haven't implemented the delete node functionality yet correctly*/
+    display: none;
+}
