@@ -3,22 +3,22 @@
   <semanticElement uri="/"/>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//Class"/>
-    <position x="9.0" y="80.0"/>
+    <position x="109.0" y="123.0"/>
     <size width="91.015625" height="43.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//Interface"/>
-    <position x="145.0" y="6.0"/>
+    <position x="303.0" y="29.0"/>
     <size width="118.828125" height="43.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//Abstract"/>
-    <position x="151.0" y="164.0"/>
+    <position x="559.0" y="182.0"/>
     <size width="115.8125" height="43.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//Enum"/>
-    <position x="10.0" y="190.0"/>
+    <position x="223.0" y="276.0"/>
     <size width="93.25" height="43.0"/>
   </elements>
 </enotation:Diagram>

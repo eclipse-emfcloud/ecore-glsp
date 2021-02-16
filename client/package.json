@@ -14,7 +14,9 @@
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
     "theia:start": "cd browser-app && yarn start",
-    "testcafe:start": "testcafe chrome:headless --no-sandbox --disable-dev-shm-usage tests/test.ts --skip-js-errors -s takeOnFails=true,path=tests/results/screenshots",
+    "testcafe:start:visual": "testcafe chrome --no-sandbox --disable-dev-shm-usage tests/test.ts --skip-js-errors -s takeOnFails=true,path=tests/screenshots",
+    "testcafe:start": "testcafe chrome:headless --no-sandbox --disable-dev-shm-usage tests/test.ts --skip-js-errors -s takeOnFails=true,path=tests/screenshots",
+    "e2etest:visual": "npm-run-all --parallel --race --aggregate-output theia:start testcafe:start:visual",
     "e2etest": "npm-run-all --parallel --race --aggregate-output theia:start testcafe:start"
   },
   "devDependencies": {
