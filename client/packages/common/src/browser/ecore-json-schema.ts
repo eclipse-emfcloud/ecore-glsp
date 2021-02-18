@@ -9,6 +9,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 
+// FIXME atm we use a local version of the typeschema, as there exist performance issues with the fetched ecore type schema
 export const ecoreTypeSchema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "http://www.eclipse.org/emf/2002/Ecore",
@@ -30,9 +31,6 @@ export const ecoreTypeSchema = {
                     "type": "string"
                 },
                 "instanceClass": {
-                    "type": "string"
-                },
-                "defaultValue": {
                     "type": "string"
                 },
                 "instanceTypeName": {
@@ -64,14 +62,8 @@ export const ecoreTypeSchema = {
                 "instanceClass": {
                     "type": "string"
                 },
-                "defaultValue": {
-                    "type": "string"
-                },
                 "instanceTypeName": {
                     "type": "string"
-                },
-                "serializable": {
-                    "type": "boolean"
                 }
             },
             "additionalProperties": false
@@ -92,15 +84,6 @@ export const ecoreTypeSchema = {
                 },
                 "instanceClass": {
                     "type": "string"
-                },
-                "defaultValue": {
-                    "type": "string"
-                },
-                "instanceTypeName": {
-                    "type": "string"
-                },
-                "serializable": {
-                    "type": "boolean"
                 }
             },
             "additionalProperties": false
@@ -136,11 +119,8 @@ export const ecoreTypeSchema = {
                 "name": {
                     "type": "string"
                 },
-                "ordered": {
-                    "type": "boolean"
-                },
-                "unique": {
-                    "type": "boolean"
+                "eType": {
+                    "type": "string"
                 },
                 "lowerBound": {
                     "type": "integer",
@@ -150,10 +130,19 @@ export const ecoreTypeSchema = {
                     "type": "integer",
                     "default": 1
                 },
-                "many": {
+                "containment": {
                     "type": "boolean"
                 },
-                "required": {
+                "transient": {
+                    "type": "boolean"
+                },
+                "derived": {
+                    "type": "boolean"
+                },
+                "ordered": {
+                    "type": "boolean"
+                },
+                "unique": {
                     "type": "boolean"
                 },
                 "changeable": {
@@ -162,25 +151,7 @@ export const ecoreTypeSchema = {
                 "volatile": {
                     "type": "boolean"
                 },
-                "transient": {
-                    "type": "boolean"
-                },
-                "defaultValueLiteral": {
-                    "type": "string"
-                },
-                "defaultValue": {
-                    "type": "string"
-                },
                 "unsettable": {
-                    "type": "boolean"
-                },
-                "derived": {
-                    "type": "boolean"
-                },
-                "containment": {
-                    "type": "boolean"
-                },
-                "container": {
                     "type": "boolean"
                 },
                 "resolveProxies": {
@@ -203,14 +174,8 @@ export const ecoreTypeSchema = {
                 "value": {
                     "type": "integer"
                 },
-                "instance": {
-                    "type": "string"
-                },
                 "literal": {
                     "type": "string"
-                },
-                "eEnum": {
-                    "$ref": "#/definitions/eenum"
                 }
             },
             "additionalProperties": false
@@ -226,11 +191,8 @@ export const ecoreTypeSchema = {
                 "name": {
                     "type": "string"
                 },
-                "ordered": {
-                    "type": "boolean"
-                },
-                "unique": {
-                    "type": "boolean"
+                "eType": {
+                    "type": "string"
                 },
                 "lowerBound": {
                     "type": "integer",
@@ -240,10 +202,19 @@ export const ecoreTypeSchema = {
                     "type": "integer",
                     "default": 1
                 },
-                "many": {
+                "defaultValueLiteral": {
+                    "type": "string"
+                },
+                "transient": {
                     "type": "boolean"
                 },
-                "required": {
+                "derived": {
+                    "type": "boolean"
+                },
+                "ordered": {
+                    "type": "boolean"
+                },
+                "unique": {
                     "type": "boolean"
                 },
                 "changeable": {
@@ -252,19 +223,7 @@ export const ecoreTypeSchema = {
                 "volatile": {
                     "type": "boolean"
                 },
-                "transient": {
-                    "type": "boolean"
-                },
-                "defaultValueLiteral": {
-                    "type": "string"
-                },
-                "defaultValue": {
-                    "type": "string"
-                },
                 "unsettable": {
-                    "type": "boolean"
-                },
-                "derived": {
                     "type": "boolean"
                 },
                 "iD": {
@@ -278,20 +237,15 @@ export const ecoreTypeSchema = {
             "title": "EType",
             "type": "object",
             "properties": {
+                "eClass": {
+                    "type": "string"
+                },
                 "eClassifier": {
                     "type": "string"
                 },
                 "eTypeParameter": {
                     "type": "string"
                 }
-            },
-            "additionalProperties": false
-        },
-        "egenerictype": {
-            "$id": "#egenerictype",
-            "title": "EGenericType",
-            "type": "object",
-            "properties": {
             },
             "additionalProperties": false
         }

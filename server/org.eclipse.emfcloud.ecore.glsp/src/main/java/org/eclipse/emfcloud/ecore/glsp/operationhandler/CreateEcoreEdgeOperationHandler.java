@@ -15,12 +15,12 @@ import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.enotation.EnotationFactory;
+import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
@@ -59,23 +59,27 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 		EClass targetEClass = getOrThrow(modelIndex.getSemantic(operation.getTargetElementId(), EClass.class),
 				"No semantic EClass found for target element with id" + operation.getTargetElementId());
 
+		NotationElement sourceElement = getOrThrow(modelIndex.getNotation(operation.getSourceElementId()),
+				"No NotationElement found for source element with id " + operation.getSourceElementId());
+		NotationElement targetElement = getOrThrow(modelIndex.getNotation(operation.getTargetElementId()),
+				"No NotationElement found for target element with id" + operation.getTargetElementId());
+
 		if (elementTypeId.equals(Types.INHERITANCE)) {
-			EGenericType genericType = createGenericType(sourceEClass, targetEClass);
-			Edge inheritanceEdge = createInheritanceEdge(genericType);
+			Edge inheritanceEdge = createInheritanceEdge(sourceElement, targetElement);
 			modelAccess.addESuperType(EcoreModelState.getModelState(modelState), targetEClass, sourceEClass,
 					inheritanceEdge);
 		} else if (elementTypeId.equals(Types.REFERENCE) || elementTypeId.equals(Types.COMPOSITION)) {
 			EReference reference = createReference(sourceEClass, targetEClass, elementTypeId);
-			Edge referenceEdge = createEdge(sourceEClass, reference);
+			Edge referenceEdge = createEdge(sourceEClass, reference, sourceElement, targetElement);
 			modelAccess.addEReference(EcoreModelState.getModelState(modelState), reference, sourceEClass,
 					referenceEdge);
 		} else if (elementTypeId.equals(Types.BIDIRECTIONAL_REFERENCE)
 				|| elementTypeId.equals(Types.BIDIRECTIONAL_COMPOSITION)) {
 
 			EReference reference = createReference(sourceEClass, targetEClass, elementTypeId);
-			Edge referenceEdge = createEdge(sourceEClass, reference);
+			Edge referenceEdge = createEdge(sourceEClass, reference, sourceElement, targetElement);
 			EReference opposite = createReference(targetEClass, sourceEClass, elementTypeId);
-			Edge oppositeEdge = createEdge(targetEClass, opposite);
+			Edge oppositeEdge = createEdge(targetEClass, opposite, targetElement, sourceElement);
 
 			modelAccess.addEReferenceBidirectional(EcoreModelState.getModelState(modelState), reference, opposite,
 					sourceEClass, targetEClass, referenceEdge, oppositeEdge,
@@ -83,22 +87,13 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 		}
 	}
 
-	protected String getSemanticProxyUri(EGenericType genericType) {
-		return EcoreUtil.getURI(genericType).fragment();
-	}
-
-	protected EGenericType createGenericType(EClass sourceClass, EClass superClass) {
-		EGenericType genericType = EcoreFactory.eINSTANCE.createEGenericType();
-		genericType.setEClassifier(superClass);
-		sourceClass.getEGenericSuperTypes().add(genericType);
-		return genericType;
-	}
-	
-	protected Edge createInheritanceEdge(EGenericType genericType) {
+	protected Edge createInheritanceEdge(NotationElement sourceElement, NotationElement targetElement) {
 		Edge inheritanceEdge = EnotationFactory.eINSTANCE.createEdge();
-		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
-		proxy.setUri(getSemanticProxyUri(genericType));
-		inheritanceEdge.setSemanticElement(proxy);
+		// As we cannot set a proper SemanticProxy for an inheritance edge, we skip it
+		// and set the type instead
+		inheritanceEdge.setType(Types.INHERITANCE);
+		inheritanceEdge.setSource(sourceElement);
+		inheritanceEdge.setTarget(targetElement);
 		return inheritanceEdge;
 	}
 
@@ -117,11 +112,16 @@ public class CreateEcoreEdgeOperationHandler extends ModelServerAwareBasicOperat
 		return reference;
 	}
 
-	protected Edge createEdge(EClass source, EReference eReference) {
+	protected Edge createEdge(EClass source, EReference eReference, NotationElement sourceElement,
+			NotationElement targetElement) {
 		Edge edge = EnotationFactory.eINSTANCE.createEdge();
+		// As we are able to set a SemanticProxy, we do not need to set an edge type
+		// here
 		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
 		proxy.setUri(getSemanticProxyUri(source, eReference));
 		edge.setSemanticElement(proxy);
+		edge.setSource(sourceElement);
+		edge.setTarget(targetElement);
 		return edge;
 	}
 

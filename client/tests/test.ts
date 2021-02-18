@@ -57,9 +57,9 @@ const edgeSelector = {
 };
 
 const attributeSelector = {
-    attributeClass: Selector('g.node.ecore-node text.sprotty-label').withText('ClassAttribute : EString'),
-    attributeAbstract: Selector('g.node.ecore-node text.sprotty-label').withText('AbstractAttribute : EString'),
-    attributeInterface: Selector('g.node.ecore-node text.sprotty-label').withText('InterfaceAttribute : EString'),
+    attributeClass: Selector('g.node.ecore-node text.sprotty-label').withText('ClassAttribute'),
+    attributeAbstract: Selector('g.node.ecore-node text.sprotty-label').withText('AbstractAttribute'),
+    attributeInterface: Selector('g.node.ecore-node text.sprotty-label').withText('InterfaceAttribute'),
     literalEnum: Selector('g.node.ecore-node text.sprotty-label').withText('EnumLiteral'),
 }
 
@@ -78,9 +78,9 @@ const defaultEdgeSelector = {
 };
 
 const defaultAttributeSelector = {
-    attributeClass: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute4 : EString'),
-    attributeAbstract: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute5 : EString'),
-    attributeInterface: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute6 : EString'),
+    attributeClass: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute4'),
+    attributeAbstract: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute5'),
+    attributeInterface: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute6'),
     literalEnum: Selector('g.node.ecore-node text.sprotty-label').withText('NewEEnumLiteral7'),
 }
 
@@ -465,8 +465,7 @@ test('Renaming Classes/Attributes', async t => {
         .expect(attributeEnumRenamed.exists).ok("Renamed Literal in Enum");
 });
 
-// Skipped, can be reactivated once editing of eAttributeType this is fixed.
-test.skip('Change Attributetype', async t => {
+test('Change Attributetype', async t => {
     openFile(t, selectors.testNodesWithAttributesEcore)
     const changedAttribute = Selector('g.node.ecore-node text.sprotty-label').withText('test : EDate');
     const changedAttributeWrite = Selector('g.node.ecore-node text.sprotty-label').withText('layout : EString');
@@ -549,13 +548,17 @@ test('Delete Edges with DEL', async t => {
         .click(edgeSelector.referenceEdge)
         .wait(200)
         .pressKey('delete')
+        .wait(200)
         .click(edgeSelector.containmentEdge)
         .wait(200)
         .pressKey('delete')
+        // Skip this temporarily, as it only fails on the CI environment
+        // .wait(500)
         // .click(edgeSelector.inheritanceEdge, { offsetX: -162 })
-        // .wait(200)
+        // .wait(500)
         // .pressKey('delete')
-        .expect(edgeSelector.referenceEdge.exists).notOk('Containment deleted')
-        .expect(edgeSelector.containmentEdge.exists).notOk('Inheritance deleted');
-    // .expect(edgeSelector.inheritanceEdge.exists).notOk('Reference deleted');
+        .wait(200)
+        .expect(edgeSelector.referenceEdge.exists).notOk('Reference deleted')
+        .expect(edgeSelector.containmentEdge.exists).notOk('Containment deleted');
+    // .expect(edgeSelector.inheritanceEdge.exists).notOk('Inheritance deleted');
 });

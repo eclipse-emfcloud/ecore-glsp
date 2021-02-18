@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EcoreFactory;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
@@ -56,7 +55,7 @@ public class CreateClassifierChildNodeOperationHandler
 		if (elementTypeId.equals(Types.ATTRIBUTE) && container instanceof EClass) {
 			EAttribute attribute = createEAttribute(modelState);
 			modelState.getIndex().add(attribute);
-			if (!modelAccess.addEAttribute(EcoreModelState.getModelState(modelState), attribute, container)) {
+			if (!modelAccess.addEAttribute(EcoreModelState.getModelState(modelState), attribute, (EClass) container)) {
 				throw new GLSPServerException(
 						"Could not execute create operation on EAttribute: " + attribute.getName());
 			}
@@ -72,7 +71,7 @@ public class CreateClassifierChildNodeOperationHandler
 	}
 
 	protected int setName(ENamedElement namedElement, EcoreModelState modelState) {
-		Function<Integer, String> nameProvider = i -> "New" + namedElement.eClass().getName() + i;
+		Function<Integer, String> nameProvider = i -> "new" + namedElement.eClass().getName() + i;
 		int nodeCounter = modelState.getIndex().getCounter(GraphPackage.Literals.GLABEL, nameProvider);
 		namedElement.setName(nameProvider.apply(nodeCounter));
 		return nodeCounter;
@@ -83,13 +82,11 @@ public class CreateClassifierChildNodeOperationHandler
 		int counter = setName(literal, modelState);
 		literal.setValue(counter);
 		return literal;
-
 	}
 
 	protected EAttribute createEAttribute(EcoreModelState modelState) {
 		EAttribute attribute = EcoreFactory.eINSTANCE.createEAttribute();
 		setName(attribute, modelState);
-		attribute.setEType(EcorePackage.eINSTANCE.getEString());
 		return attribute;
 	}
 

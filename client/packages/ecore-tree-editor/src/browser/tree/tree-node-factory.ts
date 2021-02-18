@@ -77,6 +77,7 @@ export class TreeNodeFactory implements TreeEditor.NodeFactory {
         if (data.eSuperTypes) {
             // determine eSuperTypes
             data.eSuperTypes.forEach((element: any, idx: string | number | undefined) => {
+                element["type"] = EcoreModel.Type.EGenericSuperType;
                 this.mapData(element, node, "eSuperTypes", idx);
             });
         }
@@ -89,6 +90,7 @@ export class TreeNodeFactory implements TreeEditor.NodeFactory {
         if (data.eLiterals) {
             // determine eLiterals
             data.eLiterals.forEach((element: any, idx: string | number | undefined) => {
+                element["type"] = EcoreModel.Type.EEnumLiteral;
                 this.mapData(element, node, "eLiterals", idx);
             });
         }

@@ -9,86 +9,64 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 import { ecoreTypeSchema } from "@eclipse-emfcloud/ecore-glsp-common/lib/browser/ecore-json-schema";
+import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia";
 import { TreeEditor } from "@eclipse-emfcloud/theia-tree-editor";
 import { JsonSchema, UISchemaElement } from "@jsonforms/core";
-import { ILogger } from "@theia/core";
+import { MaybePromise } from "@theia/core";
+import URI from "@theia/core/lib/common/uri";
 import { inject, injectable } from "inversify";
 
 import { EcoreEType, EcoreModel } from "./tree-model";
-import {
-    eAttributeUiSchema,
-    eClassUiSchema,
-    eDataTypeUiSchema,
-    eEnumLiteralUiSchema,
-    eEnumUiSchema,
-    ePackageUiSchema,
-    eReferenceUiSchema,
-    eTypeUiSchema
-} from "./tree-schema";
 
 @injectable()
 export class TreeModelService implements TreeEditor.ModelService {
 
-    constructor(@inject(ILogger) private readonly logger: ILogger) {
-    }
+    @inject(ModelServerClient) protected readonly modelServerClient: ModelServerClient;
 
-    getDataForNode(node: TreeEditor.Node): any {
-        if (EcoreEType.is(node.jsonforms.data)) {
-            const eClassifier = node.jsonforms.data.$ref.split("//")[1];
+    getDataForNode(node: TreeEditor.Node): MaybePromise<any> {
+        const nodeData = node.jsonforms.data;
+        if (EcoreEType.is(nodeData)) {
+            const eClassifier = new URI(nodeData.$ref).fragment.substring(2);
             /* @ts-ignore */
-            node.jsonforms.data["eClassifier"] = eClassifier;
+            nodeData["eClassifier"] = eClassifier;
             /* @ts-ignore */
-            node.jsonforms.data["eTypeParameter"] = "";
-            return node.jsonforms.data;
+            nodeData["eTypeParameter"] = "";
+            return nodeData;
         }
-        return node.jsonforms.data;
     }
 
     getSchemaForNode(node: TreeEditor.Node): JsonSchema | undefined {
         let eClass = "";
-        if (EcoreEType.is(node.jsonforms.data)) {
-            eClass = "etype";
-        } else if (node.jsonforms.data.eClass) {
-            eClass = node.jsonforms.data.eClass.split("#//")[1].toLowerCase();
+        const nodeData = node.jsonforms.data;
+        if (EcoreEType.is(nodeData)) {
+            eClass = EcoreModel.Type.EType;
+        } else if (nodeData.eClass) {
+            eClass = new URI(nodeData.eClass).fragment.substring(2);
             /* @ts-ignore */
-        } else if (node.parent.jsonforms.data.eClass === EcoreModel.Type.EEnum || node.jsonforms.data.value) {
-            eClass = EcoreModel.Type.EEnumLiteral.split("#//")[1].toLowerCase();
+        } else if (node.parent.jsonforms.data.eClass === EcoreModel.Type.EEnum || nodeData.value) {
+            eClass = EcoreModel.Type.EEnumLiteral;
         }
+
+        // FIXME atm we use a local version of the typeschema, as there exist performance issues with the fetched ecore type schema
         /* @ts-ignore */
-        const elementSchema = ecoreTypeSchema.definitions[eClass];
+        const elementSchema = ecoreTypeSchema.definitions[eClass.toLowerCase()];
         return {
             definitions: ecoreTypeSchema.definitions,
             ...elementSchema
         };
     }
 
-    getUiSchemaForNode(node: TreeEditor.Node): UISchemaElement | undefined {
-        // #FIXME as soon as the theia-tree-editor supports async schema fetching, we can replace the hard coded ui schemas and fetch them directly here
-        const type = node.jsonforms.data.eClass || EcoreModel.Type.EEnumLiteral;
-        if (EcoreEType.is(node.jsonforms.data)) {
-            return eTypeUiSchema;
+    getUiSchemaForNode(node: TreeEditor.Node): MaybePromise<UISchemaElement | undefined> {
+        const nodeData = node.jsonforms.data;
+        const relativeRefURI = new URI(nodeData.eClass);
+        let eClassName = relativeRefURI.fragment.substring(2) || EcoreModel.Type.EEnumLiteral;
+        if (EcoreEType.is(nodeData)) {
+            eClassName = EcoreModel.Type.EType;
         }
-        switch (type) {
-            case EcoreModel.Type.EPackage:
-                return ePackageUiSchema;
-            case EcoreModel.Type.EAttribute:
-                return eAttributeUiSchema;
-            case EcoreModel.Type.EClass:
-                return eClassUiSchema;
-            case EcoreModel.Type.EDataType:
-                return eDataTypeUiSchema;
-            case EcoreModel.Type.EEnum:
-                return eEnumUiSchema;
-            case EcoreModel.Type.EEnumLiteral:
-                return eEnumLiteralUiSchema;
-            case EcoreModel.Type.EReference:
-                return eReferenceUiSchema;
-            default:
-                this.logger.warn(
-                    "Can't find registered ui schema for type " + type
-                );
-                return undefined;
+        if (eClassName) {
+            return this.modelServerClient.getUiSchema(eClassName.toLowerCase()).then((response: any) => response.body as UISchemaElement);
         }
+        return undefined;
     }
 
     getChildrenMapping(): Map<string, TreeEditor.ChildrenDescriptor[]> {

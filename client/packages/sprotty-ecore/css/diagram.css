@@ -215,17 +215,17 @@ svg {
     top: 100%;
     left: 0;
     right: 0;
-    overflow-y: scroll;
+    overflow: auto;
 }
 
-.autocomplete-items div {
-    padding: 10px;
+.autocomplete-item {
+    padding: 6px;
     cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
 }
 
-.autocomplete-items div:hover {
+.autocomplete-item:hover {
     background-color: #e9e9e9;
 }
 

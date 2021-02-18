@@ -23,5 +23,9 @@ public class EcoreEdgeUtil {
 	public static String getEdgeId(String labelId) {
 		return labelId.split("_")[0];
 	}
-
+	
+	public static String getInheritanceEdgeId(String sourceId, String targetId ) {
+		return sourceId + "_" + targetId;
+	}
+	
 }

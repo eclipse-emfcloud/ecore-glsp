@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -45,114 +46,94 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 	public void executeOperation(ApplyLabelEditOperation editLabelOperation, GModelState graphicalModelState,
 			EcoreModelServerAccess modelAccess) throws Exception {
 		EcoreModelIndex modelIndex = EcoreModelState.getModelState(graphicalModelState).getIndex();
-		Optional<String> type = modelIndex.findElementByClass(editLabelOperation.getLabelId(), GModelElement.class)
-				.map(e -> e.getType());
+
+		String inputText = editLabelOperation.getText().trim();
+		String elementId = editLabelOperation.getLabelId();
+
+		Optional<String> type = modelIndex.findElementByClass(elementId, GModelElement.class).map(e -> e.getType());
+
 		if (type.isPresent()) {
 			switch (type.get()) {
 			case Types.LABEL_NAME:
-				modelIndex.findElementByClass(editLabelOperation.getLabelId(), GNode.class)
-						.ifPresentOrElse(notationElement -> {
-							modelIndex.getSemantic(notationElement).ifPresentOrElse(semanticElement -> {
-								if (semanticElement instanceof EClassifier) {
-									if (!modelAccess.setName(EcoreModelState.getModelState(graphicalModelState),
-											(EClassifier) semanticElement, editLabelOperation.getText().trim())) {
-										throw new GLSPServerException(
-												"Could not rename node to: " + editLabelOperation.getText().trim());
-									}
-								}
-							}, () -> new GLSPServerException("No semantic element for labelContainer with id "
-									+ notationElement.getId() + " found"));
-						}, () -> new GLSPServerException(
-								"No parent Node for element with id " + editLabelOperation.getLabelId() + " found"));
+				modelIndex.findElementByClass(elementId, GNode.class).ifPresentOrElse(notationElement -> {
+					modelIndex.getSemantic(notationElement).ifPresentOrElse(semanticElement -> {
+						if (semanticElement instanceof EClassifier) {
+							if (!modelAccess.setName(EcoreModelState.getModelState(graphicalModelState),
+									(EClassifier) semanticElement, inputText)) {
+								throw new GLSPServerException("Could not rename node to: " + inputText);
+							}
+						}
+					}, () -> new GLSPServerException(
+							"No semantic element for labelContainer with id " + notationElement.getId() + " found"));
+				}, () -> new GLSPServerException("No parent Node for element with id " + elementId + " found"));
 
 				break;
 
 			case Types.LABEL_INSTANCE:
-				modelIndex.findElementByClass(editLabelOperation.getLabelId(), GNode.class)
-						.ifPresentOrElse(notationElement -> {
-							modelIndex.getSemantic(notationElement).ifPresentOrElse(semanticElement -> {
-								if (semanticElement instanceof EClassifier) {
-									if (!modelAccess.setInstanceName(EcoreModelState.getModelState(graphicalModelState),
-											(EClassifier) semanticElement, editLabelOperation.getText().trim())) {
-										throw new GLSPServerException(
-												"Could not rename node to: " + editLabelOperation.getText().trim());
-									}
-								}
-							}, () -> new GLSPServerException("No semantic element for labelContainer with id "
-									+ notationElement.getId() + " found"));
-						}, () -> new GLSPServerException(
-								"No parent Node for element with id " + editLabelOperation.getLabelId() + " found"));
-				break;
-
-			case Types.ATTRIBUTE:
-				EAttribute attribute_semantic = (EAttribute) getOrThrow(
-						modelIndex.getSemantic(editLabelOperation.getLabelId()),
-						"No semantic element for label with id " + editLabelOperation.getLabelId() + " found");
-
-				String inputText = editLabelOperation.getText();
-				String attributeName;
-				if (inputText.contains(":")) {
-					String[] split = inputText.split(":");
-					attributeName = split[0].trim();
-
-					Optional<EClassifier> datatype = parseStringToEType(split[1].trim(),
-							EcoreModelState.getResourceManager(graphicalModelState));
-					if (datatype.isPresent()) {
-						if (!modelAccess.setAttributeType(EcoreModelState.getModelState(graphicalModelState),
-								attribute_semantic, datatype.get())) {
-							throw new GLSPServerException("Could not change type to: " + datatype.get().toString());
+				modelIndex.findElementByClass(elementId, GNode.class).ifPresentOrElse(notationElement -> {
+					modelIndex.getSemantic(notationElement).ifPresentOrElse(semanticElement -> {
+						if (semanticElement instanceof EClassifier) {
+							if (!modelAccess.setInstanceName(EcoreModelState.getModelState(graphicalModelState),
+									(EClassifier) semanticElement, inputText)) {
+								throw new GLSPServerException("Could not rename node to: " + inputText);
+							}
 						}
-					}
-				} else {
-					attributeName = inputText.trim();
-				}
-				if (!inputText.isEmpty()) {
-					if (!modelAccess.setAttributeName(EcoreModelState.getModelState(graphicalModelState),
-							attribute_semantic, attributeName)) {
-						throw new GLSPServerException(
-								"Could not rename node to: " + editLabelOperation.getText().trim());
-					}
-				}
+					}, () -> new GLSPServerException(
+							"No semantic element for labelContainer with id " + notationElement.getId() + " found"));
+				}, () -> new GLSPServerException("No parent Node for element with id " + elementId + " found"));
+
 				break;
 
 			case Types.ENUMLITERAL:
-				EEnumLiteral literal_semantic = (EEnumLiteral) getOrThrow(
-						modelIndex.getSemantic(editLabelOperation.getLabelId()),
-						"No semantic element for label with id " + editLabelOperation.getLabelId() + " found");
-				String text = editLabelOperation.getText().trim();
-				if (!text.isEmpty()) {
-					if (!modelAccess.setLiteralName(EcoreModelState.getModelState(graphicalModelState),
-							literal_semantic, editLabelOperation.getText().trim())) {
-						throw new GLSPServerException(
-								"Could not rename node to: " + editLabelOperation.getText().trim());
+				EEnumLiteral eEnumLiteral = (EEnumLiteral) getOrThrow(modelIndex.getSemantic(elementId),
+						"No semantic element for label with id " + elementId + " found");
+				String newLiteralName = inputText;
+				if (!newLiteralName.isEmpty()) {
+					if (!modelAccess.setLiteralName(EcoreModelState.getModelState(graphicalModelState), eEnumLiteral,
+							newLiteralName)) {
+						throw new GLSPServerException("Could not rename node to: " + newLiteralName);
 					}
 				}
+
+				break;
+
+			case Types.ATTRIBUTE:
+				EAttribute eAttribute = (EAttribute) getOrThrow(modelIndex.getSemantic(elementId),
+						"No semantic element for label with id " + elementId + " found");
+
+				String eAttributeName = getNameFromInput(inputText);
+				EDataType eAttributeEType = getEDataTypeFromInput(inputText, graphicalModelState);
+
+				if (!modelAccess.setAttribute(EcoreModelState.getModelState(graphicalModelState), eAttribute,
+						eAttribute.getName().equals(eAttributeName) ? null : eAttributeName,
+						eAttributeEType)) {
+					throw new GLSPServerException("Could not rename attribute to: " + inputText);
+				}
+
 				break;
 
 			case Types.LABEL_EDGE_NAME:
-				modelIndex.findElementByClass(editLabelOperation.getLabelId(), GEdge.class)
-						.ifPresentOrElse(notationElement -> {
-							modelIndex.getSemantic(notationElement).ifPresentOrElse(semanticElement -> {
-								if (semanticElement instanceof EReference) {
-									if (!modelAccess.setEdgeName(EcoreModelState.getModelState(graphicalModelState),
-											(EReference) semanticElement, editLabelOperation.getText().trim())) {
-										throw new GLSPServerException(
-												"Could not rename edge to: " + editLabelOperation.getText().trim());
-									}
-								}
-							}, () -> new GLSPServerException("No semantic element for labelContainer with id "
-									+ notationElement.getId() + " found"));
-						}, () -> new GLSPServerException("No semantic element for labelContainer with id "
-								+ editLabelOperation.getLabelId() + " found"));
+				modelIndex.findElementByClass(elementId, GEdge.class).ifPresentOrElse(notationElement -> {
+					modelIndex.getSemantic(notationElement).ifPresentOrElse(semanticElement -> {
+						if (semanticElement instanceof EReference) {
+							if (!modelAccess.setEdgeName(EcoreModelState.getModelState(graphicalModelState),
+									(EReference) semanticElement, inputText)) {
+								throw new GLSPServerException("Could not rename edge to: " + inputText);
+							}
+						}
+					}, () -> new GLSPServerException(
+							"No semantic element for labelContainer with id " + notationElement.getId() + " found"));
+				}, () -> new GLSPServerException(
+						"No semantic element for labelContainer with id " + elementId + " found"));
 
 				break;
 
 			case Types.LABEL_EDGE_MULTIPLICITY:
-				String edgeId = EcoreEdgeUtil.getEdgeId(editLabelOperation.getLabelId());
+				String edgeId = EcoreEdgeUtil.getEdgeId(elementId);
 				EReference reference_semantic = (EReference) getOrThrow(modelIndex.getSemantic(edgeId),
 						"No semantic element for labelContainer with id " + edgeId + " found");
 				Pattern pattern = Pattern.compile("\\s*\\[\\s*(\\d+)\\s*\\.+\\s*(\\*|\\d+|\\-1)\\s*\\]\\s*");
-				Matcher matcher = pattern.matcher(editLabelOperation.getText());
+				Matcher matcher = pattern.matcher(inputText);
 				if (matcher.matches()) {
 					String lowerBound = matcher.group(1);
 					String upperBound = matcher.group(2);
@@ -167,16 +148,42 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 						throw new GLSPServerException("Could not rename edge to: " + upper);
 					}
 				} else {
-					throw new GLSPServerException("Multiplicity of reference with id " + editLabelOperation.getLabelId()
-							+ " has a wrong input format", new IllegalArgumentException());
+					throw new GLSPServerException(
+							"Multiplicity of reference with id " + elementId + " has a wrong input format",
+							new IllegalArgumentException());
 				}
+
 				break;
 			}
 		}
 	}
 
-	private Optional<EClassifier> parseStringToEType(String name, ResourceManager resManager) {
-		for (EClassifier type : getAllEAttributeTypes(resManager)) {
+	private String getNameFromInput(String inputText) {
+		String name = "";
+		if (inputText.contains(":") && inputText.split(":").length >= 2) {
+			String[] split = inputText.split(":");
+			name = split[0].trim();
+		} else {
+			name = inputText.trim().replace(":", "");
+		}
+		return name;
+	}
+
+	private EDataType getEDataTypeFromInput(String inputText, GModelState graphicalModelState) {
+		if (inputText.contains(":") && inputText.split(":").length >= 2) {
+			String[] split = inputText.split(":");
+			String eDataTypeName = split[1].trim();
+			Optional<EDataType> datatype = parseStringToEType(eDataTypeName,
+					EcoreModelState.getResourceManager(graphicalModelState));
+			if (datatype.isPresent()) {
+				return datatype.get();
+			}
+		}
+		return null;
+	}
+
+	private Optional<EDataType> parseStringToEType(String name, ResourceManager resManager) {
+		for (EDataType type : getAllETypes(resManager)) {
 			if (type.getName().toLowerCase().equals(name.toLowerCase())) {
 				return Optional.ofNullable(type);
 			}
@@ -184,17 +191,19 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 		return Optional.empty();
 	}
 
-	public static List<EClassifier> getAllEAttributeTypes(ResourceManager resManager) {
-		List<EClassifier> listOfTypes = new ArrayList<>(EcorePackage.eINSTANCE.getEClassifiers());
-		listOfTypes.removeIf(e -> !(e instanceof EDataType));
+	public static List<EDataType> getAllETypes(ResourceManager resManager) {
+		List<EClassifier> listOfClassifiers = new ArrayList<>(EcorePackage.eINSTANCE.getEClassifiers());
+		listOfClassifiers.removeIf(e -> !(e instanceof EDataType));
+		List<EDataType> eDataTypes = listOfClassifiers.stream().filter(EDataType.class::isInstance)
+				.map(EDataType.class::cast).collect(Collectors.toList());
 		TreeIterator<Notifier> resourceSetContent = resManager.getEditingDomain().getResourceSet().getAllContents();
 		while (resourceSetContent.hasNext()) {
 			Notifier res = resourceSetContent.next();
 			if (res instanceof EDataType) {
-				listOfTypes.add((EClassifier) res);
+				eDataTypes.add((EDataType) res);
 			}
 		}
-		return listOfTypes;
+		return eDataTypes;
 	}
 
 	@Override

@@ -24,6 +24,8 @@ import org.eclipse.glsp.graph.GPoint;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.emfcloud.ecore.enotation.Edge#getBendPoints <em>Bend Points</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.Edge#getSource <em>Source</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.Edge#getTarget <em>Target</em>}</li>
  * </ul>
  *
  * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getEdge()
@@ -42,5 +44,49 @@ public interface Edge extends NotationElement {
 	 * @generated
 	 */
 	EList<GPoint> getBendPoints();
+
+	/**
+	 * Returns the value of the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Source</em>' reference.
+	 * @see #setSource(NotationElement)
+	 * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getEdge_Source()
+	 * @model
+	 * @generated
+	 */
+	NotationElement getSource();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emfcloud.ecore.enotation.Edge#getSource <em>Source</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Source</em>' reference.
+	 * @see #getSource()
+	 * @generated
+	 */
+	void setSource(NotationElement value);
+
+	/**
+	 * Returns the value of the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Target</em>' reference.
+	 * @see #setTarget(NotationElement)
+	 * @see org.eclipse.emfcloud.ecore.enotation.EnotationPackage#getEdge_Target()
+	 * @model
+	 * @generated
+	 */
+	NotationElement getTarget();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.emfcloud.ecore.enotation.Edge#getTarget <em>Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Target</em>' reference.
+	 * @see #getTarget()
+	 * @generated
+	 */
+	void setTarget(NotationElement value);
 
 } // Edge

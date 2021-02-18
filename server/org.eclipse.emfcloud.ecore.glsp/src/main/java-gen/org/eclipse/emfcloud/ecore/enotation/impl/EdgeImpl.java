@@ -12,6 +12,7 @@ package org.eclipse.emfcloud.ecore.enotation.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -19,12 +20,14 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 
+import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.glsp.graph.GPoint;
 
 /**
@@ -36,6 +39,8 @@ import org.eclipse.glsp.graph.GPoint;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.EdgeImpl#getBendPoints <em>Bend Points</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.EdgeImpl#getSource <em>Source</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.EdgeImpl#getTarget <em>Target</em>}</li>
  * </ul>
  *
  * @generated
@@ -50,6 +55,25 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 	 * @ordered
 	 */
 	protected EList<GPoint> bendPoints;
+
+	/**
+	 * The cached value of the '{@link #getSource() <em>Source</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSource()
+	 * @generated
+	 * @ordered
+	 */
+	protected NotationElement source;
+	/**
+	 * The cached value of the '{@link #getTarget() <em>Target</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTarget()
+	 * @generated
+	 * @ordered
+	 */
+	protected NotationElement target;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -89,6 +113,86 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 	 * @generated
 	 */
 	@Override
+	public NotationElement getSource() {
+		if (source != null && source.eIsProxy()) {
+			InternalEObject oldSource = (InternalEObject)source;
+			source = (NotationElement)eResolveProxy(oldSource);
+			if (source != oldSource) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EnotationPackage.EDGE__SOURCE, oldSource, source));
+			}
+		}
+		return source;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotationElement basicGetSource() {
+		return source;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setSource(NotationElement newSource) {
+		NotationElement oldSource = source;
+		source = newSource;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnotationPackage.EDGE__SOURCE, oldSource, source));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotationElement getTarget() {
+		if (target != null && target.eIsProxy()) {
+			InternalEObject oldTarget = (InternalEObject)target;
+			target = (NotationElement)eResolveProxy(oldTarget);
+			if (target != oldTarget) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, EnotationPackage.EDGE__TARGET, oldTarget, target));
+			}
+		}
+		return target;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotationElement basicGetTarget() {
+		return target;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setTarget(NotationElement newTarget) {
+		NotationElement oldTarget = target;
+		target = newTarget;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnotationPackage.EDGE__TARGET, oldTarget, target));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EnotationPackage.EDGE__BEND_POINTS:
@@ -107,6 +211,12 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 		switch (featureID) {
 			case EnotationPackage.EDGE__BEND_POINTS:
 				return getBendPoints();
+			case EnotationPackage.EDGE__SOURCE:
+				if (resolve) return getSource();
+				return basicGetSource();
+			case EnotationPackage.EDGE__TARGET:
+				if (resolve) return getTarget();
+				return basicGetTarget();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -124,6 +234,12 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 				getBendPoints().clear();
 				getBendPoints().addAll((Collection<? extends GPoint>)newValue);
 				return;
+			case EnotationPackage.EDGE__SOURCE:
+				setSource((NotationElement)newValue);
+				return;
+			case EnotationPackage.EDGE__TARGET:
+				setTarget((NotationElement)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -139,6 +255,12 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 			case EnotationPackage.EDGE__BEND_POINTS:
 				getBendPoints().clear();
 				return;
+			case EnotationPackage.EDGE__SOURCE:
+				setSource((NotationElement)null);
+				return;
+			case EnotationPackage.EDGE__TARGET:
+				setTarget((NotationElement)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -153,6 +275,10 @@ public class EdgeImpl extends NotationElementImpl implements Edge {
 		switch (featureID) {
 			case EnotationPackage.EDGE__BEND_POINTS:
 				return bendPoints != null && !bendPoints.isEmpty();
+			case EnotationPackage.EDGE__SOURCE:
+				return source != null;
+			case EnotationPackage.EDGE__TARGET:
+				return target != null;
 		}
 		return super.eIsSet(featureID);
 	}
