@@ -104,9 +104,13 @@ public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscripti
 				}
 			} else if (command.getObjectValues().get(0) instanceof Edge) {
 				Edge newEdge = (Edge) command.getObjectValues().get(0);
-				EObject proxy = ecoreFacade.getSemanticResource().getEObject(newEdge.getSemanticElement().getUri());
-				if (proxy != null) {
-					ecoreFacade.initializeEdge(newEdge, proxy);
+				if (newEdge.getSemanticElement() != null) {
+					EObject proxy = ecoreFacade.getSemanticResource().getEObject(newEdge.getSemanticElement().getUri());
+					if (proxy != null) {
+						ecoreFacade.initializeEdge(newEdge, proxy);
+					}
+				} else {
+					ecoreFacade.initializeInheritanceEdge(newEdge);
 				}
 			}
 		} else if (command.getType() == CommandKind.SET && command.getObjectValues().size() > 0) {

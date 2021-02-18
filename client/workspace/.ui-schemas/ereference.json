@@ -1,73 +1,82 @@
 {
-  "type": "VerticalLayout",
-  "elements": [
-    {
-      "type": "Label",
-      "text": "EReference"
-    },
-    {
-      "type": "Control",
-      "label": "Name",
-      "scope": "#/properties/name",
-      "rule": {
-        "effect": "DISABLE",
-        "condition": {}
-      }
-    },
-    {
-      "type": "Control",
-      "label": "Lower Bound",
-      "scope": "#/properties/lowerBound"
-    },
-    {
-      "type": "Control",
-      "label": "Upper Bound",
-      "scope": "#/properties/upperBound"
-    },
-    {
-      "type": "Control",
-      "label": "Containment",
-      "scope": "#/properties/containment"
-    },
-    {
-      "type": "Control",
-      "label": "Transient",
-      "scope": "#/properties/transient"
-    },
-    {
-      "type": "Control",
-      "label": "Derived",
-      "scope": "#/properties/derived"
-    },
-    {
-      "type": "Control",
-      "label": "Ordered",
-      "scope": "#/properties/ordered"
-    },
-    {
-      "type": "Control",
-      "label": "Unique",
-      "scope": "#/properties/unique"
-    },
-    {
-      "type": "Control",
-      "label": "Changeable",
-      "scope": "#/properties/changeable"
-    },
-    {
-      "type": "Control",
-      "label": "Volatile",
-      "scope": "#/properties/volatile"
-    },
-    {
-      "type": "Control",
-      "label": "Unsettable",
-      "scope": "#/properties/unsettable"
-    },
-    {
-      "type": "Control",
-      "label": "Resolve Proxies",
-      "scope": "#/properties/resolveProxies"
-    }
-  ]
+    "type": "VerticalLayout",
+    "elements": [
+        {
+            "type": "Label",
+            "text": "EReference"
+        },
+        {
+            "type": "Control",
+            "label": "Name",
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
+        },
+        {
+            "type": "Control",
+            "label": "EType",
+            "scope": "#/properties/eType",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
+        },
+        {
+            "type": "Control",
+            "label": "Lower Bound",
+            "scope": "#/properties/lowerBound"
+        },
+        {
+            "type": "Control",
+            "label": "Upper Bound",
+            "scope": "#/properties/upperBound"
+        },
+        {
+            "type": "Control",
+            "label": "Containment",
+            "scope": "#/properties/containment"
+        },
+        {
+            "type": "Control",
+            "label": "Transient",
+            "scope": "#/properties/transient"
+        },
+        {
+            "type": "Control",
+            "label": "Derived",
+            "scope": "#/properties/derived"
+        },
+        {
+            "type": "Control",
+            "label": "Ordered",
+            "scope": "#/properties/ordered"
+        },
+        {
+            "type": "Control",
+            "label": "Unique",
+            "scope": "#/properties/unique"
+        },
+        {
+            "type": "Control",
+            "label": "Changeable",
+            "scope": "#/properties/changeable"
+        },
+        {
+            "type": "Control",
+            "label": "Volatile",
+            "scope": "#/properties/volatile"
+        },
+        {
+            "type": "Control",
+            "label": "Unsettable",
+            "scope": "#/properties/unsettable"
+        },
+        {
+            "type": "Control",
+            "label": "Resolve Proxies",
+            "scope": "#/properties/resolveProxies"
+        }
+    ]
 }

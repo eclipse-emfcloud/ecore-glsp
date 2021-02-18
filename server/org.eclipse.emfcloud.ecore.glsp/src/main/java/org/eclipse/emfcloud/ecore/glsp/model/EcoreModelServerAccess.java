@@ -20,6 +20,7 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EGenericType;
@@ -28,6 +29,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -142,7 +144,7 @@ public class EcoreModelServerAccess {
 		compoundCommand.setType(CommandKind.COMPOUND);
 		try {
 			Command addEClassifier = createAddCommand(modelState, getEPackage(modelState),
-					EcorePackage.eINSTANCE.getEPackage_EClassifiers(), newEClassifier);
+					EcorePackage.Literals.EPACKAGE__ECLASSIFIERS, newEClassifier);
 			Command addShape = createAddCommand(modelState, getDiagram(modelState),
 					EnotationPackage.Literals.DIAGRAM__ELEMENTS, newShape);
 
@@ -160,7 +162,7 @@ public class EcoreModelServerAccess {
 		compoundCommand.setType(CommandKind.COMPOUND);
 		try {
 			Command addEReference = createAddCommand(modelState, source,
-					EcorePackage.eINSTANCE.getEClass_EStructuralFeatures(), newEReference);
+					EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES, newEReference);
 			Command addEdge = createAddCommand(modelState, getDiagram(modelState),
 					EnotationPackage.Literals.DIAGRAM__ELEMENTS, newEdge);
 
@@ -180,9 +182,9 @@ public class EcoreModelServerAccess {
 		compoundCommand.setType(CommandKind.COMPOUND);
 		try {
 			Command addEReference = createAddCommand(modelState, source,
-					EcorePackage.eINSTANCE.getEClass_EStructuralFeatures(), newEReference);
+					EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES, newEReference);
 			Command addOpposite = createAddCommand(modelState, target,
-					EcorePackage.eINSTANCE.getEClass_EStructuralFeatures(), newOpposite);
+					EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES, newOpposite);
 			Command addReferenceEdge = createAddCommand(modelState, getDiagram(modelState),
 					EnotationPackage.Literals.DIAGRAM__ELEMENTS, newEReferenceEdge);
 			Command addOppositeEdge = createAddCommand(modelState, getDiagram(modelState),
@@ -214,7 +216,7 @@ public class EcoreModelServerAccess {
 		CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
 		compoundCommand.setType(CommandKind.COMPOUND);
 		try {
-			Command addESuperType = createAddCommand(modelState, parent, EcorePackage.eINSTANCE.getEClass_ESuperTypes(),
+			Command addESuperType = createAddCommand(modelState, parent, EcorePackage.Literals.ECLASS__ESUPER_TYPES,
 					newESuperType);
 			Command addEdge = createAddCommand(modelState, getDiagram(modelState),
 					EnotationPackage.Literals.DIAGRAM__ELEMENTS, newEdge);
@@ -227,12 +229,16 @@ public class EcoreModelServerAccess {
 		return this.editCompound(compoundCommand);
 	}
 
-	public boolean addEAttribute(EcoreModelState modelState, EAttribute newEAttribute, EClassifier parent) {
-		return this.add(modelState, parent, EcorePackage.eINSTANCE.getEClass_EStructuralFeatures(), newEAttribute);
+	private Command createAddAttributeCommand(EcoreModelState modelState, EAttribute newEAttribute, EClass parent) {
+		return createAddCommand(modelState, parent, EcorePackage.Literals.ECLASS__ESTRUCTURAL_FEATURES, newEAttribute);
+	}
+
+	public boolean addEAttribute(EcoreModelState modelState, EAttribute newEAttribute, EClass parent) {
+		return this.edit(createAddAttributeCommand(modelState, newEAttribute, parent));
 	}
 
 	public boolean addEEnumLiteral(EcoreModelState modelState, EEnumLiteral newEEnumLiteral, EEnum parent) {
-		return this.add(modelState, parent, EcorePackage.eINSTANCE.getEEnum_ELiterals(), newEEnumLiteral);
+		return this.add(modelState, parent, EcorePackage.Literals.EENUM__ELITERALS, newEEnumLiteral);
 	}
 
 	private Command createAddCommand(EcoreModelState modelState, EObject owner, EReference feature, EObject addObject) {
@@ -265,7 +271,7 @@ public class EcoreModelServerAccess {
 			Command setEClassifierName = createSetCommand(modelState, eClassifier,
 					EcorePackage.Literals.ENAMED_ELEMENT__NAME, newName);
 
-			Shape shape = (Shape) getNotationElement(eClassifier);
+			Shape shape = (Shape) getNotationElement(modelState, eClassifier);
 			Command removeOldShape = createRemoveNotationElementCommand(modelState, shape);
 			Shape newShape = EnotationFactory.eINSTANCE.createShape();
 			newShape.setPosition(shape.getPosition());
@@ -277,24 +283,65 @@ public class EcoreModelServerAccess {
 			compoundCommand.getCommands().add(getCommandCodec().encode(removeOldShape));
 			compoundCommand.getCommands().add(getCommandCodec().encode(addNewShape));
 
+			// Update notation elements for EStructuralFeatures and ESuperTypes
 			if (eClassifier instanceof EClass) {
 				EClass eClass = ((EClass) eClassifier);
 				for (EStructuralFeature eStructuralFeature : eClass.getEStructuralFeatures()) {
-					NotationElement notationElement = getNotationElement(eStructuralFeature);
+					NotationElement notationElement = getNotationElement(modelState, eStructuralFeature);
 					if (notationElement != null) {
 						Command setSemanticProxyCommand = createSetCommand(modelState, notationElement,
 								EnotationPackage.Literals.NOTATION_ELEMENT__SEMANTIC_ELEMENT,
 								createProxyFromOldElement(notationElement, eClassifier.getName(), newName));
 						compoundCommand.getCommands().add(getCommandCodec().encode(setSemanticProxyCommand));
+						Command setEdgeSourceCommand = createSetCommand(modelState, notationElement,
+								EnotationPackage.Literals.EDGE__SOURCE, newShape);
+						compoundCommand.getCommands().add(getCommandCodec().encode(setEdgeSourceCommand));
 					}
 				}
-				for (EGenericType eGenericType : eClass.getEGenericSuperTypes()) {
-					NotationElement notationElement = getNotationElement(eGenericType);
+				for (EClass eSuperType : eClass.getESuperTypes()) {
+					NotationElement notationElement = getNotationElement(modelState, eClass, eSuperType);
 					if (notationElement != null) {
-						Command setSemanticProxyCommand = createSetCommand(modelState, notationElement,
-								EnotationPackage.Literals.NOTATION_ELEMENT__SEMANTIC_ELEMENT,
-								createProxyFromOldElement(notationElement, eClassifier.getName(), newName));
-						compoundCommand.getCommands().add(getCommandCodec().encode(setSemanticProxyCommand));
+						Command setEdgeSourceCommand = createSetCommand(modelState, notationElement,
+								EnotationPackage.Literals.EDGE__SOURCE, newShape);
+						compoundCommand.getCommands().add(getCommandCodec().encode(setEdgeSourceCommand));
+					}
+				}
+			}
+
+			// Update usages
+			Collection<Setting> usages = UsageCrossReferencer.find(eClassifier,
+					eClassifier.eResource().getResourceSet());
+			if (!usages.isEmpty()) {
+				for (Setting setting : usages) {
+					EObject eObject = setting.getEObject();
+					if (setting.getEStructuralFeature().isChangeable() && eObject.eContainer() instanceof EClass) {
+						if (eObject instanceof EStructuralFeature) {
+							try {
+								NotationElement notationElement = getNotationElement(modelState,
+										(EStructuralFeature) eObject);
+								if (notationElement != null) {
+									Command setEdgeSourceCommand = createSetCommand(modelState, notationElement,
+											EnotationPackage.Literals.EDGE__TARGET, newShape);
+									compoundCommand.getCommands().add(getCommandCodec().encode(setEdgeSourceCommand));
+								}
+							} catch (EncodingException e) {
+								return false;
+							}
+						} else if (eObject instanceof EGenericType
+								&& ((EGenericType) eObject).getEClassifier() instanceof EClass) {
+							try {
+								EClass eClass = (EClass) eObject.eContainer();
+								EClass eSuperType = (EClass) ((EGenericType) eObject).getEClassifier();
+								NotationElement notationElement = getNotationElement(modelState, eClass, eSuperType);
+								if (notationElement != null) {
+									Command setEdgeSourceCommand = createSetCommand(modelState, notationElement,
+											EnotationPackage.Literals.EDGE__TARGET, newShape);
+									compoundCommand.getCommands().add(getCommandCodec().encode(setEdgeSourceCommand));
+								}
+							} catch (EncodingException e) {
+								return false;
+							}
+						}
 					}
 				}
 			}
@@ -305,20 +352,44 @@ public class EcoreModelServerAccess {
 		return this.editCompound(compoundCommand);
 	}
 
-	public boolean setAttributeName(EcoreModelState modelState, EAttribute eAttribute, String name) {
-		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getENamedElement_Name(), name);
+	private Command createSetAttributeTypeCommand(EcoreModelState modelState, EAttribute eAttribute,
+			EDataType newType) {
+		return createSetCommand(modelState, eAttribute, EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, newType);
 	}
 
-	public boolean setAttributeType(EcoreModelState modelState, EAttribute eAttribute, EClassifier type) {
-		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getEAttribute_EAttributeType(), type);
+	public boolean setAttribute(EcoreModelState modelState, EAttribute eAttribute, String newName, EDataType newType) {
+		CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
+		compoundCommand.setType(CommandKind.COMPOUND);
+		try {
+			if (newName != null) {
+				Command removeEAttributeNameCommand = createRemoveEStructuralFeatureCommand(modelState, eAttribute);
+				compoundCommand.getCommands().add(getCommandCodec().encode(removeEAttributeNameCommand));
+
+				EAttribute newEAttribute = EcoreFactory.eINSTANCE.createEAttribute();
+				newEAttribute.setName(newName);
+
+				Command addEAttributeCommand = createAddAttributeCommand(modelState, newEAttribute,
+						eAttribute.getEContainingClass());
+				compoundCommand.getCommands().add(getCommandCodec().encode(addEAttributeCommand));
+
+				Command setEAttributeTypeCommand = createSetAttributeTypeCommand(modelState, newEAttribute, newType);
+				compoundCommand.getCommands().add(getCommandCodec().encode(setEAttributeTypeCommand));
+			} else {
+				Command setEAttributeTypeCommand = createSetAttributeTypeCommand(modelState, eAttribute, newType);
+				compoundCommand.getCommands().add(getCommandCodec().encode(setEAttributeTypeCommand));
+			}
+
+		} catch (EncodingException e) {
+			return false;
+		}
+		if (compoundCommand.getCommands().isEmpty()) {
+			return false;
+		}
+		return this.editCompound(compoundCommand);
 	}
 
-	public boolean setLiteralName(EcoreModelState modelState, EEnumLiteral eEnumLiteral, String literal) {
-		return this.set(modelState, eEnumLiteral, EcorePackage.eINSTANCE.getENamedElement_Name(), literal);
-	}
-
-	public boolean setAttributeType(EcoreModelState modelState, EAttribute eAttribute, EAttribute type) {
-		return this.set(modelState, eAttribute, EcorePackage.eINSTANCE.getEAttribute_EAttributeType(), type);
+	public boolean setLiteralName(EcoreModelState modelState, EEnumLiteral eEnumLiteral, String newName) {
+		return this.set(modelState, eEnumLiteral, EcorePackage.Literals.ENAMED_ELEMENT__NAME, newName);
 	}
 
 	public boolean setEdgeName(EcoreModelState modelState, EReference eReference, String newName) {
@@ -328,11 +399,13 @@ public class EcoreModelServerAccess {
 			Command setEReferenceName = createSetCommand(modelState, eReference,
 					EcorePackage.Literals.ENAMED_ELEMENT__NAME, newName);
 
-			Edge edge = (Edge) getNotationElement(eReference);
+			Edge edge = (Edge) getNotationElement(modelState, eReference);
 			Command removeOldEdge = createRemoveNotationElementCommand(modelState, edge);
 			Edge newEdge = EnotationFactory.eINSTANCE.createEdge();
 			newEdge.getBendPoints().addAll(edge.getBendPoints());
 			newEdge.setSemanticElement(createProxyFromOldElement(edge, eReference.getName(), newName));
+			newEdge.setSource(edge.getSource());
+			newEdge.setTarget(edge.getTarget());
 			Command addNewEdge = createAddCommand(modelState, getDiagram(modelState),
 					EnotationPackage.Literals.DIAGRAM__ELEMENTS, newEdge);
 
@@ -347,13 +420,13 @@ public class EcoreModelServerAccess {
 
 	public boolean setLowerMultiplicity(EcoreModelState modelState, EStructuralFeature eStructuralFeature,
 			int multiplicity) {
-		return this.set(modelState, eStructuralFeature, EcorePackage.eINSTANCE.getETypedElement_LowerBound(),
+		return this.set(modelState, eStructuralFeature, EcorePackage.Literals.ETYPED_ELEMENT__LOWER_BOUND,
 				multiplicity);
 	}
 
 	public boolean setUpperMultiplicity(EcoreModelState modelState, EStructuralFeature eStructuralFeature,
 			int multiplicity) {
-		return this.set(modelState, eStructuralFeature, EcorePackage.eINSTANCE.getETypedElement_UpperBound(),
+		return this.set(modelState, eStructuralFeature, EcorePackage.Literals.ETYPED_ELEMENT__UPPER_BOUND,
 				multiplicity);
 	}
 
@@ -447,17 +520,8 @@ public class EcoreModelServerAccess {
 		return RemoveCommand.create(editingDomain, owner, feature, List.of(element));
 	}
 
-	private NotationElement getNotationElement(EObject semanticElement) {
-		Collection<Setting> usages = UsageCrossReferencer.find(semanticElement,
-				semanticElement.eResource().getResourceSet());
-		for (Setting setting : usages) {
-			EObject eObject = setting.getEObject();
-			if (eObject instanceof SemanticProxy && eObject.eContainer() instanceof NotationElement) {
-				NotationElement notationElement = (NotationElement) eObject.eContainer();
-				return notationElement;
-			}
-		}
-		return null;
+	private NotationElement getNotationElement(EcoreModelState modelState, EObject semanticElement) {
+		return modelState.getIndex().getNotation(semanticElement).orElse(null);
 	}
 
 	private Command createRemoveEStructuralFeatureCommand(EcoreModelState modelState,
@@ -479,7 +543,7 @@ public class EcoreModelServerAccess {
 			compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
 
 			Command removeNotationElementCommand = createRemoveNotationElementCommand(modelState,
-					getNotationElement(eReference));
+					getNotationElement(modelState, eReference));
 			compoundCommand.getCommands().add(getCommandCodec().encode(removeNotationElementCommand));
 
 			if (eReference.getEOpposite() != null) {
@@ -488,7 +552,7 @@ public class EcoreModelServerAccess {
 				compoundCommand.getCommands().add(getCommandCodec().encode(removeOppositeCommand));
 
 				Command removeOppositeNotationElementCommand = createRemoveNotationElementCommand(modelState,
-						getNotationElement(eOpposite));
+						getNotationElement(modelState, eOpposite));
 				compoundCommand.getCommands().add(getCommandCodec().encode(removeOppositeNotationElementCommand));
 			}
 		} catch (EncodingException e) {
@@ -518,22 +582,22 @@ public class EcoreModelServerAccess {
 			try {
 				compoundCommand.getCommands().add(getCommandCodec().encode(removeEClassifierCommand));
 				Command removeNotationElementCommand = createRemoveNotationElementCommand(modelState,
-						getNotationElement(eClassifier));
+						getNotationElement(modelState, eClassifier));
 				compoundCommand.getCommands().add(getCommandCodec().encode(removeNotationElementCommand));
 
-				// Remove notation elements for EStructuralFeatures and EGenericTypes
+				// Remove notation elements for EStructuralFeatures and ESuperTypes
 				if (eClassifier instanceof EClass) {
 					EClass eClass = ((EClass) eClassifier);
 					for (EStructuralFeature eStructuralFeature : eClass.getEStructuralFeatures()) {
-						NotationElement notationElement = getNotationElement(eStructuralFeature);
+						NotationElement notationElement = getNotationElement(modelState, eStructuralFeature);
 						if (notationElement != null) {
 							Command removeNotationCommand = createRemoveNotationElementCommand(modelState,
 									notationElement);
 							compoundCommand.getCommands().add(getCommandCodec().encode(removeNotationCommand));
 						}
 					}
-					for (EGenericType eGenericType : eClass.getEGenericSuperTypes()) {
-						NotationElement notationElement = getNotationElement(eGenericType);
+					for (EClass eSuperType : eClass.getESuperTypes()) {
+						NotationElement notationElement = getNotationElement(modelState, eClass, eSuperType);
 						if (notationElement != null) {
 							Command removeNotationCommand = createRemoveNotationElementCommand(modelState,
 									notationElement);
@@ -554,7 +618,7 @@ public class EcoreModelServerAccess {
 							Command removeCommand = createRemoveEStructuralFeatureCommand(modelState,
 									(EStructuralFeature) eObject);
 							compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
-							NotationElement notationElement = getNotationElement(eObject);
+							NotationElement notationElement = getNotationElement(modelState, eObject);
 							if (notationElement != null) {
 								Command removeNotationCommand = createRemoveNotationElementCommand(modelState,
 										notationElement);
@@ -566,9 +630,11 @@ public class EcoreModelServerAccess {
 					} else if (eObject instanceof EGenericType
 							&& ((EGenericType) eObject).getEClassifier() instanceof EClass) {
 						try {
-							Command removeCommand = createRemoveESuperTypeCommand(modelState, (EGenericType) eObject);
+							EClass eClass = (EClass) eObject.eContainer();
+							EClass eSuperType = (EClass) ((EGenericType) eObject).getEClassifier();
+							Command removeCommand = createRemoveESuperTypeCommand(modelState, eClass, eSuperType);
 							compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
-							NotationElement notationElement = getNotationElement(eObject);
+							NotationElement notationElement = getNotationElement(modelState, eClass, eSuperType);
 							if (notationElement != null) {
 								Command removeNotationCommand = createRemoveNotationElementCommand(modelState,
 										notationElement);
@@ -595,22 +661,30 @@ public class EcoreModelServerAccess {
 		return this.edit(createRemoveEEnumLiteralCommand(modelState, eEnumLiteral));
 	}
 
-	private Command createRemoveESuperTypeCommand(EcoreModelState modelState, EGenericType eGenericType) {
-		int index = ((EClass) eGenericType.eContainer()).getESuperTypes().indexOf(eGenericType.getEClassifier());
-		return createRemoveCommand(modelState, ((EClass) eGenericType.eContainer()),
-				EcorePackage.Literals.ECLASS__ESUPER_TYPES, index);
+	private Command createRemoveESuperTypeCommand(EcoreModelState modelState, EClass eClass, EClass eSuperType) {
+		int index = eClass.getESuperTypes().indexOf(eSuperType);
+		return createRemoveCommand(modelState, eClass, EcorePackage.Literals.ECLASS__ESUPER_TYPES, index);
 	}
 
-	public boolean removeESuperType(EcoreModelState modelState, EGenericType eGenericType) {
+	private NotationElement getNotationElement(EcoreModelState modelState, String inheritanceEdgeId) {
+		return modelState.getIndex().getInheritanceEdge(inheritanceEdgeId).orElse(null);
+	}
+
+	private NotationElement getNotationElement(EcoreModelState modelState, EClass eClass, EClass eSuperType) {
+		return modelState.getIndex().getInheritanceEdge(eClass, eSuperType).orElse(null);
+	}
+
+	public boolean removeESuperType(EcoreModelState modelState, EClass eClass, EClass eSuperType,
+			String inheritanceEdgeId) {
 		CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
 		compoundCommand.setType(CommandKind.COMPOUND);
 
 		try {
-			Command removeCommand = createRemoveESuperTypeCommand(modelState, eGenericType);
+			Command removeCommand = createRemoveESuperTypeCommand(modelState, eClass, eSuperType);
 			compoundCommand.getCommands().add(getCommandCodec().encode(removeCommand));
 
 			Command removeNotationElementCommand = createRemoveNotationElementCommand(modelState,
-					getNotationElement(eGenericType));
+					getNotationElement(modelState, inheritanceEdgeId));
 			compoundCommand.getCommands().add(getCommandCodec().encode(removeNotationElementCommand));
 
 		} catch (EncodingException e) {

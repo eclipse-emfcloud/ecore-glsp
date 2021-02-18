@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 public class EnotationPackageConfiguration implements EPackageConfiguration {
 
 	// FIXME we might consider moving the Enotation code to the modelserver plugin,
-	// to avoid a depdency to the org.eclipse.emfcloud.ecore.glsp plugin due to this
+	// to avoid a dependency to the org.eclipse.emfcloud.ecore.glsp plugin due to this
 
 	public String getId() {
 		return EnotationPackage.eINSTANCE.getNsURI();

@@ -14,13 +14,15 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnumLiteral;
-import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
+import org.eclipse.glsp.graph.GEdge;
+import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.DeleteOperation;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
@@ -59,13 +61,29 @@ public class EcoreDeleteOperationHandler extends ModelServerAwareBasicOperationH
 						throw new GLSPServerException(
 								"Could not execute delete operation on EAttribute: " + element.toString());
 					}
-				} else if (element instanceof EGenericType) {
-					if (!modelAccess.removeESuperType(modelState, (EGenericType) element)) {
-						throw new GLSPServerException(
-								"Could not execute delete operation on EGenericType: " + element.toString());
-					}
 				}
-			}, () -> LOGGER.info("Could not find element for id '" + elementId + "', no delete operation executed."));
+			}, () -> {
+				Optional<GModelElement> inheritanceElement = modelState.getIndex().get(elementId);
+				if (inheritanceElement.isPresent() && inheritanceElement.get() instanceof GEdge) {
+					GEdge edge = (GEdge) inheritanceElement.get();
+
+					Optional<EObject> baseClass = modelState.getIndex().getSemantic(edge.getSource());
+					Optional<EObject> superClass = modelState.getIndex().getSemantic(edge.getTarget());
+					if (baseClass.isPresent() && baseClass.get() instanceof EClass && superClass.isPresent()
+							&& superClass.get() instanceof EClass) {
+						EClass base = (EClass) baseClass.get();
+						EClass superType = (EClass) superClass.get();
+						if (base.getESuperTypes().contains(superType)) {
+							if (!modelAccess.removeESuperType(modelState, base, superType, elementId)) {
+								throw new GLSPServerException("Could not execute delete operation on ESuperType: "
+										+ superClass.get().toString());
+							}
+						}
+					}
+				} else {
+					LOGGER.info("Could not find element for id '" + elementId + "', no delete operation executed.");
+				}
+			});
 		});
 	}
 

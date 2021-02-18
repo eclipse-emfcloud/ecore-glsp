@@ -37,7 +37,7 @@ public class EcoreGetAttributeTypesActionHandler extends BasicActionHandler<Attr
     
 	private List<String> getEAttributeTypeList(ResourceManager resManager) {
 		List<String> list = new ArrayList<>();
-		for (EObject obj : EcoreLabelEditOperationHandler.getAllEAttributeTypes(resManager)) {
+		for (EObject obj : EcoreLabelEditOperationHandler.getAllETypes(resManager)) {
 			list.add(((ENamedElement) obj).getName());
 		}
 		return list;

@@ -7,7 +7,7 @@
     testsDirectory="" testSuiteClass="org.eclipse.emfcloud.ecore.glsp.enotation.tests.EnotationAllTests"
     importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
     editPluginID="org.eclipse.emfcloud.ecore.glsp.edit" editorPluginID="org.eclipse.emfcloud.ecore.glsp.edit"
-    testsPluginID="org.eclipse.emfcloud.ecore.glsp.edit" usedGenPackages="platform:/resource/org.eclipse.emfcloud.ecore.glsp/src/main/resources/glsp-graph.genmodel#//graph"
+    testsPluginID="org.eclipse.emfcloud.ecore.glsp.edit" usedGenPackages="platform:/plugin/org.eclipse.glsp.graph/model/glsp-graph.genmodel#//graph"
     operationReflection="true" importOrganizing="true">
   <foreignModel>enotation.ecore</foreignModel>
   <genPackages prefix="Enotation" basePackage="org.eclipse.emfcloud.ecore" disposableProviderFactory="true"
@@ -18,9 +18,12 @@
     </genClasses>
     <genClasses ecoreClass="enotation.ecore#//Edge">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enotation.ecore#//Edge/bendPoints"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enotation.ecore#//Edge/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enotation.ecore#//Edge/target"/>
     </genClasses>
     <genClasses image="false" ecoreClass="enotation.ecore#//NotationElement">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference enotation.ecore#//NotationElement/semanticElement"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute enotation.ecore#//NotationElement/type"/>
     </genClasses>
     <genClasses ecoreClass="enotation.ecore#//Diagram">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference enotation.ecore#//Diagram/elements"/>

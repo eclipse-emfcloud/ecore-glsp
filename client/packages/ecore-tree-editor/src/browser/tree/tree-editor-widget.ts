@@ -159,10 +159,6 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
         return "";
     }
 
-    protected getTypeProperty(): string {
-        return "typeId";
-    }
-
     protected configureTitle(title: Title<Widget>): void {
         super.configureTitle(title);
         title.iconClass = "ecoremodelfileTabIcon";
@@ -195,7 +191,7 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
         };
     }
 
-    protected deleteNode(node: Readonly<TreeEditor.Node>): void {
+    protected async deleteNode(node: Readonly<TreeEditor.Node>): Promise<void> {
         // TODO
         // const removeCommand = ModelServerCommandUtil.createRemoveCommand(
         //     this.getOwner(node),
@@ -205,7 +201,7 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
         // this.modelServerClient.edit(this.modelIDToRequest, removeCommand);
     }
 
-    protected addNode({ node, type, property }: AddCommandProperty): void {
+    protected async addNode({ node, type, property }: AddCommandProperty): Promise<void> {
         // TODO
         // const addCommand = ModelServerCommandUtil.createAddCommand(...);
         // this.modelServerClient.edit(this.modelIDToRequest, addCommand);
@@ -227,7 +223,7 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
     }
 
 
-    protected handleFormUpdate(data: any, node: TreeEditor.Node): void {
+    protected async handleFormUpdate(data: any, node: TreeEditor.Node): Promise<void> {
         const results = this.difference(data, node.jsonforms.data);
         const editCommand = this.createSetCommand(results as object, data);
         if (editCommand) {

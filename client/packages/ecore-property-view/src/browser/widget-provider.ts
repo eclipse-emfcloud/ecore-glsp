@@ -100,8 +100,8 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
     }
 
     protected updateViaCommand(command: ModelServerCommand, semanticUri: string): void {
-        const relativeRef = this.getRelativeModelUri(command.owner.$ref.replace("file:", ""));
-        if (relativeRef.split("#")[0] === this.currentModelUri && command.dataValues && relativeRef.split("#")[1] === semanticUri) {
+        const relativeRefURI = new URI(this.getRelativeModelUri(command.owner.$ref.replace("file:", "")));
+        if (relativeRefURI.path.toString() === "/" + this.currentModelUri && command.dataValues && relativeRefURI.fragment === semanticUri) {
             console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
 
             if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
@@ -115,7 +115,7 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
                 this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
                 this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
             }
-        } else if (relativeRef.split("#")[0] === this.currentModelUri && command.type === "remove") {
+        } else if (relativeRefURI.path.toString() === "/" + this.currentModelUri && command.type === "remove") {
             // clear global selection
             this.selectionService.selection = new Object();
         }

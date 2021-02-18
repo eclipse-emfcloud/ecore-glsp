@@ -115,7 +115,8 @@ public class EcoreFacade {
 
 	public List<NotationElement> findUnresolvedElements(Diagram diagram) {
 		return diagram.getElements().stream()
-				.filter(element -> resolved(element.getSemanticElement()).getResolvedElement() == null)
+				.filter(element -> element.getSemanticElement() == null ? false
+						: resolved(element.getSemanticElement()).getResolvedElement() == null)
 				.collect(Collectors.toList());
 	}
 
@@ -167,11 +168,18 @@ public class EcoreFacade {
 		modelIndex.indexNotation(edge);
 		return edge;
 	}
-	
-	public Edge initializeEdge(Edge edge, EObject semanticElement) {
-		edge.setSemanticElement(createProxy(semanticElement));
-		modelIndex.indexNotation(edge);
-		return edge;
+
+	public void initializeEdge(Edge edge, EObject semanticElement) {
+		if (semanticElement instanceof SemanticProxy) {
+			edge.setSemanticElement((SemanticProxy) semanticElement);
+		} else {
+			edge.setSemanticElement(createProxy(semanticElement));
+			modelIndex.indexNotation(edge);
+		}
+	}
+
+	public void initializeInheritanceEdge(Edge edge) {
+		modelIndex.indexInheritanceEdge(edge);
 	}
 
 	public SemanticProxy createProxy(EObject eObject) {

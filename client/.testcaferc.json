@@ -1,3 +1,25 @@
 {
-  "tsConfigPath": "./tests/tsconfig.json"
+  "compilerOptions": {
+    "typescript": {
+      "configPath": "./tests/tsconfig.json"
+    }
+  },
+  "src": [
+    "tests/**/*.ts"
+  ],
+  "reporter": [
+    {
+      "name": "spec"
+    },
+    {
+      "name": "xunit",
+      "output": "tests/results/testcafe-report.xml"
+    }
+  ],
+  "screenshots": {
+    "path": "./tests/results/screenshots",
+    "takeOnFails": true,
+    "pathPattern": "${DATE}_${TIME}/test-${TEST_INDEX}/${USERAGENT}/${FILE_INDEX}.png"
+  },
+  "skipJsErrors": true
 }

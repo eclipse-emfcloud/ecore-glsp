@@ -92,3 +92,16 @@ Start the tests if client and server are already running.
     yarn testcafe:start
 
 Please keep the mouse focus on the Testcafe window during the tests. Losing focus will cause tests to fail.
+
+### Enable testcafe to capture videos of test runs
+
+To enable video capturing for failed tests, add the following configurations to [.testcaferc.json](./.testcaferc.json).
+
+```json
+"videoPath": "./tests/results/videos",
+"videoOptions": {
+    "singleFile": true,
+    "failedOnly": true,
+    "pathPattern": "${DATE}_${TIME}/test-${TEST_INDEX}/${USERAGENT}/${FILE_INDEX}.mp4"
+}
+```

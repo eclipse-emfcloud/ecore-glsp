@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="ASCII"?>
-<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
   <semanticElement uri="/"/>
 </enotation:Diagram>

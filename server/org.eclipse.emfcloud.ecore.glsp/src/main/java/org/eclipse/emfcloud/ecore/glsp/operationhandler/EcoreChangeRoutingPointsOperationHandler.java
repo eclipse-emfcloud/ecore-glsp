@@ -29,9 +29,15 @@ public class EcoreChangeRoutingPointsOperationHandler
 		EcoreModelState ecoreModelState = EcoreModelState.getModelState(graphicalModelState);
 		Map<Edge, ElementAndRoutingPoints> changeRoutingPointsMap = new HashMap<>();
 		for (ElementAndRoutingPoints element : operation.getNewRoutingPoints()) {
-			ecoreModelState.getIndex().getNotation(element.getElementId(), Edge.class).ifPresent(notationElement -> {
-				changeRoutingPointsMap.put(notationElement, element);
-			});
+			ecoreModelState.getIndex().getNotation(element.getElementId(), Edge.class)
+					.ifPresentOrElse(notationElement -> {
+						changeRoutingPointsMap.put(notationElement, element);
+					}, () -> {
+						ecoreModelState.getIndex().getInheritanceEdge(element.getElementId())
+								.ifPresent(inheritanceEdge -> {
+									changeRoutingPointsMap.put(inheritanceEdge, element);
+								});
+					});
 		}
 		;
 		modelServerAccess.setBendPoints(ecoreModelState, changeRoutingPointsMap);

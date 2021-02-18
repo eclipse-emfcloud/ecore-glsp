@@ -3,6 +3,10 @@
     --jsonforms-property-view-label-width: 250px;
 }
 
+#jsonforms-property-view {
+    overflow-y: auto;
+}
+
 .properties-view-widget .vertical-layout-item>label {
     font-size: var(--theia-ui-font-size1);
 }
