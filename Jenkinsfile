@@ -78,11 +78,17 @@ pipeline {
                 }
             }
         }
-        
         stage('Deploy (master only)') {
             when { branch 'master' }
             steps {
                 build job: 'deploy-ecore-glsp-npm', wait: false
+            }
+        }
+    }
+    post {
+        failure {
+            container('ci') {
+                archiveArtifacts artifacts: 'client/tests/results/**', fingerprint: true
             }
         }
     }
