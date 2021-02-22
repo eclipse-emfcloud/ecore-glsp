@@ -107,6 +107,10 @@ export class SLabelNodeLiteral extends SLabelNode {
     imageName = "EEnumLiteral.svg";
 }
 
+export class SLabelNodeOperation extends SLabelNode {
+    imageName = "EOperation.svg";
+}
+
 export class ArrowEdge extends SEdge {
     public readonly targetAnchorCorrection = 3.3;
 }

@@ -10,9 +10,14 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.gmodel;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
 import org.eclipse.glsp.graph.GLabel;
@@ -30,6 +35,8 @@ public class LabelFactory extends AbstractGModelFactory<ENamedElement, GLabel> {
 			return create((EAttribute) semanticElement);
 		} else if (semanticElement instanceof EEnumLiteral) {
 			return create((EEnumLiteral) semanticElement);
+		} else if (semanticElement instanceof EOperation) {
+			return create((EOperation) semanticElement);
 		}
 		return null;
 	}
@@ -42,6 +49,7 @@ public class LabelFactory extends AbstractGModelFactory<ENamedElement, GLabel> {
 		return new GLabelBuilder(Types.ATTRIBUTE) //
 				.id(toId(eAttribute))//
 				.text(label) //
+				.addCssClass(getOccurrenceClass(eAttribute.getLowerBound(), eAttribute.getUpperBound())) //
 				.build();
 	}
 
@@ -52,6 +60,63 @@ public class LabelFactory extends AbstractGModelFactory<ENamedElement, GLabel> {
 				.id(toId(eEnumLiteral)) //
 				.text(label) //
 				.build();
+	}
+
+	public GLabel create(EOperation eOperation) {
+		String label = eOperation.getName().concat("()");
+		if (eOperation.getEType() != null) {
+			label = label.concat(" : " + eOperation.getEType().getName());
+		}
+		return new GLabelBuilder(Types.OPERATION) //
+				.id(toId(eOperation))//
+				.text(label) //
+				.addCssClass(getOccurrenceClass(eOperation.getLowerBound(), eOperation.getUpperBound())) //
+				.addCssClass(getEExceptionsClass(eOperation.getEExceptions())) //
+				.build();
+	}
+	
+	private String getEExceptionsClass(List<EClassifier> exceptions) {
+		if (!exceptions.isEmpty()) {
+			return String.join("-", exceptions.stream().map(EClassifier::getName).collect(Collectors.toList()));
+		}
+		return "none";
+	}
+
+	private String getOccurrenceClass(int lowerBound, int upperBound) {
+		if (lowerBound == 0) {
+			if (upperBound == 0) {
+				return "eoccurrencezero";
+			} else if (upperBound == 1) {
+				return "eoccurrencezerotoone";
+			} else if (upperBound > 1) {
+				return "eoccurrencezeroton";
+			} else if (upperBound < 0) {
+				return "eoccurrencezerotounbounded";
+			} else {
+				return "eoccurrencezerotounspecified";
+			}
+		} else if (lowerBound == 1) {
+			if (upperBound == 1) {
+				return "eoccurrenceone";
+			} else if (upperBound > 1) {
+				return "eoccurrenceoneton";
+			} else if (upperBound < 0) {
+				return "eoccurrenceonetounbounded";
+			} else {
+				return "eoccurrenceoneunspecified";
+			}
+		} else if (lowerBound > 1) {
+			if (lowerBound == upperBound) {
+				return "eoccurrencen";
+			} else if (upperBound > 1) {
+				return "eoccurrencentom";
+			} else if (upperBound < 0) {
+				return "eoccurrencentounbounded";
+			} else {
+				return "eoccurrencentounspecified";
+			}
+		}
+		return "none";
 	}
 
 }

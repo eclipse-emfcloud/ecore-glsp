@@ -93,6 +93,10 @@ svg {
     font-weight: bold;
 }
 
+.sprotty-label.occurrence {
+    font-size: 9px;
+}
+
 .sprotty-icon {
     stroke-width: 0;
 }

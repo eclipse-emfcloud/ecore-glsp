@@ -12,10 +12,18 @@ package org.eclipse.emfcloud.ecore.glsp;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -78,7 +86,8 @@ public class ResourceManager {
 
 			EObject notationRoot = modelServerAccess.getNotationModel();
 			Resource notationResource = loadResource(convertToFile(getNotationURI()), notationRoot);
-			// #FIXME if semanticresource exists, but no enotation resource add one basic notation resource to modelserver (diagram with semantic element)
+			// #FIXME if semanticresource exists, but no enotation resource add one basic
+			// notation resource to modelserver (diagram with semantic element)
 			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelState.getIndex());
 			return ecoreFacade;
 		} catch (IOException e) {
@@ -113,6 +122,7 @@ public class ResourceManager {
 	private void configureResource(Resource resource) {
 		if (resource instanceof XMLResource) {
 			XMLResource xmlResource = (XMLResource) resource;
+			xmlResource.getDefaultLoadOptions().put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
 			xmlResource.getDefaultSaveOptions().put(XMLResource.OPTION_PROCESS_DANGLING_HREF,
 					XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 		}
@@ -120,6 +130,32 @@ public class ResourceManager {
 
 	private Resource createResource(String path) {
 		return resourceSet.createResource(URI.createFileURI(path));
+	}
+
+	public List<EClassifier> getAllEClassifiers() {
+		List<EClassifier> listOfClassifiers = new ArrayList<>(EcorePackage.eINSTANCE.getEClassifiers());
+		TreeIterator<Notifier> resourceSetContent = editingDomain.getResourceSet().getAllContents();
+		while (resourceSetContent.hasNext()) {
+			Notifier res = resourceSetContent.next();
+			if (res instanceof EDataType) {
+				listOfClassifiers.add((EDataType) res);
+			}
+		}
+		return listOfClassifiers;
+	}
+
+	public List<EDataType> getAllETypes() {
+		return getAllEClassifiers().stream().filter(EDataType.class::isInstance).map(EDataType.class::cast)
+				.collect(Collectors.toList());
+	}
+
+	public Optional<EDataType> getETypeFromString(String eTypeName) {
+		for (EDataType type : getAllETypes()) {
+			if (type.getName().toLowerCase().equals(eTypeName.toLowerCase())) {
+				return Optional.ofNullable(type);
+			}
+		}
+		return Optional.empty();
 	}
 
 }

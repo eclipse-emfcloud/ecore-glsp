@@ -16,15 +16,6 @@
         },
         {
             "type": "Control",
-            "label": "EType",
-            "scope": "#/properties/eType",
-            "rule": {
-                "effect": "DISABLE",
-                "condition": {}
-            }
-        },
-        {
-            "type": "Control",
             "label": "Lower Bound",
             "scope": "#/properties/lowerBound"
         },

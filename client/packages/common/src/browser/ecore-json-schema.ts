@@ -41,6 +41,18 @@ export const ecoreTypeSchema = {
                 },
                 "interface": {
                     "type": "boolean"
+                },
+                "eSuperTypes": {
+                    "type": "array",
+                    "title": "ESuperTypes",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "eClass": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             },
             "additionalProperties": false
@@ -120,7 +132,12 @@ export const ecoreTypeSchema = {
                     "type": "string"
                 },
                 "eType": {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                        "eClass": {
+                            "type": "string"
+                        }
+                    }
                 },
                 "lowerBound": {
                     "type": "integer",
@@ -192,7 +209,12 @@ export const ecoreTypeSchema = {
                     "type": "string"
                 },
                 "eType": {
-                    "type": "string"
+                    "type": "object",
+                    "properties": {
+                        "eClass": {
+                            "type": "string"
+                        }
+                    }
                 },
                 "lowerBound": {
                     "type": "integer",
@@ -245,6 +267,53 @@ export const ecoreTypeSchema = {
                 },
                 "eTypeParameter": {
                     "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "eoperation": {
+            "$id": "#eoperation",
+            "title": "EOperation",
+            "type": "object",
+            "properties": {
+                "eClass": {
+                    "const": "http://www.eclipse.org/emf/2002/Ecore#//EOperation"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "eType": {
+                    "type": "object",
+                    "properties": {
+                        "eClass": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "lowerBound": {
+                    "type": "integer",
+                    "default": 0
+                },
+                "upperBound": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "ordered": {
+                    "type": "boolean"
+                },
+                "unique": {
+                    "type": "boolean"
+                },
+                "eExceptions": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "eClass": {
+                                "type": "string"
+                            }
+                        }
+                    }
                 }
             },
             "additionalProperties": false

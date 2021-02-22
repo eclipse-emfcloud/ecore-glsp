@@ -101,24 +101,30 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
 
     protected updateViaCommand(command: ModelServerCommand, semanticUri: string): void {
         const relativeRefURI = new URI(this.getRelativeModelUri(command.owner.$ref.replace("file:", "")));
-        if (relativeRefURI.path.toString() === "/" + this.currentModelUri && command.dataValues && relativeRefURI.fragment === semanticUri) {
-            console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
+        if (this.isCurrentModelUri(relativeRefURI)) {
+            if (command.dataValues && relativeRefURI.fragment === semanticUri) {
+                console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
 
-            if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-                let newValue: any = command.dataValues[0];
-                // Parse boolean and integer values
-                if (newValue === "true" || newValue === "false") {
-                    newValue = newValue === "true";
-                } else if (!isNaN(parseInt(newValue, 10))) {
-                    newValue = parseInt(newValue, 10);
+                if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
+                    let newValue: any = command.dataValues[0];
+                    // Parse boolean and integer values
+                    if (newValue === "true" || newValue === "false") {
+                        newValue = newValue === "true";
+                    } else if (!isNaN(parseInt(newValue, 10))) {
+                        newValue = parseInt(newValue, 10);
+                    }
+                    this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
+                    this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
                 }
-                this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
-                this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
+            } else if (command.type === "remove") {
+                // clear global selection
+                this.selectionService.selection = new Object();
             }
-        } else if (relativeRefURI.path.toString() === "/" + this.currentModelUri && command.type === "remove") {
-            // clear global selection
-            this.selectionService.selection = new Object();
         }
+    }
+
+    protected isCurrentModelUri(uri: URI): boolean {
+        return uri.path.toString() === "/" + this.currentModelUri;
     }
 
     canHandle(selection: any): number {

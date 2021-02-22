@@ -26,13 +26,14 @@ export class TreeModelService implements TreeEditor.ModelService {
     getDataForNode(node: TreeEditor.Node): MaybePromise<any> {
         const nodeData = node.jsonforms.data;
         if (EcoreEType.is(nodeData)) {
-            const eClassifier = new URI(nodeData.$ref).fragment.substring(2);
+            const eClassifier = nodeData.$ref.startsWith("//") ? nodeData.$ref.substring(2) : new URI(nodeData.$ref).fragment.substring(2);
             /* @ts-ignore */
             nodeData["eClassifier"] = eClassifier;
             /* @ts-ignore */
             nodeData["eTypeParameter"] = "";
             return nodeData;
         }
+        return nodeData;
     }
 
     getSchemaForNode(node: TreeEditor.Node): JsonSchema | undefined {

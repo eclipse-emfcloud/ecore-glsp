@@ -1,0 +1,38 @@
+{
+    "type": "VerticalLayout",
+    "elements": [
+        {
+            "type": "Label",
+            "text": "EOperation"
+        },
+        {
+            "type": "Control",
+            "label": "Name",
+            "scope": "#/properties/name",
+            "rule": {
+                "effect": "DISABLE",
+                "condition": {}
+            }
+        },
+        {
+            "type": "Control",
+            "label": "Lower Bound",
+            "scope": "#/properties/lowerBound"
+        },
+        {
+            "type": "Control",
+            "label": "Upper Bound",
+            "scope": "#/properties/upperBound"
+        },
+        {
+            "type": "Control",
+            "label": "Ordered",
+            "scope": "#/properties/ordered"
+        },
+        {
+            "type": "Control",
+            "label": "Unique",
+            "scope": "#/properties/unique"
+        }
+    ]
+}
