@@ -18,7 +18,7 @@
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//State"/>
-    <position x="602.0" y="141.0"/>
+    <position x="603.0" y="141.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//StateMachine"/>
@@ -38,9 +38,7 @@
   </elements>
   <elements xsi:type="enotation:Edge" source="//@elements.4" target="//@elements.3">
     <semanticElement uri="//StateMachine/states"/>
-    <bendPoints x="557.3203125" y="41.166666666666686"/>
     <bendPoints x="557.3203125" y="43.166666666666686"/>
-    <bendPoints x="718.7265625" y="43.166666666666686"/>
   </elements>
   <elements xsi:type="enotation:Edge" source="//@elements.3" target="//@elements.1">
     <semanticElement uri="//State/transitions"/>

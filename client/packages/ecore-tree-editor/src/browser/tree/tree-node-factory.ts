@@ -81,10 +81,24 @@ export class TreeNodeFactory implements TreeEditor.NodeFactory {
                 this.mapData(element, node, "eSuperTypes", idx);
             });
         }
+        if (data.eExceptions) {
+            // determine eExceptions
+            data.eExceptions.forEach((element: any, idx: string | number | undefined) => {
+                element["type"] = EcoreModel.Type.EException;
+                this.mapData(element, node, "eExceptions", idx);
+            });
+        }
         if (data.eStructuralFeatures) {
             // determine eStructuralFeatures
             data.eStructuralFeatures.forEach((element: any, idx: string | number | undefined) => {
                 this.mapData(element, node, "eStructuralFeatures", idx);
+            });
+        }
+        if (data.eOperations) {
+            // determine eOperations
+            data.eOperations.forEach((element: any, idx: string | number | undefined) => {
+                element["eClass"] = EcoreModel.Type.EOperation;
+                this.mapData(element, node, "eOperations", idx);
             });
         }
         if (data.eLiterals) {

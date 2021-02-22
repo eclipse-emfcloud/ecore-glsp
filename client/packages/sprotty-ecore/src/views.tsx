@@ -166,6 +166,68 @@ export class LabelNodeView extends SLabelView {
     }
 }
 
+@injectable()
+export class LabelNodeWithOccurrenceView extends SLabelView {
+    render(labelNode: Readonly<SLabelNode>, context: RenderingContext): VNode {
+        let image;
+        if (labelNode.imageName) {
+            image = require("../images/" + labelNode.imageName);
+        }
+
+        const isOperation = labelNode.imageName === "EOperation.svg";
+
+        let occurrenceString = undefined;
+        let exceptionsString = undefined;
+        let singleOccurrence = false;
+        if (labelNode.cssClasses) {
+
+            const occurrenceClass = labelNode.cssClasses[0];
+            switch (occurrenceClass) {
+                case "eoccurrencezero": occurrenceString = "0"; singleOccurrence = true; break;
+                case "eoccurrencezerotoone": occurrenceString = "0..1"; break;
+                case "eoccurrencezeroton": occurrenceString = "0..n"; break;
+                case "eoccurrencezerotounbounded": occurrenceString = "0..*"; break;
+                case "eoccurrencezerotounspecified": occurrenceString = "0..?"; break;
+                case "eoccurrenceone": occurrenceString = "1"; singleOccurrence = true; break;
+                case "eoccurrenceoneton": occurrenceString = "1..n"; break;
+                case "eoccurrenceonetounbounded": occurrenceString = "1..*"; break;
+                case "eoccurrenceoneunspecified": occurrenceString = "1..?"; break;
+                case "eoccurrencen": occurrenceString = "n"; singleOccurrence = true; break;
+                case "eoccurrencentom": occurrenceString = "n..m"; break;
+                case "eoccurrencentounbounded": occurrenceString = "n..*"; break;
+                case "eoccurrencentounspecified": occurrenceString = "n..?"; break;
+            }
+
+            const exceptionsClass = labelNode.cssClasses[1];
+            if (isOperation && exceptionsClass && exceptionsClass !== "none") {
+                exceptionsString = ` throws ${exceptionsClass.split("-").join(", ")}`;
+            } else {
+                exceptionsString = undefined;
+            }
+        }
+
+        const vnode = (
+            <g
+                class-selected={labelNode.selected}
+                class-mouseover={labelNode.hoverFeedback}
+                class-sprotty-label-node={true}
+            >
+                {!!image && <image class-sprotty-icon={true} href={image} y={isOperation ? -8 : -6} width={13} height={isOperation ? 10 : 8}></image>}
+                {!!occurrenceString &&
+                    <text class-sprotty-label={true} class-occurrence={true} x={singleOccurrence ? 4 : 0} y={8}>{occurrenceString}</text>}
+                <text class-sprotty-label={true} x={image ? 25 : 0}>{`${labelNode.text}${isOperation && exceptionsString ? " *" : ""}`}</text>
+                {isOperation && exceptionsString && <title>{exceptionsString}</title>}
+            </g >
+        );
+
+        const subType = getSubType(labelNode);
+        if (subType) {
+            setAttr(vnode, "class", subType);
+        }
+        return vnode;
+    }
+}
+
 export function angle(x0: Point, x1: Point): number {
     return toDegrees(Math.atan2(x1.y - x0.y, x1.x - x0.x));
 }

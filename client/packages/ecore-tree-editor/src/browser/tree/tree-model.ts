@@ -30,9 +30,11 @@ export namespace EcoreModel {
         export const EDataType = "http://www.eclipse.org/emf/2002/Ecore#//EDataType";
         export const EEnum = "http://www.eclipse.org/emf/2002/Ecore#//EEnum";
         export const EReference = "http://www.eclipse.org/emf/2002/Ecore#//EReference";
+        export const EOperation = "http://www.eclipse.org/emf/2002/Ecore#//EOperation";
 
         export const EClassAbstract = "EClassAbstract";
         export const EClassInterface = "EClassInterface";
+        export const EException = "EException";
         export const EEnumLiteral = "EEnumLiteral";
         export const EGenericElementType = "EGenericElementType";
         export const EGenericSuperType = "EGenericSuperType";
@@ -68,7 +70,7 @@ export namespace EcoreModel {
             [
                 {
                     property: "children",
-                    children: [Type.EAttribute, Type.EReference]
+                    children: [Type.EAttribute, Type.EReference, Type.EOperation]
                 }
             ]
         ],

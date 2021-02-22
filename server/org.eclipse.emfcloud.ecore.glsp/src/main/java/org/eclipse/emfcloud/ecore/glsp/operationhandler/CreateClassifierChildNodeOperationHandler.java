@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
@@ -59,6 +60,13 @@ public class CreateClassifierChildNodeOperationHandler
 				throw new GLSPServerException(
 						"Could not execute create operation on EAttribute: " + attribute.getName());
 			}
+		} else if (elementTypeId.equals(Types.OPERATION) && container instanceof EClass) {
+			EOperation attribute = createEOperation(modelState);
+			modelState.getIndex().add(attribute);
+			if (!modelAccess.addEOperation(EcoreModelState.getModelState(modelState), attribute, (EClass) container)) {
+				throw new GLSPServerException(
+						"Could not execute create operation on EAttribute: " + attribute.getName());
+			}
 		} else if (elementTypeId.contentEquals(Types.ENUMLITERAL) && container instanceof EEnum) {
 			EEnumLiteral literal = createEEnumLiteral(modelState);
 			modelState.getIndex().add(literal);
@@ -88,6 +96,12 @@ public class CreateClassifierChildNodeOperationHandler
 		EAttribute attribute = EcoreFactory.eINSTANCE.createEAttribute();
 		setName(attribute, modelState);
 		return attribute;
+	}
+
+	protected EOperation createEOperation(EcoreModelState modelState) {
+		EOperation operation = EcoreFactory.eINSTANCE.createEOperation();
+		setName(operation, modelState);
+		return operation;
 	}
 
 	@Override

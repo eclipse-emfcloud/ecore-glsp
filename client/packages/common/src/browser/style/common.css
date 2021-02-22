@@ -33,6 +33,58 @@
     background-image: url(../../../resources/icons/EAttribute.gif);
 }
 
+.eattribute.eoccurrencen {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceN.gif);
+}
+
+.eattribute.eoccurrencentom {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToM.gif);
+}
+
+.eattribute.eoccurrencentounbounded {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToUnbounded.gif);
+}
+
+.eattribute.eoccurrencentounspecified {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToUnspecified.gif);
+}
+
+.eattribute.eoccurrenceone {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOne.gif);
+}
+
+.eattribute.eoccurrenceoneton {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToN.gif);
+}
+
+.eattribute.eoccurrenceonetounbounded {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToUnbounded.gif);
+}
+
+.eattribute.eoccurrenceonetounspecified {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToUnspecified.gif);
+}
+
+.eattribute.eoccurrencezero {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZero.gif);
+}
+
+.eattribute.eoccurrencezerotoone {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToOne.gif);
+}
+
+.eattribute.eoccurrencezeroton {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToN.gif);
+}
+
+.eattribute.eoccurrencezerotounbounded {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToUnbounded.gif);
+}
+
+.eattribute.eoccurrencezerotounspecified {
+    background-image: url(../../../resources/icons/EAttribute_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToUnspecified.gif);
+}
+
 .eclassabstract {
     background-image: url(../../../resources/icons/EClassAbstract.gif);
 }
@@ -65,12 +117,124 @@
     background-image: url(../../../resources/icons/EReference.gif);
 }
 
+.ereference.eoccurrencen {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceN.gif);
+}
+
+.ereference.eoccurrencentom {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToM.gif);
+}
+
+.ereference.eoccurrencentounbounded {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToUnbounded.gif);
+}
+
+.ereference.eoccurrencentounspecified {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToUnspecified.gif);
+}
+
+.ereference.eoccurrenceone {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOne.gif);
+}
+
+.ereference.eoccurrenceoneton {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToN.gif);
+}
+
+.ereference.eoccurrenceonetounbounded {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToUnbounded.gif);
+}
+
+.ereference.eoccurrenceonetounspecified {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToUnspecified.gif);
+}
+
+.ereference.eoccurrencezero {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZero.gif);
+}
+
+.ereference.eoccurrencezerotoone {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToOne.gif);
+}
+
+.ereference.eoccurrencezeroton {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToN.gif);
+}
+
+.ereference.eoccurrencezerotounbounded {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToUnbounded.gif);
+}
+
+.ereference.eoccurrencezerotounspecified {
+    background-image: url(../../../resources/icons/EReference_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToUnspecified.gif);
+}
+
 .egenericelementtype {
     background-image: url(../../../resources/icons/EGenericElementType.gif);
 }
 
 .egenericsupertype {
     background-image: url(../../../resources/icons/EGenericSuperType.gif);
+}
+
+.egenericexception {
+    background-image: url(../../../resources/icons/EGenericException.gif);
+}
+
+.eoperation {
+    background-image: url(../../../resources/icons/EOperation.gif);
+}
+
+.eoperation.eoccurrencen {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceN.gif);
+}
+
+.eoperation.eoccurrencentom {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToM.gif);
+}
+
+.eoperation.eoccurrencentounbounded {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToUnbounded.gif);
+}
+
+.eoperation.eoccurrencentounspecified {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceNToUnspecified.gif);
+}
+
+.eoperation.eoccurrenceone {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOne.gif);
+}
+
+.eoperation.eoccurrenceoneton {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToN.gif);
+}
+
+.eoperation.eoccurrenceonetounbounded {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToUnbounded.gif);
+}
+
+.eoperation.eoccurrenceonetounspecified {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceOneToUnspecified.gif);
+}
+
+.eoperation.eoccurrencezero {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZero.gif);
+}
+
+.eoperation.eoccurrencezerotoone {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToOne.gif);
+}
+
+.eoperation.eoccurrencezeroton {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToN.gif);
+}
+
+.eoperation.eoccurrencezerotounbounded {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToUnbounded.gif);
+}
+
+.eoperation.eoccurrencezerotounspecified {
+    background-image: url(../../../resources/icons/EOperation_EOccurrence.gif), url(../../../resources/icons/EOccurrenceZeroToUnspecified.gif);
 }
 
 .ecoremodelfile {

@@ -12,23 +12,17 @@ package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
 import static org.eclipse.glsp.server.protocol.GLSPServerException.getOrThrow;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnumLiteral;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
-import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
@@ -105,9 +99,22 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 				EDataType eAttributeEType = getEDataTypeFromInput(inputText, graphicalModelState);
 
 				if (!modelAccess.setAttribute(EcoreModelState.getModelState(graphicalModelState), eAttribute,
-						eAttribute.getName().equals(eAttributeName) ? null : eAttributeName,
-						eAttributeEType)) {
+						eAttribute.getName().equals(eAttributeName) ? null : eAttributeName, eAttributeEType)) {
 					throw new GLSPServerException("Could not rename attribute to: " + inputText);
+				}
+
+				break;
+
+			case Types.OPERATION:
+				EOperation eOperation = (EOperation) getOrThrow(modelIndex.getSemantic(elementId),
+						"No semantic element for label with id " + elementId + " found");
+
+				String eOperationName = getNameFromInput(inputText, "\\(.*\\)");
+				EDataType eOperationEType = getEDataTypeFromInput(inputText, graphicalModelState);
+
+				if (!modelAccess.setOperation(EcoreModelState.getModelState(graphicalModelState), eOperation,
+						eOperation.getName().equals(eOperationName) ? null : eOperationName, eOperationEType)) {
+					throw new GLSPServerException("Could not rename operation to: " + inputText);
 				}
 
 				break;
@@ -159,6 +166,10 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 	}
 
 	private String getNameFromInput(String inputText) {
+		return getNameFromInput(inputText, "");
+	}
+
+	private String getNameFromInput(String inputText, String replaceRegex) {
 		String name = "";
 		if (inputText.contains(":") && inputText.split(":").length >= 2) {
 			String[] split = inputText.split(":");
@@ -166,44 +177,20 @@ public class EcoreLabelEditOperationHandler extends ModelServerAwareBasicOperati
 		} else {
 			name = inputText.trim().replace(":", "");
 		}
-		return name;
+		return name.replaceAll(replaceRegex, "");
 	}
 
 	private EDataType getEDataTypeFromInput(String inputText, GModelState graphicalModelState) {
 		if (inputText.contains(":") && inputText.split(":").length >= 2) {
 			String[] split = inputText.split(":");
 			String eDataTypeName = split[1].trim();
-			Optional<EDataType> datatype = parseStringToEType(eDataTypeName,
-					EcoreModelState.getResourceManager(graphicalModelState));
+			Optional<EDataType> datatype = EcoreModelState.getResourceManager(graphicalModelState)
+					.getETypeFromString(eDataTypeName);
 			if (datatype.isPresent()) {
 				return datatype.get();
 			}
 		}
 		return null;
-	}
-
-	private Optional<EDataType> parseStringToEType(String name, ResourceManager resManager) {
-		for (EDataType type : getAllETypes(resManager)) {
-			if (type.getName().toLowerCase().equals(name.toLowerCase())) {
-				return Optional.ofNullable(type);
-			}
-		}
-		return Optional.empty();
-	}
-
-	public static List<EDataType> getAllETypes(ResourceManager resManager) {
-		List<EClassifier> listOfClassifiers = new ArrayList<>(EcorePackage.eINSTANCE.getEClassifiers());
-		listOfClassifiers.removeIf(e -> !(e instanceof EDataType));
-		List<EDataType> eDataTypes = listOfClassifiers.stream().filter(EDataType.class::isInstance)
-				.map(EDataType.class::cast).collect(Collectors.toList());
-		TreeIterator<Notifier> resourceSetContent = resManager.getEditingDomain().getResourceSet().getAllContents();
-		while (resourceSetContent.hasNext()) {
-			Notifier res = resourceSetContent.next();
-			if (res instanceof EDataType) {
-				eDataTypes.add((EDataType) res);
-			}
-		}
-		return eDataTypes;
 	}
 
 	@Override

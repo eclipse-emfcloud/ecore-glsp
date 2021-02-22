@@ -24,10 +24,12 @@ const ICON_CLASSES: Map<string, string> = new Map([
     [EcoreModel.Type.EReference, "ecoreimg ereference"],
     [EcoreModel.Type.EAttribute, "ecoreimg eattribute"],
     [EcoreModel.Type.EEnumLiteral, "ecoreimg eenumliteral"],
+    [EcoreModel.Type.EOperation, "ecoreimg eoperation"],
     [EcoreModel.Type.EGenericSuperType, "ecoreimg egenericsupertype"],
     [EcoreModel.Type.EGenericElementType, "ecoreimg egenericelementtype"],
     [EcoreModel.Type.EClassAbstract, "ecoreimg eclassabstract"],
-    [EcoreModel.Type.EClassInterface, "ecoreimg eclassinterface"]
+    [EcoreModel.Type.EClassInterface, "ecoreimg eclassinterface"],
+    [EcoreModel.Type.EException, "ecoreimg egenericexception"]
 ]);
 
 /* Icon for unknown types */
@@ -50,6 +52,8 @@ export class TreeLabelProvider implements LabelProviderContribution {
             const elementData = element.jsonforms.data;
             if (elementData.type) {
                 switch (elementData.type) {
+                    case EcoreModel.Type.EException:
+                        iconClass = ICON_CLASSES.get(EcoreModel.Type.EException); break;
                     case EcoreModel.Type.EEnumLiteral:
                         iconClass = ICON_CLASSES.get(EcoreModel.Type.EEnumLiteral); break;
                     case EcoreModel.Type.EGenericSuperType:
@@ -66,9 +70,54 @@ export class TreeLabelProvider implements LabelProviderContribution {
                     iconClass = ICON_CLASSES.get(elementData.eClass);
                 }
             }
+
+            if (iconClass &&
+                (elementData.eClass === EcoreModel.Type.EAttribute || elementData.eClass === EcoreModel.Type.EReference || elementData.eClass === EcoreModel.Type.EOperation)) {
+                iconClass += this.appendOccurrenceIcon(elementData);
+            }
         }
 
         return iconClass || UNKNOWN_ICON;
+    }
+
+    protected appendOccurrenceIcon(elementData: any): string {
+        let occurrenceIconString = " ";
+        const lowerBound = elementData.lowerBound;
+        const upperBound = elementData.upperBound;
+        if (!lowerBound || lowerBound === 0) {
+            if (upperBound === 0) {
+                occurrenceIconString += "eoccurrencezero";
+            } else if (upperBound > 1) {
+                occurrenceIconString += "eoccurrencezeroton";
+            } else if (upperBound < 0) {
+                occurrenceIconString += "eoccurrencezerotounbounded";
+            } else {
+                occurrenceIconString += "eoccurrencezerotoone";
+                // FIXME if default values are fixed, do check for upperBound === 1 and otherwise return unspecified
+                // occurrenceIconString += "eoccurrencezerotounspecified";
+            }
+        } else if (lowerBound === 1) {
+            if (upperBound > 1) {
+                occurrenceIconString += "eoccurrenceoneton";
+            } else if (upperBound < 0) {
+                occurrenceIconString += "eoccurrenceonetounbounded";
+            } else {
+                occurrenceIconString += "eoccurrenceone";
+                // FIXME if default values are fixed, do check for upperBound === 1 and otherwise return unspecified
+                // occurrenceIconString += "eoccurrenceoneunspecified";
+            }
+        } else if (lowerBound > 1) {
+            if (lowerBound === upperBound) {
+                occurrenceIconString += "eoccurrencen";
+            } else if (upperBound > 1) {
+                occurrenceIconString += "eoccurrencentom";
+            } else if (upperBound < 0) {
+                occurrenceIconString += "eoccurrencentounbounded";
+            } else {
+                occurrenceIconString += "eoccurrencentounspecified";
+            }
+        }
+        return occurrenceIconString;
     }
 
     public getName(element: object): string | undefined {
@@ -76,11 +125,16 @@ export class TreeLabelProvider implements LabelProviderContribution {
             ? element.jsonforms.data
             : element;
         if (elementData.eSuperTypes) {
-            let name = `${elementData.name} \u2192 `; // \u2192 is an arrow to the right
-            elementData.eSuperTypes.forEach((eSuperType: EcoreEType) => {
-                name = name.concat(eSuperType.$ref.substring(2) + ", ");
-            });
-            return name.slice(0, -2);
+            return `${elementData.name} \u2192 ${elementData.eSuperTypes.map((eSuperType: any) => this.toName(eSuperType.$ref)).join(", ")}`; // \u2192 is an arrow to the right
+        } else if (elementData.eClass === EcoreModel.Type.EOperation) {
+            let name = `${elementData.name}()`;
+            if (elementData.eType) {
+                name = name.concat(` : ${this.toName(new URI(elementData.eType.$ref).fragment)}`);
+            }
+            if (elementData.eExceptions) {
+                name = name.concat(` throws ${elementData.eExceptions.map((eException: any) => this.toName(eException.$ref)).join(", ")}`);
+            }
+            return name;
         } else if (elementData.type) {
             switch (elementData.type) {
                 case EcoreModel.Type.EEnumLiteral: {
@@ -89,6 +143,8 @@ export class TreeLabelProvider implements LabelProviderContribution {
                 case EcoreModel.Type.EGenericSuperType: {
                     return this.toName(elementData.$ref);
                 }
+                case EcoreModel.Type.EException:
+                    return this.toName(elementData.$ref);
             }
         } else if (elementData.eType) {
             const name = `${elementData.name} : `;

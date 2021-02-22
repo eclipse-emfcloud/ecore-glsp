@@ -41,7 +41,7 @@
     flex: none;
 }
 
-.jsonforms-property-view .control>input {
+.jsonforms-property-view .control>input, .jsonforms-property-view .array-table-layout td input, .jsonforms-property-view .array-table-layout td select {
     display: flex;
     height: var(--jsonforms-property-view-line-height);
     background: var(--theia-textCodeBlock-background) !important;
@@ -50,7 +50,7 @@
     flex-grow: 0 !important;
 }
 
-.jsonforms-property-view .control>input[disabled] {
+.jsonforms-property-view .control>input[disabled], .jsonforms-property-view .array-table-layout td input[disabled], .jsonforms-property-view .array-table-layout td select[disabled] {
     opacity: 0.5;
 }
 
@@ -63,5 +63,64 @@
     display: inline-block;
     position: relative;
     padding-right: 10px;
+    font-size: var(--theia-ui-font-size1);
+}
+
+.jsonforms-property-view .array-table-layout.control>header {
+    margin: 0;
+    display: flex;
+    width: var(--jsonforms-property-view-label-width);
+    flex: none;
+    flex-direction: column;
+}
+
+.jsonforms-property-view .array-table-layout.control>header>label {
+    font-weight: normal;
+}
+
+.jsonforms-property-view .array-table-layout.control>header>button {
+    margin-top: 10px;
+    line-height: var(--theia-content-line-height);
+    align-self: flex-start;
+}
+
+.jsonforms-property-view .array-table-layout.control>table {
+    border: none;
+    margin: 0;
+}
+
+.jsonforms-property-view .array-table-layout.control>table>thead {
+    display: none;
+}
+
+.jsonforms-property-view .array-table-layout.control table tbody tr td:nth-child(2) {
+    display: none;
+}
+
+.jsonforms-property-view .array-table-layout td {
+    border: none !important;
+}
+
+.jsonforms-property-view .array-table-layout td input, .jsonforms-property-view .array-table-layout td select {
+    flex: 85%;
+    background: var(--theia-input-background);
+    color: var(--theia-input-foreground);
+    border: var(--theia-border-width) solid var(--theia-input-border);
+    font-family: var(--theia-ui-font-family);
+    font-size: var(--theia-ui-font-size1);
+    line-height: var(--theia-content-line-height);
+    padding: 3px 0 3px 4px;
+}
+
+.jsonforms-property-view .array-table-layout.control table tbody tr td:nth-child(3) {
+    flex: 0;
+}
+
+.jsonforms-property-view .array-table-layout button {
+    display: inline-block;
+    background: var(--theia-textCodeBlock-background) !important;
+    color: var(--theia-input-foreground);
+    border: var(--theia-border-width) solid var(--theia-input-border);
+    font-family: var(--theia-ui-font-family);
     font-size: var(--theia-ui-font-size1);
 }

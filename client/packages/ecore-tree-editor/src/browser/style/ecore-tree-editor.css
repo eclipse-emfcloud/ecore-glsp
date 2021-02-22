@@ -29,7 +29,7 @@
     margin-right: -4px;
 }
 
-.theia-tree-editor-form .control>input {
+.theia-tree-editor-form .control>input, .theia-tree-editor-form .array-table-layout td input, .theia-tree-editor-form .array-table-layout td select {
     background: var(--theia-textCodeBlock-background) !important;
     height: var(--theia-tree-editor-form-line-height);
 }
@@ -43,4 +43,46 @@
 .theia-tree-editor-tree .node-buttons {
     /* #FIXME this is only temporary as we haven't implemented the delete node functionality yet correctly*/
     display: none;
+}
+
+.theia-tree-editor-form .array-table-layout.control>table {
+    border: none;
+    margin: 0;
+}
+
+.theia-tree-editor-form .array-table-layout.control>table>thead {
+    display: none;
+}
+
+.theia-tree-editor-form .array-table-layout.control table tbody tr td:nth-child(2) {
+    display: none;
+}
+
+.theia-tree-editor-form .array-table-layout td {
+    border: none !important;
+}
+
+.theia-tree-editor-form .array-table-layout td input, .theia-tree-editor-form .array-table-layout td select {
+    flex: 85%;
+    background: var(--theia-input-background);
+    color: var(--theia-input-foreground);
+    border: var(--theia-border-width) solid var(--theia-input-border);
+    font-family: var(--theia-ui-font-family);
+    font-size: var(--theia-ui-font-size1);
+    line-height: var(--theia-content-line-height);
+    padding: 3px 0 3px 4px;
+}
+
+.theia-tree-editor-form .array-table-layout.control table tbody tr td:nth-child(3) {
+    flex: 0;
+}
+
+.theia-tree-editor-form .array-table-layout button {
+    display: inline-block;
+    background: var(--theia-textCodeBlock-background) !important;
+    color: var(--theia-input-foreground);
+    border: var(--theia-border-width) solid var(--theia-input-border);
+    font-family: var(--theia-ui-font-family);
+    font-size: var(--theia-ui-font-size1);
+    box-shadow: none;
 }

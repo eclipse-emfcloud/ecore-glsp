@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -241,6 +242,14 @@ public class EcoreModelServerAccess {
 		return this.add(modelState, parent, EcorePackage.Literals.EENUM__ELITERALS, newEEnumLiteral);
 	}
 
+	private Command createAddOperationCommand(EcoreModelState modelState, EOperation newEOperation, EClass parent) {
+		return createAddCommand(modelState, parent, EcorePackage.Literals.ECLASS__EOPERATIONS, newEOperation);
+	}
+
+	public boolean addEOperation(EcoreModelState modelState, EOperation newEOperation, EClass parent) {
+		return this.edit(createAddOperationCommand(modelState, newEOperation, parent));
+	}
+
 	private Command createAddCommand(EcoreModelState modelState, EObject owner, EReference feature, EObject addObject) {
 		return AddCommand.create(EcoreModelState.getEditorContext(modelState).getResourceManager().getEditingDomain(),
 				owner, feature, addObject);
@@ -390,6 +399,42 @@ public class EcoreModelServerAccess {
 
 	public boolean setLiteralName(EcoreModelState modelState, EEnumLiteral eEnumLiteral, String newName) {
 		return this.set(modelState, eEnumLiteral, EcorePackage.Literals.ENAMED_ELEMENT__NAME, newName);
+	}
+
+	private Command createSetOperationTypeCommand(EcoreModelState modelState, EOperation eOperation,
+			EDataType newType) {
+		return createSetCommand(modelState, eOperation, EcorePackage.Literals.ETYPED_ELEMENT__ETYPE, newType);
+	}
+
+	public boolean setOperation(EcoreModelState modelState, EOperation eOperation, String newName, EDataType newType) {
+		CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
+		compoundCommand.setType(CommandKind.COMPOUND);
+		try {
+			if (newName != null) {
+				Command removeEAttributeNameCommand = createRemoveEOperationCommand(modelState, eOperation);
+				compoundCommand.getCommands().add(getCommandCodec().encode(removeEAttributeNameCommand));
+
+				EOperation newEOperation = EcoreFactory.eINSTANCE.createEOperation();
+				newEOperation.setName(newName);
+
+				Command addEAttributeCommand = createAddOperationCommand(modelState, newEOperation,
+						eOperation.getEContainingClass());
+				compoundCommand.getCommands().add(getCommandCodec().encode(addEAttributeCommand));
+
+				Command setEAttributeTypeCommand = createSetOperationTypeCommand(modelState, newEOperation, newType);
+				compoundCommand.getCommands().add(getCommandCodec().encode(setEAttributeTypeCommand));
+			} else {
+				Command setEAttributeTypeCommand = createSetOperationTypeCommand(modelState, eOperation, newType);
+				compoundCommand.getCommands().add(getCommandCodec().encode(setEAttributeTypeCommand));
+			}
+
+		} catch (EncodingException e) {
+			return false;
+		}
+		if (compoundCommand.getCommands().isEmpty()) {
+			return false;
+		}
+		return this.editCompound(compoundCommand);
 	}
 
 	public boolean setEdgeName(EcoreModelState modelState, EReference eReference, String newName) {
@@ -659,6 +704,15 @@ public class EcoreModelServerAccess {
 
 	public boolean removeEEnumLiteral(EcoreModelState modelState, EEnumLiteral eEnumLiteral) {
 		return this.edit(createRemoveEEnumLiteralCommand(modelState, eEnumLiteral));
+	}
+
+	private Command createRemoveEOperationCommand(EcoreModelState modelState, EOperation eOperation) {
+		return createRemoveCommand(modelState, eOperation.getEContainingClass(),
+				EcorePackage.Literals.ECLASS__EOPERATIONS, eOperation);
+	}
+
+	public boolean removeEOperation(EcoreModelState modelState, EOperation eOperation) {
+		return this.edit(createRemoveEOperationCommand(modelState, eOperation));
 	}
 
 	private Command createRemoveESuperTypeCommand(EcoreModelState modelState, EClass eClass, EClass eSuperType) {
