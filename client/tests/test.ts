@@ -78,10 +78,10 @@ const defaultEdgeSelector = {
 };
 
 const defaultAttributeSelector = {
-    attributeClass: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute4'),
-    attributeAbstract: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute5'),
-    attributeInterface: Selector('g.node.ecore-node text.sprotty-label').withText('NewEAttribute6'),
-    literalEnum: Selector('g.node.ecore-node text.sprotty-label').withText('NewEEnumLiteral7'),
+    attributeClass: Selector('g.node.ecore-node text.sprotty-label').withText('newEAttribute4'),
+    attributeAbstract: Selector('g.node.ecore-node text.sprotty-label').withText('newEAttribute5'),
+    attributeInterface: Selector('g.node.ecore-node text.sprotty-label').withText('newEAttribute6'),
+    literalEnum: Selector('g.node.ecore-node text.sprotty-label').withText('newEEnumLiteral7'),
 }
 
 const openFile = async (t, file) => {
@@ -104,7 +104,7 @@ const checkDefaultWorkbench = async (t) => {
         .expect(selectors.testNodesWithAttributesEcore.exists).ok('Check if testNodesWithAttributes.ecore exists')
         .expect(selectors.testNodesWithAttributesEnotation.exists).ok('Check if testNodesWith Attributes.enotation exists')
         .expect(selectors.umlEcore.exists).ok('Check if UML.ecore exists')
-        .expect(Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').count).eql(9);
+        .expect(Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').count).eql(10);
 };
 
 const openQuickAccessBar = async (t) => {
@@ -222,7 +222,7 @@ test('Deletion/Renaming of enotation', async t => {
         .rightClick(selectors.testEnotation)
         .click(selectors.deleteFile)
         .click(selectors.okButton)
-        .expect(Selector('.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').count).eql(9)
+        .expect(Selector('.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').count).eql(10)
         .rightClick(await fileSelect('test_copy.enotation'))
         .click(selectors.renameFile)
         .pressKey('ctrl+a')
@@ -419,7 +419,7 @@ test('Renaming Classes/Attributes', async t => {
 
     const attributeClassRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeClass : EString');
     const attributeAbstractRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeAbstract : EString');
-    const attributeInterfaceRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeInterface : EString');
+    const attributeInterfaceRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestAttributeInterface');
     const attributeEnumRenamed = Selector('g.node.ecore-node text.sprotty-label').withText('TestLiteralEnum');
 
     const nameClassRenamed = Selector('g.node.ecore-node text.name.sprotty-label').withText('TestClass');
@@ -444,10 +444,10 @@ test('Renaming Classes/Attributes', async t => {
         .typeText(selectors.input, "TestEnum", { replace: true })
         .click(attributeSelector.attributeClass)
         .doubleClick(attributeSelector.attributeClass)
-        .typeText(selectors.input, "TestAttributeClass", { replace: true })
+        .typeText(selectors.input, "TestAttributeClass : EString", { replace: true })
         .click(attributeSelector.attributeAbstract)
         .doubleClick(attributeSelector.attributeAbstract)
-        .typeText(selectors.input, "TestAttributeAbstract", { replace: true })
+        .typeText(selectors.input, "TestAttributeAbstract : EString", { replace: true })
         .click(attributeSelector.attributeInterface)
         .doubleClick(attributeSelector.attributeInterface)
         .typeText(selectors.input, "TestAttributeInterface", { replace: true })
@@ -552,12 +552,12 @@ test('Delete Edges with DEL', async t => {
         .click(edgeSelector.containmentEdge)
         .wait(200)
         .pressKey('delete')
-        // Skip this temporarily, as it only fails on the CI environment
+        // Skip this temporarily, as it tends to fail on the CI environment
         // .wait(500)
         // .click(edgeSelector.inheritanceEdge, { offsetX: -162 })
         // .wait(500)
         // .pressKey('delete')
-        .wait(200)
+        // .wait(500)
         .expect(edgeSelector.referenceEdge.exists).notOk('Reference deleted')
         .expect(edgeSelector.containmentEdge.exists).notOk('Containment deleted');
     // .expect(edgeSelector.inheritanceEdge.exists).notOk('Inheritance deleted');
