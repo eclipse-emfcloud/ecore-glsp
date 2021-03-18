@@ -18,7 +18,6 @@ import { inject, injectable } from "inversify";
 
 export const GLSPLaunchOptions = Symbol.for("LaunchOptions");
 export interface GLSPLaunchOptions {
-    isRunning: boolean;
     serverPort: number;
     hostname: string;
     jarPath?: string;
@@ -33,34 +32,26 @@ export class GLSPServerLauncher implements BackendApplicationContribution {
     @inject(ILogger) private readonly logger: ILogger;
 
     initialize(): void {
-        if (!this.launchOptions.isRunning) {
-            if (!this.start()) {
-                this.logError("Error during GLSP server startup");
-            }
+        if (this.shouldStartFromJar()) {
+            this.startServer();
         } else {
             this.logInfo("GLSP Server is already running");
         }
     }
 
-    start(): boolean {
-        if (!this.launchOptions.isRunning) {
-            return this.startServer();
-        }
-        return true;
-    }
-
-    protected startServer(): boolean {
+    protected startServer(): void {
         if (this.launchOptions.jarPath) {
             let args = ["-jar", this.launchOptions.jarPath, "--port", `${this.launchOptions.serverPort}`];
             if (this.launchOptions.additionalArgs) {
                 args = [...args, ...this.launchOptions.additionalArgs];
             }
             this.spawnProcessAsync("java", args);
+            this.logInfo("GLSP server started successfully!");
         } else {
             this.logError("Could not start GLSP server. No path to executable is specified");
         }
-        return true;
     }
+
     protected spawnProcessAsync(command: string, args?: string[], options?: cp.SpawnOptions): Promise<RawProcess> {
         const rawProcess = this.processFactory({ command, args, options });
         rawProcess.errorStream.on("data", this.logError.bind(this));
@@ -95,6 +86,15 @@ export class GLSPServerLauncher implements BackendApplicationContribution {
         if (data) {
             this.logger.info(`GLSPServerBackendContribution: ${data}`);
         }
+    }
+
+    protected shouldStartFromJar(): boolean {
+        const argKey = "--startFromJar";
+        const argFound = process.argv.filter(a => a.startsWith(argKey));
+        if (argFound.length > 0) {
+            return true;
+        }
+        return false;
     }
 
 }

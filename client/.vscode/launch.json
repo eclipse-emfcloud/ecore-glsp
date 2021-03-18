@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Start Browser Backend",
+      "name": "Start Browser Backend (expects running GLSP Server instance)",
       "program": "${workspaceRoot}/browser-app/src-gen/backend/main.js",
       "args": [
         "--ECORE_GLSP=5007",
