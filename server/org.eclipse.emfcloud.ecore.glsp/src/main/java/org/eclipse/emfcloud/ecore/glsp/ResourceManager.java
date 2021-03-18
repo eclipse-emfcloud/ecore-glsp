@@ -12,16 +12,21 @@ package org.eclipse.emfcloud.ecore.glsp;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreAdapterFactory;
 import org.eclipse.emf.ecore.xmi.XMLResource;
@@ -29,15 +34,14 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
 
 public class ResourceManager {
 	public static final String ECORE_EXTENSION = ".ecore";
 	public static final String NOTATION_EXTENSION = ".enotation";
-	private static final String FORMAT_XMI = "xmi";
 
 	private static Logger LOGGER = Logger.getLogger(ResourceManager.class);
 
@@ -46,7 +50,7 @@ public class ResourceManager {
 	private EcoreFacade ecoreFacade;
 	private EditingDomain editingDomain;
 
-	public ResourceManager(EcoreModelState modelState) {
+	public ResourceManager(EcoreModelState modelState, EcoreModelServerAccess modelServerAccess) {
 		String sourceURI = ClientOptions.getValue(modelState.getClientOptions(), ClientOptions.SOURCE_URI)
 				.orElseThrow(() -> new GLSPServerException("No source uri given to load model!"));
 		if (!sourceURI.endsWith(ECORE_EXTENSION) && !sourceURI.endsWith(NOTATION_EXTENSION)) {
@@ -55,7 +59,7 @@ public class ResourceManager {
 
 		this.baseSourceUri = sourceURI.substring(0, sourceURI.lastIndexOf('.'));
 		this.resourceSet = setupResourceSet();
-		createEcoreFacade(modelState);
+		createEcoreFacade(modelState, modelServerAccess);
 	}
 
 	protected ResourceSet setupResourceSet() {
@@ -75,16 +79,18 @@ public class ResourceManager {
 		return ecoreFacade;
 	}
 
-	protected EcoreFacade createEcoreFacade(EcoreModelState modelState) {
+	protected EcoreFacade createEcoreFacade(EcoreModelState modelState, EcoreModelServerAccess modelServerAccess) {
 		try {
-			ModelServerClientApi<EObject> client = modelState.getModelServerAccess().getModelServerClient();
-			EObject root = client.get(getSemanticURI(), FORMAT_XMI).thenApply(res -> res.body()).get();
+			EObject semanticRoot = modelServerAccess.getModel();
+			Resource semanticResource = loadResource(convertToFile(getSemanticURI()), semanticRoot);
 
-			Resource semanticResource = loadResource(convertToFile(getSemanticURI()), root);
-			Resource notationResource = loadResource(convertToFile(getNotationURI()));
+			EObject notationRoot = modelServerAccess.getNotationModel();
+			Resource notationResource = loadResource(convertToFile(getNotationURI()), notationRoot);
+			// #FIXME if semanticresource exists, but no enotation resource add one basic
+			// notation resource to modelserver (diagram with semantic element)
 			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelState.getIndex());
 			return ecoreFacade;
-		} catch (IOException | InterruptedException | ExecutionException e) {
+		} catch (IOException e) {
 			LOGGER.error(e);
 			throw new GLSPServerException("Error during model loading", e);
 		}
@@ -105,15 +111,6 @@ public class ResourceManager {
 		return null;
 	}
 
-	private Resource loadResource(File file) throws IOException {
-		Resource resource = createResource(file.getAbsolutePath());
-		configureResource(resource);
-		if (file.exists()) {
-			resource.load(Collections.EMPTY_MAP);
-		}
-		return resource;
-	}
-
 	private Resource loadResource(File file, EObject root) throws IOException {
 		Resource resource = createResource(file.getAbsolutePath());
 		resource.getContents().clear();
@@ -125,6 +122,7 @@ public class ResourceManager {
 	private void configureResource(Resource resource) {
 		if (resource instanceof XMLResource) {
 			XMLResource xmlResource = (XMLResource) resource;
+			xmlResource.getDefaultLoadOptions().put(XMLResource.OPTION_KEEP_DEFAULT_CONTENT, Boolean.TRUE);
 			xmlResource.getDefaultSaveOptions().put(XMLResource.OPTION_PROCESS_DANGLING_HREF,
 					XMLResource.OPTION_PROCESS_DANGLING_HREF_RECORD);
 		}
@@ -134,27 +132,30 @@ public class ResourceManager {
 		return resourceSet.createResource(URI.createFileURI(path));
 	}
 
-	public void saveNotationResource() {
-		try {
-			ecoreFacade.getNotationResource().save(Collections.EMPTY_MAP);
-			handleSaveErrors(ecoreFacade.getNotationResource());
-		} catch (IOException e) {
-			throw new GLSPServerException("Could not save notation resource", e);
-		}
-	}
-
-	private void handleSaveErrors(Resource resource) {
-		if (resource.getErrors().isEmpty()) {
-			return;
-		}
-
-		LOGGER.error("Some errors have been found while saving " + resource.getURI().lastSegment() + ":");
-		for (Diagnostic d : resource.getErrors()) {
-			if (d instanceof Exception) {
-				LOGGER.error(d.getMessage(), (Exception) d);
+	public List<EClassifier> getAllEClassifiers() {
+		List<EClassifier> listOfClassifiers = new ArrayList<>(EcorePackage.eINSTANCE.getEClassifiers());
+		TreeIterator<Notifier> resourceSetContent = editingDomain.getResourceSet().getAllContents();
+		while (resourceSetContent.hasNext()) {
+			Notifier res = resourceSetContent.next();
+			if (res instanceof EDataType) {
+				listOfClassifiers.add((EDataType) res);
 			}
 		}
+		return listOfClassifiers;
+	}
 
+	public List<EDataType> getAllETypes() {
+		return getAllEClassifiers().stream().filter(EDataType.class::isInstance).map(EDataType.class::cast)
+				.collect(Collectors.toList());
+	}
+
+	public Optional<EDataType> getETypeFromString(String eTypeName) {
+		for (EDataType type : getAllETypes()) {
+			if (type.getName().toLowerCase().equals(eTypeName.toLowerCase())) {
+				return Optional.ofNullable(type);
+			}
+		}
+		return Optional.empty();
 	}
 
 }

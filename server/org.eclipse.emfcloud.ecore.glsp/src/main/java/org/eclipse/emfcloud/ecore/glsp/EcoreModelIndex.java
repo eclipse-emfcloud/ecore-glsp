@@ -10,17 +10,19 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
+import org.eclipse.emfcloud.ecore.enotation.Edge;
 import org.eclipse.emfcloud.ecore.enotation.NotationElement;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreConfig.Types;
+import org.eclipse.emfcloud.ecore.glsp.util.EcoreEdgeUtil;
 import org.eclipse.glsp.graph.GModelElement;
 import org.eclipse.glsp.graph.impl.GModelIndexImpl;
 
@@ -29,14 +31,16 @@ import com.google.common.collect.HashBiMap;
 
 public class EcoreModelIndex extends GModelIndexImpl {
 	private BiMap<String, EObject> semanticIndex;
-	private Map<EObject, NotationElement> notationIndex;
+	private BiMap<EObject, NotationElement> notationIndex;
 	private Set<String> bidirectionalReferences;
+	private BiMap<String, Edge> inheritanceEdges;
 
 	private EcoreModelIndex(EObject target) {
 		super(target);
 		semanticIndex = HashBiMap.create();
-		notationIndex = new HashMap<>();
+		notationIndex = HashBiMap.create();
 		bidirectionalReferences = new HashSet<>();
+		inheritanceEdges = HashBiMap.create();
 	}
 
 	public static EcoreModelIndex get(GModelElement element) {
@@ -59,9 +63,13 @@ public class EcoreModelIndex extends GModelIndexImpl {
 	}
 
 	public void indexNotation(NotationElement notationElement) {
-		EObject semanticElement = notationElement.getSemanticElement().getResolvedElement();
-		notationIndex.put(semanticElement, notationElement);
-		semanticIndex.inverse().putIfAbsent(semanticElement, UUID.randomUUID().toString());
+		if (notationElement.getSemanticElement() != null) {
+			EObject semanticElement = notationElement.getSemanticElement().getResolvedElement();
+			notationIndex.put(semanticElement, notationElement);
+			semanticIndex.inverse().putIfAbsent(semanticElement, UUID.randomUUID().toString());
+		} else if (notationElement.getType() != null && notationElement.getType().equals(Types.INHERITANCE)) {
+			indexInheritanceEdge((Edge) notationElement);
+		}
 
 		if (notationElement instanceof Diagram) {
 			((Diagram) notationElement).getElements().forEach(this::indexNotation);
@@ -149,8 +157,32 @@ public class EcoreModelIndex extends GModelIndexImpl {
 		}
 		semanticIndex.inverse().remove(eObject);
 	}
-	
+
 	public Set<String> getBidirectionalReferences() {
 		return bidirectionalReferences;
 	}
+
+	public void indexInheritanceEdge(Edge inheritanceEdge) {
+		Optional<String> sourceId = getElementId(inheritanceEdge.getSource());
+		Optional<String> targetId = getElementId(inheritanceEdge.getTarget());
+		String inheritanceEdgeId = EcoreEdgeUtil.getInheritanceEdgeId(sourceId.get(), targetId.get());
+		inheritanceEdges.putIfAbsent(inheritanceEdgeId, inheritanceEdge);
+	}
+
+	public Optional<Edge> getInheritanceEdge(String elementId) {
+		return Optional.ofNullable(inheritanceEdges.get(elementId));
+	}
+
+	public Optional<Edge> getInheritanceEdge(EClass eClass, EClass eSuperType) {
+		String sourceId = semanticIndex.inverse().get(eClass);
+		String targetId = semanticIndex.inverse().get(eSuperType);
+		String inheritanceEdgeId = EcoreEdgeUtil.getInheritanceEdgeId(sourceId, targetId);
+		return Optional.ofNullable(inheritanceEdges.get(inheritanceEdgeId));
+	}
+
+	protected Optional<String> getElementId(NotationElement notationElement) {
+		EObject semantic = notationIndex.inverse().get(notationElement);
+		return Optional.of(semanticIndex.inverse().get(semantic));
+	}
+
 }

@@ -42,7 +42,6 @@ import {
     modelSourceModule,
     openModule,
     PolylineEdgeView,
-    RectangularNodeView,
     routingModule,
     saveModule,
     SCompartment,
@@ -51,7 +50,6 @@ import {
     SGraphView,
     SLabel,
     SLabelView,
-    SNode,
     SRoutingHandle,
     SRoutingHandleView,
     toolFeedbackModule,
@@ -83,7 +81,8 @@ import {
     SEditableLabel,
     SLabelNode,
     SLabelNodeAttribute,
-    SLabelNodeLiteral
+    SLabelNodeLiteral,
+    SLabelNodeOperation
 } from "./model";
 import {
     ArrowEdgeView,
@@ -92,7 +91,8 @@ import {
     CompositionEdgeView,
     IconView,
     InheritanceEdgeView,
-    LabelNodeView
+    LabelNodeView,
+    LabelNodeWithOccurrenceView
 } from "./views";
 
 export default (containerId: string): Container => {
@@ -111,9 +111,9 @@ export default (containerId: string): Container => {
         configureModelElement(context, "label:edge-name", SEditableLabel, SLabelView);
         configureModelElement(context, "label:edge-multiplicity", SEditableLabel, SLabelView);
         configureModelElement(context, "label:instancename", SLabelNode, LabelNodeView);
-        configureModelElement(context, "node:attribute", SLabelNodeAttribute, LabelNodeView);
+        configureModelElement(context, "node:attribute", SLabelNodeAttribute, LabelNodeWithOccurrenceView);
         configureModelElement(context, "node:enumliteral", SLabelNodeLiteral, LabelNodeView);
-        configureModelElement(context, "node:operation", SNode, RectangularNodeView);
+        configureModelElement(context, "node:operation", SLabelNodeOperation, LabelNodeWithOccurrenceView);
         configureModelElement(context, "label:text", SLabel, SLabelView);
         configureModelElement(context, "comp:comp", SCompartment, SCompartmentView);
         configureModelElement(context, "comp:header", SCompartment, SCompartmentView);

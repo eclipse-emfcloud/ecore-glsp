@@ -10,6 +10,7 @@
  ********************************************************************************/
 import { TreeEditor } from "@eclipse-emfcloud/theia-tree-editor";
 import { LabelProviderContribution } from "@theia/core/lib/browser";
+import URI from "@theia/core/lib/common/uri";
 import { injectable } from "inversify";
 
 import { TreeEditorWidget } from "./tree-editor-widget";
@@ -23,8 +24,12 @@ const ICON_CLASSES: Map<string, string> = new Map([
     [EcoreModel.Type.EReference, "ecoreimg ereference"],
     [EcoreModel.Type.EAttribute, "ecoreimg eattribute"],
     [EcoreModel.Type.EEnumLiteral, "ecoreimg eenumliteral"],
-    ["EGenericSuperType", "ecoreimg egenericsupertype"],
-    ["EGenericElementType", "ecoreimg egenericelementtype"]
+    [EcoreModel.Type.EOperation, "ecoreimg eoperation"],
+    [EcoreModel.Type.EGenericSuperType, "ecoreimg egenericsupertype"],
+    [EcoreModel.Type.EGenericElementType, "ecoreimg egenericelementtype"],
+    [EcoreModel.Type.EClassAbstract, "ecoreimg eclassabstract"],
+    [EcoreModel.Type.EClassInterface, "ecoreimg eclassinterface"],
+    [EcoreModel.Type.EException, "ecoreimg egenericexception"]
 ]);
 
 /* Icon for unknown types */
@@ -43,60 +48,127 @@ export class TreeLabelProvider implements LabelProviderContribution {
 
     public getIcon(element: object): string | undefined {
         let iconClass: string | undefined;
-        if (TreeEditor.CommandIconInfo.is(element)) {
-            iconClass = ICON_CLASSES.get(element.type);
-        } else if (TreeEditor.Node.is(element)) {
-            /* @ts-ignore */
-            if ((element.parent && element.parent.jsonforms && element.parent.jsonforms.data.eClass === EcoreModel.Type.EEnum) || element.jsonforms.data.value) {
-                iconClass = ICON_CLASSES.get(EcoreModel.Type.EEnumLiteral);
-            } else if (EcoreEType.is(element.jsonforms.data)) {
-                /* @ts-ignore */
-                if (element.parent.jsonforms.data.eClass === EcoreModel.Type.EClass) {
-                    iconClass = ICON_CLASSES.get("EGenericSuperType");
-                } else {
-                    iconClass = ICON_CLASSES.get("EGenericElementType");
+        if (TreeEditor.Node.is(element)) {
+            const elementData = element.jsonforms.data;
+            if (elementData.type) {
+                switch (elementData.type) {
+                    case EcoreModel.Type.EException:
+                        iconClass = ICON_CLASSES.get(EcoreModel.Type.EException); break;
+                    case EcoreModel.Type.EEnumLiteral:
+                        iconClass = ICON_CLASSES.get(EcoreModel.Type.EEnumLiteral); break;
+                    case EcoreModel.Type.EGenericSuperType:
+                        iconClass = ICON_CLASSES.get(EcoreModel.Type.EGenericSuperType); break;
                 }
+            } else if (EcoreEType.is(elementData)) {
+                iconClass = ICON_CLASSES.get(EcoreModel.Type.EGenericElementType);
             } else {
-                iconClass = ICON_CLASSES.get(element.jsonforms.data.eClass);
+                if (elementData.abstract) {
+                    iconClass = ICON_CLASSES.get(EcoreModel.Type.EClassAbstract);
+                } else if (elementData.interface) {
+                    iconClass = ICON_CLASSES.get(EcoreModel.Type.EClassInterface);
+                } else {
+                    iconClass = ICON_CLASSES.get(elementData.eClass);
+                }
+            }
+
+            if (iconClass &&
+                (elementData.eClass === EcoreModel.Type.EAttribute || elementData.eClass === EcoreModel.Type.EReference || elementData.eClass === EcoreModel.Type.EOperation)) {
+                iconClass += this.appendOccurrenceIcon(elementData);
             }
         }
 
-        return iconClass ? iconClass : UNKNOWN_ICON;
+        return iconClass || UNKNOWN_ICON;
+    }
+
+    protected appendOccurrenceIcon(elementData: any): string {
+        let occurrenceIconString = " ";
+        const lowerBound = elementData.lowerBound;
+        const upperBound = elementData.upperBound;
+        if (!lowerBound || lowerBound === 0) {
+            if (upperBound === 0) {
+                occurrenceIconString += "eoccurrencezero";
+            } else if (upperBound > 1) {
+                occurrenceIconString += "eoccurrencezeroton";
+            } else if (upperBound < 0) {
+                occurrenceIconString += "eoccurrencezerotounbounded";
+            } else {
+                occurrenceIconString += "eoccurrencezerotoone";
+                // FIXME if default values are fixed, do check for upperBound === 1 and otherwise return unspecified
+                // occurrenceIconString += "eoccurrencezerotounspecified";
+            }
+        } else if (lowerBound === 1) {
+            if (upperBound > 1) {
+                occurrenceIconString += "eoccurrenceoneton";
+            } else if (upperBound < 0) {
+                occurrenceIconString += "eoccurrenceonetounbounded";
+            } else {
+                occurrenceIconString += "eoccurrenceone";
+                // FIXME if default values are fixed, do check for upperBound === 1 and otherwise return unspecified
+                // occurrenceIconString += "eoccurrenceoneunspecified";
+            }
+        } else if (lowerBound > 1) {
+            if (lowerBound === upperBound) {
+                occurrenceIconString += "eoccurrencen";
+            } else if (upperBound > 1) {
+                occurrenceIconString += "eoccurrencentom";
+            } else if (upperBound < 0) {
+                occurrenceIconString += "eoccurrencentounbounded";
+            } else {
+                occurrenceIconString += "eoccurrencentounspecified";
+            }
+        }
+        return occurrenceIconString;
     }
 
     public getName(element: object): string | undefined {
-        const data = TreeEditor.Node.is(element)
+        const elementData = TreeEditor.Node.is(element)
             ? element.jsonforms.data
             : element;
-        if (data.eSuperTypes) {
-            let name = data.name + " \u2192 ";
-            data.eSuperTypes.forEach((eSuperType: EcoreEType) => {
-                name = name.concat(eSuperType.$ref.split("//")[1] + ", ");
-            });
-            return name.slice(0, -2);
-        } else if (data.eType) {
-            const name = data.name + " : ";
-            if (data.eType.eClass.indexOf("EClass") > -1) {
-                return name.concat(data.eType.$ref.split("//")[1]);
+        if (elementData.eSuperTypes) {
+            return `${elementData.name} \u2192 ${elementData.eSuperTypes.map((eSuperType: any) => this.toName(eSuperType.$ref)).join(", ")}`; // \u2192 is an arrow to the right
+        } else if (elementData.eClass === EcoreModel.Type.EOperation) {
+            let name = `${elementData.name}()`;
+            if (elementData.eType) {
+                name = name.concat(` : ${this.toName(new URI(elementData.eType.$ref).fragment)}`);
             }
-            return name.concat(data.eType.$ref.split("//")[2]);
-        } else if (data.value) {
-            return data.name + " = " + data.value;
-            /* @ts-ignore */
-        } else if (element.parent && element.parent.jsonforms && element.parent.jsonforms.data.eClass === EcoreModel.Type.EEnum) {
-            return data.name + " = 0";
-        } else if (data.instanceClassName) {
-            return data.name + " [" + data.instanceClassName + "]";
-        } else if (data.name) {
-            return data.name;
-        } else if (EcoreEType.is(data)) {
-            if (data.eClass.indexOf("EClass") > -1) {
-                return data.$ref.split("//")[1];
+            if (elementData.eExceptions) {
+                name = name.concat(` throws ${elementData.eExceptions.map((eException: any) => this.toName(eException.$ref)).join(", ")}`);
             }
-            return data.$ref.split("//")[2];
+            return name;
+        } else if (elementData.type) {
+            switch (elementData.type) {
+                case EcoreModel.Type.EEnumLiteral: {
+                    return elementData.name.concat(` = ${elementData.value || "0"}`);
+                }
+                case EcoreModel.Type.EGenericSuperType: {
+                    return this.toName(elementData.$ref);
+                }
+                case EcoreModel.Type.EException:
+                    return this.toName(elementData.$ref);
+            }
+        } else if (elementData.eType) {
+            const name = `${elementData.name} : `;
+            if (elementData.eType.$ref.startsWith("//")) {
+                return name.concat(this.toName(elementData.eType.$ref));
+            }
+            return name.concat(this.toName(new URI(elementData.eType.$ref).fragment));
+        } else if (EcoreEType.is(elementData)) {
+            if (elementData.$ref.startsWith("//")) {
+                return this.toName(elementData.$ref);
+            }
+            return this.toName(new URI(elementData.$ref).fragment);
+        } else if (elementData.eClass === EcoreModel.Type.EDataType) {
+            return elementData.name.concat(` [${elementData.instanceClassName}]`);
+        } else if (elementData.name) {
+            return elementData.name;
         }
 
         return undefined;
+    }
+
+    protected toName(semanticUriFragment: string): string {
+        // we expect an uri fragment of pattern '//SemanticUri'
+        return semanticUriFragment.substring(2);
     }
 
 }

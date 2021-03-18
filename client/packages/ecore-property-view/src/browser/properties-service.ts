@@ -18,6 +18,7 @@ import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia/lib/commo
 import { GlspSelection, isGlspSelection } from "@eclipse-emfcloud/theia-ecore/lib/browser/selection-forwarder";
 import { JsonSchema, JsonSchema7, UISchemaElement } from "@jsonforms/core";
 import { JsonFormsPropertiesService } from "@ndoschek/jsonforms-property-view";
+import URI from "@theia/core/lib/common/uri";
 import { inject, injectable } from "inversify";
 
 @injectable()
@@ -64,8 +65,8 @@ export class EcoreGlspPropertiesService implements JsonFormsPropertiesService {
     }
 
     async getSchema(selection: any, properties?: any): Promise<JsonSchema | undefined> {
-        const eClassName = this.getSelectionData(selection).eClass || properties.eClass.split("#//")[1];
-        // FIXME atm we use a local version of the typeschema, as there are performace issues with the whole ecore type schema
+        const eClassName = this.getSelectionData(selection).eClass || new URI(properties.eClass).fragment.substring(2);
+        // FIXME atm we use a local version of the typeschema, as there exist performance issues with the fetched ecore type schema
         // const ecoreTypeSchema = await this.getTypeSchema();
         if (ecoreTypeSchema.definitions) {
             /* @ts-ignore */
@@ -96,7 +97,7 @@ export class EcoreGlspPropertiesService implements JsonFormsPropertiesService {
 
     async getUiSchema(selection: any, properties?: any): Promise<UISchemaElement | undefined> {
         if (properties && properties.eClass) {
-            const eClassName = this.getSelectionData(selection).eClass || properties.eClass.split("#//")[1];
+            const eClassName = this.getSelectionData(selection).eClass || new URI(properties.eClass).fragment.substring(2);
             return this.modelServerClient.getUiSchema(eClassName.toLowerCase()).then((response: any) => response.body as UISchemaElement);
         }
         return undefined;

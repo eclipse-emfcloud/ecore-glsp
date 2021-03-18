@@ -58,6 +58,8 @@ export class EditLabelUIAutocomplete extends EditLabelUI {
     protected configureAndAdd(element: HTMLInputElement | HTMLTextAreaElement, containerElement: HTMLElement): void {
         super.configureAndAdd(element, containerElement);
         element.addEventListener("keydown", (event: KeyboardEvent) => this.handleKeyDown(event));
+        element.removeEventListener("blur", () => window.setTimeout(() => this.applyLabelEdit(), 200));
+        element.addEventListener("blur", () => this.handleBlur());
     }
 
     protected handleKeyDown(event: KeyboardEvent): void {
@@ -67,8 +69,15 @@ export class EditLabelUIAutocomplete extends EditLabelUI {
                 this.createAutocomplete();
             }
         }
-
         this.updateAutocomplete(event);
+    }
+
+    protected handleBlur(): void {
+        if (this.editControl.value && !this.editControl.value.trim().endsWith(":")) {
+            window.setTimeout(() => this.applyLabelEdit(), 200);
+        } else {
+            this.hide();
+        }
     }
 
     protected validateLabelIfContentChange(event: KeyboardEvent, value: string): void {
@@ -102,6 +111,8 @@ export class EditLabelUIAutocomplete extends EditLabelUI {
         let val = "";
         if (input.includes(":")) {
             val = input.split(":")[1].trim();
+        } else {
+            return;
         }
 
         this.closeAllLists();
@@ -116,6 +127,7 @@ export class EditLabelUIAutocomplete extends EditLabelUI {
         for (let i = 0; i < this.types.length; i++) {
             if (this.types[i].substr(0, val.length).toLowerCase() === val.toLowerCase()) {
                 const element = document.createElement("div");
+                element.setAttribute("class", "autocomplete-item");
                 element.innerHTML = "<strong>" + this.types[i].substr(0, val.length) + "</strong>";
                 element.innerHTML += this.types[i].substr(val.length);
                 element.innerHTML += "<input type='hidden' value='" + this.types[i] + "'>";

@@ -22,8 +22,8 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 
 	private PaletteItem classifiers() {
 		PaletteItem createEClass = node(Types.ECLASS, "Class", "eclass");
-		PaletteItem createAbstract = node(Types.ABSTRACT, "Abstract", "eclass");
-		PaletteItem createInterface = node(Types.INTERFACE, "Interface", "eclass");
+		PaletteItem createAbstract = node(Types.ABSTRACT, "Abstract", "eclassabstract");
+		PaletteItem createInterface = node(Types.INTERFACE, "Interface", "eclassinterface");
 		PaletteItem createEnum = node(Types.ENUM, "Enum", "eenum");
 		PaletteItem createDataType = node(Types.DATATYPE, "DataType", "edatatype");
 
@@ -45,10 +45,11 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 	}
 
 	private PaletteItem features() {
-		PaletteItem createAttributeOperation = node(Types.ATTRIBUTE, "Attribute", "eattribute");
+		PaletteItem createAttribute = node(Types.ATTRIBUTE, "Attribute", "eattribute");
 		PaletteItem createEnumLiteral = node(Types.ENUMLITERAL, "Literal", "eenumliteral");
+		PaletteItem createOperation = node(Types.OPERATION, "Operation", "eoperation");
 
-		List<PaletteItem> features = Lists.newArrayList(createAttributeOperation, createEnumLiteral);
+		List<PaletteItem> features = Lists.newArrayList(createAttribute, createEnumLiteral, createOperation);
 		
 		return PaletteItem.createPaletteGroup("ecore.feature", "Feature", features, "fa-hammer");
 	}

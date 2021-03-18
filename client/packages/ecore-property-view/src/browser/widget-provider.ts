@@ -13,12 +13,13 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
-import { ModelServerSubscriptionService } from "@eclipse-emfcloud/modelserver-theia/lib/browser";
 import {
     ModelServerClient,
     ModelServerCommand,
     ModelServerCommandUtil,
-    ModelServerReferenceDescription
+    ModelServerCompoundCommand,
+    ModelServerReferenceDescription,
+    ModelServerSubscriptionService
 } from "@eclipse-emfcloud/modelserver-theia/lib/common";
 import { isGlspSelection } from "@eclipse-emfcloud/theia-ecore/lib/browser/selection-forwarder";
 import { JsonFormsCore } from "@jsonforms/core";
@@ -51,7 +52,7 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
 
         this.subscriptionService.onIncrementalUpdateListener(incrementalUpdate => {
             if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-                this.updateWidgetData(incrementalUpdate as ModelServerCommand);
+                this.updateWidgetData(incrementalUpdate.data);
             }
         });
     }
@@ -87,24 +88,43 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
         });
     }
 
-    protected updateWidgetData(command: ModelServerCommand): void {
+    protected updateWidgetData(command: ModelServerCommand | ModelServerCompoundCommand): void {
         const semanticUri = this.jsonFormsWidget.currentJsonFormsCore.data.semanticUri;
-        const relativeRef = this.getRelativeModelUri(command.owner.$ref.replace("file:", ""));
-        if (relativeRef.split("#")[0] === this.currentModelUri && command.dataValues && relativeRef.split("#")[1] === semanticUri) {
-            console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
+        if (command.type) {
+            this.updateViaCommand(command as ModelServerCommand, semanticUri);
+        } else { // #FIXME: command.type='compound' type not set right now!
+            (command as ModelServerCompoundCommand).commands.forEach((cmd: ModelServerCommand | ModelServerCompoundCommand) => {
+                this.updateWidgetData(cmd);
+            });
+        }
+    }
 
-            if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-                let newValue: any = command.dataValues[0];
-                // Parse boolean and integer values
-                if (newValue === "true" || newValue === "false") {
-                    newValue = newValue === "true";
-                } else if (!isNaN(parseInt(newValue, 10))) {
-                    newValue = parseInt(newValue, 10);
+    protected updateViaCommand(command: ModelServerCommand, semanticUri: string): void {
+        const relativeRefURI = new URI(this.getRelativeModelUri(command.owner.$ref.replace("file:", "")));
+        if (this.isCurrentModelUri(relativeRefURI)) {
+            if (command.dataValues && relativeRefURI.fragment === semanticUri) {
+                console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
+
+                if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
+                    let newValue: any = command.dataValues[0];
+                    // Parse boolean and integer values
+                    if (newValue === "true" || newValue === "false") {
+                        newValue = newValue === "true";
+                    } else if (!isNaN(parseInt(newValue, 10))) {
+                        newValue = parseInt(newValue, 10);
+                    }
+                    this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
+                    this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
                 }
-                this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
-                this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
+            } else if (command.type === "remove") {
+                // clear global selection
+                this.selectionService.selection = new Object();
             }
         }
+    }
+
+    protected isCurrentModelUri(uri: URI): boolean {
+        return uri.path.toString() === "/" + this.currentModelUri;
     }
 
     canHandle(selection: any): number {

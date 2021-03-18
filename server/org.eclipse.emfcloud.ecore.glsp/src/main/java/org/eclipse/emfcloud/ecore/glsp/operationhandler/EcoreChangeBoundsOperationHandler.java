@@ -10,39 +10,29 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emfcloud.ecore.enotation.Shape;
-import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.graph.GDimension;
-import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.ChangeBoundsOperation;
 import org.eclipse.glsp.server.types.ElementAndBounds;
 
-public class EcoreChangeBoundsOperationHandler extends BasicOperationHandler<ChangeBoundsOperation> {
+public class EcoreChangeBoundsOperationHandler extends ModelServerAwareBasicOperationHandler<ChangeBoundsOperation> {
 
 	@Override
-	public void executeOperation(ChangeBoundsOperation changeBoundsOperation, GModelState graphicalModelState) {
-		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
-		applyBounds(changeBoundsOperation, modelState.getIndex());
-	}
-
-	private void applyBounds(ChangeBoundsOperation operation, EcoreModelIndex index) {
-		for (ElementAndBounds element : operation.getNewBounds()) {
-			index.getNotation(element.getElementId(), Shape.class)
-					.ifPresent(notationElement -> changeElementBounds(notationElement, element.getNewSize(),
-							element.getNewPosition()));
+	public void executeOperation(ChangeBoundsOperation changeBoundsOperation, GModelState graphicalModelState,
+			EcoreModelServerAccess modelServerAccess) throws Exception {
+		EcoreModelState ecoreModelState = EcoreModelState.getModelState(graphicalModelState);
+		Map<Shape, ElementAndBounds> changeBoundsMap = new HashMap<>();
+		for (ElementAndBounds element : changeBoundsOperation.getNewBounds()) {
+			ecoreModelState.getIndex().getNotation(element.getElementId(), Shape.class).ifPresent(notationElement -> {
+				changeBoundsMap.put(notationElement, element);
+			});
 		}
-	}
-
-	private void changeElementBounds(Shape element, GDimension dimension, GPoint position) {
-		if (position != null) {
-			element.setPosition(position);
-		}
-		if (dimension != null) {
-			element.setSize(dimension);
-		}
+		modelServerAccess.setBounds(ecoreModelState, changeBoundsMap);
 	}
 
 	@Override

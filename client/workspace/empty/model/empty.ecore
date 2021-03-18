@@ -1,48 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="testpackage" nsURI="testpackage" nsPrefix="testpackage">
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass0" eSuperTypes="#//NewEClass1">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass1s" eType="#//NewEClass1"
-        eOpposite="#//NewEClass1/neweclass0s"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass1" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass0s" eType="#//NewEClass0"
-        eOpposite="#//NewEClass0/neweclass1s"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass2" eSuperTypes="#//NewEClass3"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass3" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EEnum" name="NewEEnum4">
-    <eLiterals name="blue"/>
-    <eLiterals name="red" value="1"/>
-    <eLiterals name="orange" value="2"/>
-    <eLiterals name="yellow" value="3"/>
-    <eLiterals name="green" value="4"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewEClass0" eSuperTypes="#//NewEClass5">
+    <eOperations name="newEOperation3" lowerBound="4" upperBound="8"/>
+    <eOperations name="newEOperation4" upperBound="3" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat"/>
+    <eOperations name="newEOperation12" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="NewEAttribute1" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newEAttribute2" lowerBound="8"
+        upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newEAttribute11" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NewEClass5" interface="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass6" eSuperTypes="#//NewEClass5 #//NewEClass3"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="NewEDataType7" instanceClassName="java.lang.Object"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass8" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass9">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text2" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text3" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text4" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass10">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass11s" eType="#//NewEClass11"
-        eOpposite="#//NewEClass11/neweclass10s"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass11">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="neweclass10s" eType="#//NewEClass10"
-        eOpposite="#//NewEClass10/neweclass11s"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass12">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="containment" upperBound="-1"
-        eType="#//NewEClass8" containment="true" resolveProxies="false"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass13" eSuperTypes="#//NewEClass14"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass14" eSuperTypes="#//NewEClass13"/>
-  <eClassifiers xsi:type="ecore:EClass" name="NewEClass15">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" lowerBound="1" upperBound="3" eType="//NewEClass14"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TestOccurrences">
+    <eOperations name="EOccurrenceZero" upperBound="0"/>
+    <eOperations name="EOccurrenceZeroToOne"/>
+    <eOperations name="EOccurrenceZeroToN" upperBound="7"/>
+    <eOperations name="EOccurrenceZeroToUnbounded" upperBound="-1"/>
+    <eOperations name="EOccurrenceOne" lowerBound="1"/>
+    <eOperations name="EOccurrenceOneToN" lowerBound="1" upperBound="7"/>
+    <eOperations name="EOccurrenceOneToUnbounded" lowerBound="1" upperBound="-1"/>
+    <eOperations name="EOccurrenceN" lowerBound="5" upperBound="5"/>
+    <eOperations name="EOccurrenceNToM" lowerBound="5" upperBound="10"/>
+    <eOperations name="EOccurrenceNToUnbounded" lowerBound="5" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceZero" upperBound="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceZeroToOne"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceZeroToN" upperBound="7"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceZeroToUnbounded"
+        upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceOne" lowerBound="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceOneToN" lowerBound="1"
+        upperBound="7"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceOneToUnbounded"
+        lowerBound="1" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceN" lowerBound="5"
+        upperBound="5"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceNToM" lowerBound="5"
+        upperBound="9"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="EOccurrenceNToUnbounded"
+        lowerBound="5" upperBound="-1"/>
   </eClassifiers>
 </ecore:EPackage>

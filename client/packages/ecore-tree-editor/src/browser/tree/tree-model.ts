@@ -29,8 +29,16 @@ export namespace EcoreModel {
         export const EClass = "http://www.eclipse.org/emf/2002/Ecore#//EClass";
         export const EDataType = "http://www.eclipse.org/emf/2002/Ecore#//EDataType";
         export const EEnum = "http://www.eclipse.org/emf/2002/Ecore#//EEnum";
-        export const EEnumLiteral = "http://www.eclipse.org/emf/2002/Ecore#//EEnumLiteral";
         export const EReference = "http://www.eclipse.org/emf/2002/Ecore#//EReference";
+        export const EOperation = "http://www.eclipse.org/emf/2002/Ecore#//EOperation";
+
+        export const EClassAbstract = "EClassAbstract";
+        export const EClassInterface = "EClassInterface";
+        export const EException = "EException";
+        export const EEnumLiteral = "EEnumLiteral";
+        export const EGenericElementType = "EGenericElementType";
+        export const EGenericSuperType = "EGenericSuperType";
+        export const EType = "EType";
 
         export function name(type: string): string {
             return new URI(type).fragment.substring(2);
@@ -62,7 +70,7 @@ export namespace EcoreModel {
             [
                 {
                     property: "children",
-                    children: [Type.EAttribute, Type.EReference]
+                    children: [Type.EAttribute, Type.EReference, Type.EOperation]
                 }
             ]
         ],

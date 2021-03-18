@@ -10,41 +10,41 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.operationhandler;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.emfcloud.ecore.enotation.Edge;
-import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.server.model.GModelState;
-import org.eclipse.glsp.server.operations.BasicOperationHandler;
 import org.eclipse.glsp.server.operations.ChangeRoutingPointsOperation;
 import org.eclipse.glsp.server.types.ElementAndRoutingPoints;
 
-public class EcoreChangeRoutingPointsOperationHandler extends BasicOperationHandler<ChangeRoutingPointsOperation> {
+public class EcoreChangeRoutingPointsOperationHandler
+		extends ModelServerAwareBasicOperationHandler<ChangeRoutingPointsOperation> {
 
-    @Override
-    public void executeOperation(ChangeRoutingPointsOperation operation, GModelState modelState) {
-        EcoreModelIndex index = EcoreModelState.getModelState(modelState).getIndex();
-        rerouteEdge(operation, index);
-    }
+	@Override
+	public void executeOperation(ChangeRoutingPointsOperation operation, GModelState graphicalModelState,
+			EcoreModelServerAccess modelServerAccess) throws Exception {
+		EcoreModelState ecoreModelState = EcoreModelState.getModelState(graphicalModelState);
+		Map<Edge, ElementAndRoutingPoints> changeRoutingPointsMap = new HashMap<>();
+		for (ElementAndRoutingPoints element : operation.getNewRoutingPoints()) {
+			ecoreModelState.getIndex().getNotation(element.getElementId(), Edge.class)
+					.ifPresentOrElse(notationElement -> {
+						changeRoutingPointsMap.put(notationElement, element);
+					}, () -> {
+						ecoreModelState.getIndex().getInheritanceEdge(element.getElementId())
+								.ifPresent(inheritanceEdge -> {
+									changeRoutingPointsMap.put(inheritanceEdge, element);
+								});
+					});
+		}
+		;
+		modelServerAccess.setBendPoints(ecoreModelState, changeRoutingPointsMap);
+	}
 
-    private void rerouteEdge(ChangeRoutingPointsOperation operation, EcoreModelIndex index) {
-        for (ElementAndRoutingPoints element : operation.getNewRoutingPoints()) {
-            index.getNotation(element.getElementId(), Edge.class)
-                    .ifPresent(notationElement -> changeEdgePoints(notationElement, element.getNewRoutingPoints()));
-        };
-    }
-
-    private void changeEdgePoints(Edge element, List<GPoint> points) {
-        if (points != null) {
-            element.getBendPoints().clear();
-            element.getBendPoints().addAll(points);
-        }
-    }
-
-    @Override
-    public String getLabel() {
-        return "Reroute ecore edge";
-    }
+	@Override
+	public String getLabel() {
+		return "Reroute ecore edge";
+	}
 }

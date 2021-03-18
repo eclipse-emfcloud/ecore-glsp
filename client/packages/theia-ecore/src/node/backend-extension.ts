@@ -23,7 +23,6 @@ import { GLSPLaunchOptions, GLSPServerLauncher } from "./glsp-server-launcher";
 
 @injectable()
 export class EcoreGlspLaunchOptions implements GLSPLaunchOptions {
-    isRunning = false;
     hostname = "localhost";
     jarPath = findEquinoxLauncher(join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.glsp.product-1.0.0"));
     serverPort = 5007;

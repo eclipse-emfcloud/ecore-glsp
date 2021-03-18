@@ -86,4 +86,11 @@ pipeline {
             }
         }
     }
+    post {
+        failure {
+            container('ci') {
+                archiveArtifacts artifacts: 'client/tests/results/**', fingerprint: true
+            }
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -17,23 +17,26 @@ package org.eclipse.emfcloud.ecore.modelserver;
 
 import java.util.Collection;
 
-import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emfcloud.ecore.enotation.EnotationPackage;
 import org.eclipse.emfcloud.modelserver.emf.configuration.EPackageConfiguration;
 
 import com.google.common.collect.Lists;
 
-public class EcorePackageConfiguration implements EPackageConfiguration {
+public class EnotationPackageConfiguration implements EPackageConfiguration {
+
+	// FIXME we might consider moving the Enotation code to the modelserver plugin,
+	// to avoid a dependency to the org.eclipse.emfcloud.ecore.glsp plugin due to this
 
 	public String getId() {
-		return EcorePackage.eINSTANCE.getNsURI();
+		return EnotationPackage.eINSTANCE.getNsURI();
 	}
 
 	public Collection<String> getFileExtensions() {
-		return Lists.newArrayList("ecore");
+		return Lists.newArrayList("enotation");
 	}
 
 	public void registerEPackage() {
-		EcorePackage.eINSTANCE.eClass();
+		EnotationPackage.eINSTANCE.eClass();
 	}
 
 }

@@ -32,6 +32,7 @@ import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.NotationElementImpl#getSemanticElement <em>Semantic Element</em>}</li>
+ *   <li>{@link org.eclipse.emfcloud.ecore.enotation.impl.NotationElementImpl#getType <em>Type</em>}</li>
  * </ul>
  *
  * @generated
@@ -46,6 +47,25 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 	 * @ordered
 	 */
 	protected SemanticProxy semanticElement;
+
+	/**
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TYPE_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String type = TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -117,6 +137,29 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 	 * @generated
 	 */
 	@Override
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setType(String newType) {
+		String oldType = type;
+		type = newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EnotationPackage.NOTATION_ELEMENT__TYPE, oldType, type));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
@@ -135,6 +178,8 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				return getSemanticElement();
+			case EnotationPackage.NOTATION_ELEMENT__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -149,6 +194,9 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				setSemanticElement((SemanticProxy)newValue);
+				return;
+			case EnotationPackage.NOTATION_ELEMENT__TYPE:
+				setType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -165,6 +213,9 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				setSemanticElement((SemanticProxy)null);
 				return;
+			case EnotationPackage.NOTATION_ELEMENT__TYPE:
+				setType(TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -179,8 +230,26 @@ public abstract class NotationElementImpl extends MinimalEObjectImpl.Container i
 		switch (featureID) {
 			case EnotationPackage.NOTATION_ELEMENT__SEMANTIC_ELEMENT:
 				return semanticElement != null;
+			case EnotationPackage.NOTATION_ELEMENT__TYPE:
+				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (type: ");
+		result.append(type);
+		result.append(')');
+		return result.toString();
 	}
 
 } //NotationElementImpl

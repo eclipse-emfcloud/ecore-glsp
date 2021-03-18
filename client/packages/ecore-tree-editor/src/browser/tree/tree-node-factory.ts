@@ -77,7 +77,15 @@ export class TreeNodeFactory implements TreeEditor.NodeFactory {
         if (data.eSuperTypes) {
             // determine eSuperTypes
             data.eSuperTypes.forEach((element: any, idx: string | number | undefined) => {
+                element["type"] = EcoreModel.Type.EGenericSuperType;
                 this.mapData(element, node, "eSuperTypes", idx);
+            });
+        }
+        if (data.eExceptions) {
+            // determine eExceptions
+            data.eExceptions.forEach((element: any, idx: string | number | undefined) => {
+                element["type"] = EcoreModel.Type.EException;
+                this.mapData(element, node, "eExceptions", idx);
             });
         }
         if (data.eStructuralFeatures) {
@@ -86,9 +94,17 @@ export class TreeNodeFactory implements TreeEditor.NodeFactory {
                 this.mapData(element, node, "eStructuralFeatures", idx);
             });
         }
+        if (data.eOperations) {
+            // determine eOperations
+            data.eOperations.forEach((element: any, idx: string | number | undefined) => {
+                element["eClass"] = EcoreModel.Type.EOperation;
+                this.mapData(element, node, "eOperations", idx);
+            });
+        }
         if (data.eLiterals) {
             // determine eLiterals
             data.eLiterals.forEach((element: any, idx: string | number | undefined) => {
+                element["type"] = EcoreModel.Type.EEnumLiteral;
                 this.mapData(element, node, "eLiterals", idx);
             });
         }

@@ -84,13 +84,22 @@ public interface EnotationPackage extends EPackage {
 	int NOTATION_ELEMENT__SEMANTIC_ELEMENT = 0;
 
 	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTATION_ELEMENT__TYPE = 1;
+
+	/**
 	 * The number of structural features of the '<em>Notation Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NOTATION_ELEMENT_FEATURE_COUNT = 1;
+	int NOTATION_ELEMENT_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Notation Element</em>' class.
@@ -119,6 +128,15 @@ public interface EnotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int SHAPE__SEMANTIC_ELEMENT = NOTATION_ELEMENT__SEMANTIC_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SHAPE__TYPE = NOTATION_ELEMENT__TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Position</b></em>' containment reference.
@@ -176,6 +194,15 @@ public interface EnotationPackage extends EPackage {
 	int EDGE__SEMANTIC_ELEMENT = NOTATION_ELEMENT__SEMANTIC_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__TYPE = NOTATION_ELEMENT__TYPE;
+
+	/**
 	 * The feature id for the '<em><b>Bend Points</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -185,13 +212,31 @@ public interface EnotationPackage extends EPackage {
 	int EDGE__BEND_POINTS = NOTATION_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__SOURCE = NOTATION_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__TARGET = NOTATION_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Edge</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EDGE_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 1;
+	int EDGE_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Edge</em>' class.
@@ -220,6 +265,15 @@ public interface EnotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIAGRAM__SEMANTIC_ELEMENT = NOTATION_ELEMENT__SEMANTIC_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__TYPE = NOTATION_ELEMENT__TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -349,6 +403,28 @@ public interface EnotationPackage extends EPackage {
 	EReference getEdge_BendPoints();
 
 	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emfcloud.ecore.enotation.Edge#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Edge#getSource()
+	 * @see #getEdge()
+	 * @generated
+	 */
+	EReference getEdge_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.emfcloud.ecore.enotation.Edge#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.Edge#getTarget()
+	 * @see #getEdge()
+	 * @generated
+	 */
+	EReference getEdge_Target();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.emfcloud.ecore.enotation.NotationElement <em>Notation Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -368,6 +444,17 @@ public interface EnotationPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getNotationElement_SemanticElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.emfcloud.ecore.enotation.NotationElement#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see org.eclipse.emfcloud.ecore.enotation.NotationElement#getType()
+	 * @see #getNotationElement()
+	 * @generated
+	 */
+	EAttribute getNotationElement_Type();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.emfcloud.ecore.enotation.Diagram <em>Diagram</em>}'.
@@ -490,6 +577,22 @@ public interface EnotationPackage extends EPackage {
 		EReference EDGE__BEND_POINTS = eINSTANCE.getEdge_BendPoints();
 
 		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EDGE__SOURCE = eINSTANCE.getEdge_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EDGE__TARGET = eINSTANCE.getEdge_Target();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.NotationElementImpl <em>Notation Element</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -506,6 +609,14 @@ public interface EnotationPackage extends EPackage {
 		 * @generated
 		 */
 		EReference NOTATION_ELEMENT__SEMANTIC_ELEMENT = eINSTANCE.getNotationElement_SemanticElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NOTATION_ELEMENT__TYPE = eINSTANCE.getNotationElement_Type();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.emfcloud.ecore.enotation.impl.DiagramImpl <em>Diagram</em>}' class.

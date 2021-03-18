@@ -15,7 +15,6 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.modelserver;
 
-import org.eclipse.emfcloud.modelserver.emf.di.DefaultModelServerModule;
 import org.eclipse.emfcloud.modelserver.emf.launch.ModelServerLauncher;
 
 import com.google.common.collect.Lists;
@@ -23,9 +22,9 @@ import com.google.common.collect.Lists;
 public class EcoreModelServerLauncher {
 
 	public static void main(String[] args) {
-		final ModelServerLauncher launcher = new ModelServerLauncher(args, new DefaultModelServerModule());
+		final ModelServerLauncher launcher = new ModelServerLauncher(args, new EcoreModelServerModule());
 		ModelServerLauncher.configureLogger();
-		launcher.addEPackageConfigurations(Lists.newArrayList(EcorePackageConfiguration.class));
+		launcher.addEPackageConfigurations(Lists.newArrayList(EnotationPackageConfiguration.class));
 		launcher.start();
 	}
 
