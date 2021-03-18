@@ -25,8 +25,8 @@
   },
   "scripts": {
     "prepare": "theia build --mode development",
-    "start": "theia start",
-    "start:debug": "theia start --loglevel=debug --root=../../workspace",
+    "start": "theia start --hostname=0.0.0.0 --root-dir=../workspace --startFromJar",
+    "start:debug": "theia start --hostname=0.0.0.0 --loglevel=debug --root-dir=../workspace",
     "watch": "theia build --watch --mode development"
   },
   "theia": {

@@ -18,9 +18,19 @@
       "problemMatcher": []
     },
     {
-      "label": "Start Browser Backend",
+      "label": "Start Browser Backend and Server Jars",
       "type": "shell",
-      "command": "cd browser-app && yarn start:debug",
+      "command": "yarn start",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Browser Backend in Debug Mode (expects running Server instances)",
+      "type": "shell",
+      "command": "yarn start:debug",
       "presentation": {
         "reveal": "always",
         "panel": "new"

@@ -31,7 +31,7 @@ Run
   * The copied backend artifacts are automatically launched on startup.
   * If you want to start the backends manually:
     * Execute the Java main classes: `org.eclipse.emfcloud.ecore.glsp.EcoreServerLauncher` and/or `org.eclipse.emfcloud.ecore.modelserver.EcoreModelServerLauncher`
-    * For this to work with the client, you have to set the regarding `isRunning` flag of the EcoreGlspLaunchOptions to `true`. The EcoreGlspLaunchOptions are located in `client/theia-ecore/src/node/backend-extension.ts`. The modelserver backend only starts the jar if the ping is unsuccessful, therefore no action is required.
+    * On the client run `yarn start:debug` or the launch config `Start Browser Backend (expects running GLSP Server instance)`
 
 
 ## Building and deploying via Docker
