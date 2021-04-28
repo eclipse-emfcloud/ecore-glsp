@@ -13,19 +13,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import {
+    isSetSemanticUriAction,
+    RequestSemanticUriAction,
+    SetSemanticUriAction
+} from "@eclipse-emfcloud/sprotty-ecore/lib/action-definitions";
 import { GLSPActionDispatcher, TYPES } from "@eclipse-glsp/client";
+import { GlspSelectionData, GlspSelectionDataService } from "@eclipse-glsp/theia-integration/lib/browser";
 import { inject, injectable } from "inversify";
-
-import { isSetSemanticUriAction, RequestSemanticUriAction, SetSemanticUriAction } from "../../action-definitions";
-
-export interface SelectionData {
-    selectionDataMap: Map<string, any>;
-}
-
-@injectable()
-export abstract class GlspSelectionDataService {
-    abstract getSelectionData(selectedElementIds: string[]): Promise<SelectionData>;
-}
 
 export interface EcoreElementSelectionData {
     modelUri: string;
@@ -33,7 +28,7 @@ export interface EcoreElementSelectionData {
     eClass: string;
 }
 
-export interface EcoreGlspSelectionData extends SelectionData {
+export interface EcoreGlspSelectionData extends GlspSelectionData {
     selectionDataMap: Map<string, EcoreElementSelectionData>;
 }
 
@@ -50,7 +45,6 @@ export class EcoreGlspSelectionDataService extends GlspSelectionDataService {
         }
 
         return new Promise(resolve => {
-            // selectedElementIds.forEach(id => {
             this.actionDispatcher.request(new RequestSemanticUriAction(selectedElementIds[0])).then(response => {
                 if (isSetSemanticUriAction(response)) {
                     map.set(
@@ -64,7 +58,6 @@ export class EcoreGlspSelectionDataService extends GlspSelectionDataService {
                     resolve({ selectionDataMap: map });
                 }
             });
-            // });
         });
     }
 

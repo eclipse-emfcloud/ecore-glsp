@@ -26,7 +26,8 @@ import URI from "@theia/core/lib/common/uri";
 import { UriAwareCommandHandler, UriCommandHandler } from "@theia/core/lib/common/uri-command-handler";
 import { EDITOR_CONTEXT_MENU } from "@theia/editor/lib/browser";
 import { FileDialogService } from "@theia/filesystem/lib/browser";
-import { FileStat, FileSystem } from "@theia/filesystem/lib/common/filesystem";
+import { FileService } from "@theia/filesystem/lib/browser/file-service";
+import { FileStat } from "@theia/filesystem/lib/common/files";
 import { NAVIGATOR_CONTEXT_MENU } from "@theia/navigator/lib/browser/navigator-contribution";
 import { WorkspaceService } from "@theia/workspace/lib/browser";
 import { inject, injectable } from "inversify";
@@ -63,7 +64,7 @@ export const GENERATE_CODE: Command = {
 @injectable()
 export class EcoreCommandContribution implements CommandContribution {
 
-    @inject(FileSystem) protected readonly fileSystem: FileSystem;
+    @inject(FileService) protected readonly fileService: FileService;
     @inject(SelectionService) protected readonly selectionService: SelectionService;
     @inject(OpenerService) protected readonly openerService: OpenerService;
     @inject(FrontendApplication) protected readonly app: FrontendApplication;
@@ -78,7 +79,7 @@ export class EcoreCommandContribution implements CommandContribution {
         registry.registerCommand(NEW_ECORE_FILE, this.newWorkspaceRootUriAwareCommandHandler({
             execute: uri => this.getDirectory(uri).then(parent => {
                 if (parent) {
-                    const parentUri = new URI(parent.uri);
+                    const parentUri = parent.resource;
 
                     const createEcore = (name: string, nsPrefix: string, nsURI: string): void => {
                         if (name) {
@@ -125,7 +126,7 @@ export class EcoreCommandContribution implements CommandContribution {
         registry.registerCommand(GENERATE_GENMODEL_DEFAULT, this.newWorkspaceRootUriAwareCommandHandler({
             execute: uri => this.getDirectory(uri).then(parent => {
                 if (parent) {
-                    const parentUri = new URI(parent.uri);
+                    const parentUri = parent.resource;
 
                     this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", "").then(() => {
                         const extensionStart = uri.displayName.lastIndexOf(".");
@@ -139,7 +140,7 @@ export class EcoreCommandContribution implements CommandContribution {
         registry.registerCommand(GENERATE_GENMODEL, this.newWorkspaceRootUriAwareCommandHandler({
             execute: uri => this.getDirectory(uri).then(parent => {
                 if (parent) {
-                    const parentUri = new URI(parent.uri);
+                    const parentUri = parent.resource;
 
                     const showInput = (hint: string, prefix: string, onEnter: (result: string) => void): void => {
                         const quickOpenModel: QuickOpenModel = {
@@ -176,7 +177,7 @@ export class EcoreCommandContribution implements CommandContribution {
         registry.registerCommand(GENERATE_CODE, this.newWorkspaceRootUriAwareCommandHandler({
             execute: uri => this.getDirectory(uri).then(parent => {
                 if (parent) {
-                    const parentUri = new URI(parent.uri);
+                    const parentUri = parent.resource;
                     if (parentUri.parent) {
                         this.fileGenServer.generateCode(uri.path.toString(), parentUri.parent.path.toString()).then(() => {
                             open(this.openerService, uri);
@@ -204,7 +205,7 @@ export class EcoreCommandContribution implements CommandContribution {
     }
 
     protected async getDirectory(candidate: URI): Promise<FileStat | undefined> {
-        const stat = await this.fileSystem.getFileStat(candidate.toString());
+        const stat = await this.fileService.resolve(candidate);
         if (stat && stat.isDirectory) {
             return stat;
         }
@@ -212,7 +213,7 @@ export class EcoreCommandContribution implements CommandContribution {
     }
 
     protected getParent(candidate: URI): Promise<FileStat | undefined> {
-        return this.fileSystem.getFileStat(candidate.parent.toString());
+        return this.fileService.resolve(candidate.parent);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -252,7 +253,7 @@ export class WorkspaceRootUriAwareCommandHandler extends UriAwareCommandHandler<
         }
         // Return the first root if available.
         if (this.workspaceService.tryGetRoots().length) {
-            return new URI(this.workspaceService.tryGetRoots()[0].uri);
+            return this.workspaceService.tryGetRoots()[0].resource;
         }
         return undefined;
     }

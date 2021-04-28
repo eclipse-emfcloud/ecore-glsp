@@ -31,6 +31,7 @@ import {
     GLSPGraph,
     glspHoverModule,
     glspMouseToolModule,
+    glspSelectModule,
     glspServerCopyPasteModule,
     HtmlRoot,
     HtmlRootView,
@@ -59,12 +60,10 @@ import {
     viewportModule,
     zorderModule
 } from "@eclipse-glsp/client/lib";
-import executeCommandModule from "@eclipse-glsp/client/lib/features/execute/di.config";
 import { Container, ContainerModule } from "inversify";
 import { EditLabelUI } from "sprotty/lib";
 
 import { EditLabelUIAutocomplete } from "./features/edit-label-autocomplete";
-import ecoreGlspSelectModule from "./features/select/di.config";
 import ecoreToolPaletteModule from "./features/tool-palette/di.config";
 import { LabelSelectionFeedback } from "./feedback";
 import {
@@ -139,9 +138,9 @@ export default (containerId: string): Container => {
     });
 
     const container = new Container();
-    container.load(decorationModule, validationModule, defaultModule, glspMouseToolModule, defaultGLSPModule, ecoreGlspSelectModule, boundsModule, viewportModule, toolsModule,
+    container.load(decorationModule, validationModule, defaultModule, glspMouseToolModule, defaultGLSPModule, glspSelectModule, boundsModule, viewportModule, toolsModule,
         glspHoverModule, fadeModule, exportModule, expandModule, openModule, buttonModule, modelSourceModule, labelEditModule, labelEditUiModule, glspEditLabelModule,
-        classDiagramModule, saveModule, executeCommandModule, toolFeedbackModule, modelHintsModule, glspContextMenuModule, glspServerCopyPasteModule,
+        classDiagramModule, saveModule, toolFeedbackModule, modelHintsModule, glspContextMenuModule, glspServerCopyPasteModule,
         copyPasteContextMenuModule, glspCommandPaletteModule, ecoreToolPaletteModule, routingModule, edgeLayoutModule, zorderModule,
         layoutCommandsModule);
 

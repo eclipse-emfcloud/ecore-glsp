@@ -10,6 +10,8 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp;
 
+import java.util.concurrent.CompletableFuture;
+
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
@@ -30,7 +32,7 @@ public class EcoreGLSPServer extends DefaultGLSPServer<EcoreInitializeOptions> {
 	}
 
 	@Override
-	public boolean handleOptions(EcoreInitializeOptions options) {
+	public CompletableFuture<Boolean> handleOptions(EcoreInitializeOptions options) {
 		if (options != null) {
 			LOGGER.debug(String.format("[%s] Pinging modelserver", options.getTimestamp()));
 
@@ -39,14 +41,14 @@ public class EcoreGLSPServer extends DefaultGLSPServer<EcoreInitializeOptions> {
 				boolean alive = client.ping().thenApply(Response<Boolean>::body).get();
 				if (alive) {
 					modelServerClientProvider.setModelServerClient(client);
-					return true;
+					return CompletableFuture.completedFuture(true);
 				}
 
 			} catch (Exception e) {
 				LOGGER.error("Error during initialization of modelserver connection", e);
 			}
 		}
-		return true;
+		return CompletableFuture.completedFuture(true);
 	}
 
 }

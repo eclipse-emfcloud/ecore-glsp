@@ -18,13 +18,12 @@
     "url": "https://github.com/eclipse-emfcloud/ecore-glsp.git"
   },
   "dependencies": {
-    "@eclipse-emfcloud/ecore-glsp-common": "0.0.1",
+    "@eclipse-emfcloud/ecore-glsp-common": "0.2.0",
     "@eclipse-glsp/client": "next",
     "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
     "css-loader": "^1.0.1",
-    "eslint": "^6.8.0",
     "rimraf": "^2.6.1",
     "ts-loader": "^5.3.0",
     "typescript": "~3.9.2",

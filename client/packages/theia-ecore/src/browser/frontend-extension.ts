@@ -8,40 +8,26 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
-import { GLSPClientContribution } from "@eclipse-glsp/theia-integration/lib/browser";
+import { GLSPClientContribution, registerDiagramManager } from "@eclipse-glsp/theia-integration/lib/browser";
 import { CommandContribution } from "@theia/core";
-import {
-    FrontendApplicationContribution,
-    OpenHandler,
-    WebSocketConnectionProvider,
-    WidgetFactory
-} from "@theia/core/lib/browser";
-import { ContainerModule, interfaces } from "inversify";
-import { DiagramConfiguration, DiagramManager, DiagramManagerProvider } from "sprotty-theia/lib";
+import { WebSocketConnectionProvider } from "@theia/core/lib/browser";
+import { ContainerModule } from "inversify";
+import { DiagramConfiguration } from "sprotty-theia/lib";
 
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreCommandContribution } from "./command-contribution";
 import { EcoreDiagramConfiguration } from "./diagram/ecore-diagram-configuration";
 import { EcoreDiagramManager } from "./diagram/ecore-diagram-manager";
 import { EcoreGLSPDiagramClient } from "./diagram/ecore-glsp-diagram-client";
-import { EcoreModelServerFrontendContribution } from "./frontend-contribution";
 import { EcoreGLSPClientContribution } from "./glsp-client-contribution";
 
-export default new ContainerModule((bind: interfaces.Bind, unbind: interfaces.Unbind, isBound: interfaces.IsBound, rebind: interfaces.Rebind) => {
-    bind(EcoreModelServerFrontendContribution).toSelf().inSingletonScope();
-    bind(FrontendApplicationContribution).toService(EcoreModelServerFrontendContribution);
+export default new ContainerModule(bind => {
     bind(EcoreGLSPClientContribution).toSelf().inSingletonScope();
     bind(GLSPClientContribution).toService(EcoreGLSPClientContribution);
     bind(EcoreGLSPDiagramClient).toSelf().inSingletonScope();
     bind(DiagramConfiguration).to(EcoreDiagramConfiguration).inSingletonScope();
-    bind(EcoreDiagramManager).toSelf().inSingletonScope();
-    bind(FrontendApplicationContribution).toService(EcoreDiagramManager);
-    bind(OpenHandler).toService(EcoreDiagramManager);
-    bind(WidgetFactory).toService(EcoreDiagramManager);
-    bind(DiagramManagerProvider).toProvider<DiagramManager>(context => () => new Promise<DiagramManager>(resolve => {
-        const diagramManager = context.container.get<EcoreDiagramManager>(EcoreDiagramManager);
-        resolve(diagramManager);
-    }));
+    registerDiagramManager(bind, EcoreDiagramManager);
+
     bind(CommandContribution).to(EcoreCommandContribution);
     bind(FileGenServer).toDynamicValue(ctx => {
         const connection = ctx.container.get(WebSocketConnectionProvider);

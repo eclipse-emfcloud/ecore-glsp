@@ -6,3 +6,4 @@ lib
 !*-app/package.json
 build/
 tests/results
+plugins/

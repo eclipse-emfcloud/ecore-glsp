@@ -17,9 +17,9 @@ import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
-import org.eclipse.glsp.server.actions.RedoAction;
-import org.eclipse.glsp.server.actions.UndoAction;
-import org.eclipse.glsp.server.actions.UndoRedoActionHandler;
+import org.eclipse.glsp.server.features.undoredo.RedoAction;
+import org.eclipse.glsp.server.features.undoredo.UndoAction;
+import org.eclipse.glsp.server.features.undoredo.UndoRedoActionHandler;
 import org.eclipse.glsp.server.model.GModelState;
 
 import com.google.common.collect.Lists;

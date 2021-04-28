@@ -17,8 +17,8 @@ import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
 import org.eclipse.glsp.server.actions.ActionMessage;
-import org.eclipse.glsp.server.actions.ComputedBoundsAction;
-import org.eclipse.glsp.server.actions.ComputedBoundsActionHandler;
+import org.eclipse.glsp.server.features.core.model.ComputedBoundsAction;
+import org.eclipse.glsp.server.features.core.model.ComputedBoundsActionHandler;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.LayoutOperation;
 import org.eclipse.glsp.server.utils.LayoutUtil;
@@ -44,7 +44,7 @@ public class EcoreComputedBoundsActionHandler extends ComputedBoundsActionHandle
 							new LayoutOperation());
 					actionDispatcher.dispatch(layoutMessage);
 				}
-				return submissionHandler.doSubmitModel(true, ecoreModelState);
+				return submissionHandler.submitModel(ecoreModelState);
 			}
 		}
 

@@ -82,6 +82,7 @@
       }
     ],
     // @typescript-eslint/eslint-plugin
+    "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/class-name-casing": "error",
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/no-explicit-any": "off",

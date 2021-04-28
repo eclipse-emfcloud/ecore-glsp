@@ -13,8 +13,6 @@ import {
     GLSPActionDispatcher,
     InitializeClientSessionAction,
     RequestTypeHintsAction,
-    SelectAction,
-    SelectionResult,
     SetEditModeAction
 } from "@eclipse-glsp/client";
 import {
@@ -26,15 +24,14 @@ import {
     GLSPWidgetOpenerOptions,
     GLSPWidgetOptions
 } from "@eclipse-glsp/theia-integration/lib/browser";
-import { Message } from "@phosphor/messaging/lib";
-import { MessageService, SelectionService } from "@theia/core";
+import { MessageService } from "@theia/core";
 import { WidgetManager } from "@theia/core/lib/browser";
 import { Emitter, Event } from "@theia/core/lib/common";
 import URI from "@theia/core/lib/common/uri";
 import { EditorManager } from "@theia/editor/lib/browser";
 import { WorkspaceService } from "@theia/workspace/lib/browser";
-import { inject, injectable, postConstruct } from "inversify";
-import { DiagramServer, GetSelectionAction, ModelSource, RequestModelAction, TYPES } from "sprotty";
+import { inject, injectable } from "inversify";
+import { DiagramServer, ModelSource, RequestModelAction, TYPES } from "sprotty";
 import { DiagramWidget, DiagramWidgetOptions, TheiaFileSaver } from "sprotty-theia";
 
 import { EcoreLanguage } from "../../common/ecore-language";
@@ -55,10 +52,6 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
     private _diagramConnector: GLSPTheiaSprottyConnector;
     private workspaceRoot: string;
 
-    private _currentDiagramWidget: EcoreDiagramWidget | undefined;
-
-    @inject(SelectionService) protected readonly selectionService: SelectionService;
-
     constructor(
         @inject(EcoreGLSPDiagramClient) diagramClient: EcoreGLSPDiagramClient,
         @inject(TheiaFileSaver) fileSaver: TheiaFileSaver,
@@ -72,7 +65,7 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
             diagramClient,
             fileSaver, editorManager, widgetManager, diagramManager: this, messageService, notificationManager
         });
-        workspaceService.roots.then(roots => this.workspaceRoot = roots[0].uri);
+        workspaceService.roots.then(roots => this.workspaceRoot = roots[0].resource.toString());
     }
 
     get fileExtensions(): string[] {
@@ -89,16 +82,9 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
             const widgetId = this.createWidgetId(options);
             const config = this.getDiagramConfiguration(options);
             const diContainer = config.createContainer(clientId);
-            return new EcoreDiagramWidget(options, widgetId, diContainer, this.editorPreferences, this.diagramConnector);
+            return new EcoreDiagramWidget(options, widgetId, diContainer, this.editorPreferences, this.theiaSelectionService, this.diagramConnector);
         }
         throw Error("DiagramWidgetFactory needs DiagramWidgetOptions but got " + JSON.stringify(options));
-    }
-
-    @postConstruct()
-    protected init(): void {
-        super.init();
-        this.shell.onDidChangeActiveWidget(() => this.updateCurrentDiagramWidget());
-        this.onCreated(widget => widget.disposed.connect(() => this.updateCurrentDiagramWidget()));
     }
 
     protected createWidgetOptions(uri: URI, options?: GLSPWidgetOpenerOptions): EcoreDiagramWidgetOptions {
@@ -106,35 +92,6 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
             ...super.createWidgetOptions(uri, options),
             workspaceRoot: this.workspaceRoot
         } as EcoreDiagramWidgetOptions;
-    }
-
-    get currentDiagramWidget(): EcoreDiagramWidget | undefined {
-        return this._currentDiagramWidget;
-    }
-
-    protected setCurrentDiagramWidget(current: EcoreDiagramWidget | undefined): void {
-        if (this.currentDiagramWidget !== current) {
-            this._currentDiagramWidget = current;
-            if (this._currentDiagramWidget !== undefined) {
-                this._currentDiagramWidget.updateGlobalSelection();
-                this._currentDiagramWidget.onWidgetClosed(() => {
-                    this.clearGlobalSelection();
-                });
-            }
-        }
-    }
-    protected updateCurrentDiagramWidget(): void {
-        const currentWidget = this.shell.currentWidget;
-        if (currentWidget instanceof EcoreDiagramWidget) {
-            this.setCurrentDiagramWidget(currentWidget);
-        } else if (!this.currentDiagramWidget || !this.currentDiagramWidget.isVisible) {
-            this.setCurrentDiagramWidget(undefined);
-        }
-    }
-
-    protected clearGlobalSelection(): void {
-        console.log("clearGlobalSelection");
-        this.selectionService.selection = new Object();
     }
 }
 
@@ -176,30 +133,5 @@ export class EcoreDiagramWidget extends GLSPDiagramWidget {
 
     getGlspActionDispatcher(): GLSPActionDispatcher {
         return this.diContainer.get<GLSPActionDispatcher>(TYPES.IActionDispatcher);
-    }
-
-    protected onCloseRequest(msg: Message): void {
-        super.onCloseRequest(msg);
-        console.log("diagramwidget onclose");
-        this.onWidgetClosedEmitter.fire(undefined);
-        this.clearGlobalSelection();
-    }
-
-    private async getSelectedElementIds(): Promise<string[]> {
-        const selectedElementIds = await this.actionDispatcher.request(GetSelectionAction.create()).then((selection: SelectionResult) => {
-            if (selection.selectedElementsIDs) {
-                return selection.selectedElementsIDs;
-            }
-            return [];
-        });
-        return selectedElementIds;
-    }
-
-    async updateGlobalSelection(): Promise<void> {
-        this.getSelectedElementIds().then((prevSelection: string[]) => this.actionDispatcher.dispatch(new SelectAction(prevSelection)));
-    }
-
-    protected async clearGlobalSelection(): Promise<void> {
-        this.actionDispatcher.dispatch(new SelectAction());
     }
 }

@@ -13,70 +13,42 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
+import { ModelserverAwareWidgetProvider } from "@eclipse-emfcloud/modelserver-jsonforms-property-view";
 import {
-    ModelServerClient,
     ModelServerCommand,
     ModelServerCommandUtil,
-    ModelServerCompoundCommand,
-    ModelServerReferenceDescription,
-    ModelServerSubscriptionService
+    ModelServerReferenceDescription
 } from "@eclipse-emfcloud/modelserver-theia/lib/common";
-import { isGlspSelection } from "@eclipse-emfcloud/theia-ecore/lib/browser/selection-forwarder";
-import { JsonFormsCore } from "@jsonforms/core";
-import { JsonFormsPropertyViewWidgetProvider } from "@ndoschek/jsonforms-property-view";
+import { isGlspSelection } from "@eclipse-glsp/theia-integration/lib/browser/diagram";
 import URI from "@theia/core/lib/common/uri";
-import { WorkspaceService } from "@theia/workspace/lib/browser";
-import { inject, injectable, postConstruct } from "inversify";
+import { injectable, postConstruct } from "inversify";
 import { debounce, isEqual, isObject, transform } from "lodash";
 
-import { ModelServerJsonFormsPropertyViewWidget } from "./widget";
-
 @injectable()
-export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWidgetProvider {
-
-    @inject(WorkspaceService) readonly workspaceService: WorkspaceService;
-    @inject(ModelServerClient) protected readonly modelServerClient: ModelServerClient;
-    @inject(ModelServerSubscriptionService) protected readonly subscriptionService: ModelServerSubscriptionService;
-
-    protected currentPropertiesCore: JsonFormsCore;
-    private _currentModelUri: string;
+export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetProvider {
 
     @postConstruct()
     init(): void {
-        this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
+        this.propertyDataServices = this.propertyDataServices.concat(this.contributions.getContributions());
+        this.currentPropertyData = {};
+        this.currentModelUri = "";
         this.jsonFormsWidget.onChange(
-            debounce(jsonFormsData => {
+            debounce((jsonFormsData: any) => {
                 this.handleChanges(jsonFormsData);
             }, 200)
         );
 
         this.subscriptionService.onIncrementalUpdateListener(incrementalUpdate => {
-            if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-                this.updateWidgetData(incrementalUpdate.data);
-            }
+            this.updateWidgetData(incrementalUpdate.data);
         });
     }
 
-    protected get currentModelUri(): string {
-        return this._currentModelUri;
+    canHandle(selection: Object | undefined): number {
+        return isGlspSelection(selection) ? 100 : 0;
     }
 
-    protected set currentModelUri(modelUri: string) {
-        this._currentModelUri = modelUri;
-    }
-
-    protected getRelativeModelUri(sourceUri: string): string {
-        const workspaceUri = this.workspaceService.getWorkspaceRootUri(new URI(sourceUri));
-        if (workspaceUri) {
-            const workspaceString = workspaceUri.toString().replace("file://", "");
-            const rootUriLength = workspaceString.length;
-            return sourceUri.substring(rootUriLength + 1);
-        }
-        return "";
-    }
-
-    updateWidget(selection: any): void {
-        this.getPropertiesService(selection).then(service => {
+    updateContentWidget(selection: any): void {
+        this.getJsonFormsPropertyDataService(selection).then(service => {
             if (this.currentModelUri !== this.getRelativeModelUri(selection.sourceUri)) {
                 if (this.currentModelUri) {
                     this.modelServerClient.unsubscribe(this.currentModelUri);
@@ -88,34 +60,19 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
         });
     }
 
-    protected updateWidgetData(command: ModelServerCommand | ModelServerCompoundCommand): void {
-        const semanticUri = this.jsonFormsWidget.currentJsonFormsCore.data.semanticUri;
-        if (command.type) {
-            this.updateViaCommand(command as ModelServerCommand, semanticUri);
-        } else { // #FIXME: command.type='compound' type not set right now!
-            (command as ModelServerCompoundCommand).commands.forEach((cmd: ModelServerCommand | ModelServerCompoundCommand) => {
-                this.updateWidgetData(cmd);
-            });
-        }
-    }
-
     protected updateViaCommand(command: ModelServerCommand, semanticUri: string): void {
         const relativeRefURI = new URI(this.getRelativeModelUri(command.owner.$ref.replace("file:", "")));
         if (this.isCurrentModelUri(relativeRefURI)) {
             if (command.dataValues && relativeRefURI.fragment === semanticUri) {
-                console.log("incrementalUpdate of '" + semanticUri + "' received: " + command.feature + " " + command.dataValues[0]);
-
-                if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-                    let newValue: any = command.dataValues[0];
-                    // Parse boolean and integer values
-                    if (newValue === "true" || newValue === "false") {
-                        newValue = newValue === "true";
-                    } else if (!isNaN(parseInt(newValue, 10))) {
-                        newValue = parseInt(newValue, 10);
-                    }
-                    this.jsonFormsWidget.updateModelServerWidgetData(command.feature, newValue);
-                    this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
+                let newValue: any = command.dataValues[0];
+                // Parse boolean and integer values
+                if (newValue === "true" || newValue === "false") {
+                    newValue = newValue === "true";
+                } else if (!isNaN(parseInt(newValue, 10))) {
+                    newValue = parseInt(newValue, 10);
                 }
+                this.currentPropertyData[command.feature] = newValue;
+                this.jsonFormsWidget.updatePropertyViewData(this.currentPropertyData);
             } else if (command.type === "remove") {
                 // clear global selection
                 this.selectionService.selection = new Object();
@@ -127,35 +84,23 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
         return uri.path.toString() === "/" + this.currentModelUri;
     }
 
-    canHandle(selection: any): number {
-        if (isGlspSelection(selection)) {
-            return 15;
-        }
-        return super.canHandle(selection);
-    }
-
     protected handleChanges(jsonFormsData: any): void {
-        if (this.jsonFormsWidget instanceof ModelServerJsonFormsPropertyViewWidget) {
-            if (jsonFormsData.semanticUri === this.currentPropertiesCore.data.semanticUri && !isEqual(jsonFormsData, this.currentPropertiesCore.data)) {
-                const results = this.difference(jsonFormsData, this.currentPropertiesCore.data);
-                const editCommand = this.createSetCommand(results as object, jsonFormsData);
-                if (editCommand) {
-                    this.modelServerClient.edit(this.currentModelUri, editCommand);
-                }
+        if (jsonFormsData.semanticUri === this.currentPropertyData.semanticUri && !isEqual(jsonFormsData, this.currentPropertyData)) {
+            const results = this.difference(jsonFormsData, this.currentPropertyData);
+            const editCommand = this.createSetCommand(results as object, jsonFormsData);
+            if (editCommand) {
+                this.modelServerClient.edit(this.currentModelUri, editCommand);
             }
-            this.currentPropertiesCore = this.jsonFormsWidget.currentJsonFormsCore;
         }
+        this.currentPropertyData = jsonFormsData;
     }
 
-    /* eslint-disable */
-    /* @ts-ignore */
-    private difference(object, base) {
-        /* @ts-ignore */
-        function changes(object, base) {
-            return transform(object, function (result, value, key) {
-                if (!isEqual(value, base[key])) {
+    private difference(object: any, base: any): unknown {
+        function changes(o: any, b: any): unknown {
+            return transform(o, function (result, value, key) {
+                if (!isEqual(value, b[key])) {
                     /* @ts-ignore */
-                    result[key] = (isObject(value) && isObject(base[key])) ? changes(value, base[key]) : value;
+                    result[key] = (isObject(value) && isObject(b[key])) ? changes(value, b[key]) : value;
                 }
             });
         }
@@ -163,7 +108,7 @@ export class EcoreGlspPropertyViewWidgetProvider extends JsonFormsPropertyViewWi
     }
 
     protected getOwnerRef(semanticUri: string): string {
-        return `${this.workspaceService.workspace!.uri}/${this.currentModelUri}#${semanticUri}`.replace("file:///", "file:/");
+        return `${this.workspaceService.workspace!.resource}/${this.currentModelUri}#${semanticUri}`.replace("file:///", "file:/");
     }
 
     protected getOwner(jsonFormsData: any): ModelServerReferenceDescription {

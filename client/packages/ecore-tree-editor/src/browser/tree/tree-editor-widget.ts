@@ -178,7 +178,7 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
     }
 
     protected getOwnerRef(semanticUri: string): string {
-        return `${this.workspaceService.workspace!.uri}/${this.modelIDToRequest}#${semanticUri}`.replace("file:///", "file:/");
+        return `${this.workspaceService.workspace!.resource.toString()}/${this.modelIDToRequest}#${semanticUri}`.replace("file:///", "file:/");
     }
 
     protected getOwner(node: Readonly<TreeEditor.Node>): ModelServerReferenceDescription {

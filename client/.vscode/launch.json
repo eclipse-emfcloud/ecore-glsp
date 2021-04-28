@@ -16,6 +16,7 @@
         "--root-dir=${workspaceRoot}/workspace",
         "--app-project-path=${workspaceRoot}/browser-app",
         "--loglevel=debug",
+        "--plugins=${workspaceRoot}/plugins"
       ],
       "env": {
         "NODE_ENV": "development"
@@ -24,7 +25,8 @@
       "outFiles": [
         "${workspaceRoot}/node_modules/@theia/*/lib/**/*.js",
         "${workspaceRoot}/browser-app/lib/**/*.js",
-        "${workspaceRoot}/browser-app/src-gen/**/*.js"
+        "${workspaceRoot}/browser-app/src-gen/**/*.js",
+        "${workspaceRoot}/packages/*/lib/**/*.js"
       ],
       "smartStep": true,
       "internalConsoleOptions": "openOnSessionStart",
