@@ -34,8 +34,8 @@ import org.eclipse.emfcloud.modelserver.command.CommandKind;
 import org.eclipse.emfcloud.modelserver.common.codecs.DecodingException;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
-import org.eclipse.glsp.server.actions.RequestBoundsAction;
 import org.eclipse.glsp.server.actions.SetDirtyStateAction;
+import org.eclipse.glsp.server.features.core.model.RequestBoundsAction;
 
 public class EcoreModelServerSubscriptionListener extends XmiToEObjectSubscriptionListener {
 

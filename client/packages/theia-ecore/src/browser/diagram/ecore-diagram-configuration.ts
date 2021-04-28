@@ -9,28 +9,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 import { createEcoreDiagramContainer } from "@eclipse-emfcloud/sprotty-ecore/lib";
-import { TYPES } from "@eclipse-glsp/client/lib";
-import { SelectionService } from "@theia/core";
-import { Container, inject, injectable } from "inversify";
-import { DiagramConfiguration, TheiaDiagramServer } from "sprotty-theia/lib";
+import { GlspSelectionDataService } from "@eclipse-glsp/theia-integration/lib/browser";
+import {
+    GLSPTheiaDiagramConfiguration
+} from "@eclipse-glsp/theia-integration/lib/browser/diagram/glsp-theia-diagram-configuration";
+import { Container, injectable } from "inversify";
 
 import { EcoreLanguage } from "../../common/ecore-language";
-import { TheiaGlspSelectionForwarder } from "../selection-forwarder";
 import { EcoreGLSPTheiaDiagramServer } from "./ecore-glsp-theia-diagram-server";
+import { EcoreGlspSelectionDataService } from "./selection-data-service";
 
 @injectable()
-export class EcoreDiagramConfiguration implements DiagramConfiguration {
-    @inject(SelectionService) protected selectionService: SelectionService;
+export class EcoreDiagramConfiguration extends GLSPTheiaDiagramConfiguration {
     diagramType: string = EcoreLanguage.DiagramType;
 
-    createContainer(widgetId: string): Container {
+    doCreateContainer(widgetId: string): Container {
         const container = createEcoreDiagramContainer(widgetId);
-        container.bind(TYPES.ModelSource).to(EcoreGLSPTheiaDiagramServer).inSingletonScope();
-        container.bind(TheiaDiagramServer).toService(EcoreGLSPTheiaDiagramServer);
-        // container.rebind(KeyTool).to(TheiaKeyTool).inSingletonScope()
-        container.bind(TYPES.IActionHandlerInitializer).to(TheiaGlspSelectionForwarder);
-        container.bind(SelectionService).toConstantValue(this.selectionService);
-
+        this.configureDiagramServer(container, EcoreGLSPTheiaDiagramServer);
+        container.bind(GlspSelectionDataService).to(EcoreGlspSelectionDataService);
         return container;
     }
+
 }

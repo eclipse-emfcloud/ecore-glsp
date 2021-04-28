@@ -8,17 +8,16 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
-import { BaseGLSPServerContribution } from "@eclipse-glsp/theia-integration/lib/node";
-import { IConnection } from "@theia/languages/lib/node";
-import { inject, injectable, optional } from "inversify";
+import { getPort } from "@eclipse-glsp/protocol";
+import { JavaSocketServerContribution, JavaSocketServerLaunchOptions } from "@eclipse-glsp/theia-integration/lib/node";
+import { injectable } from "inversify";
 import * as net from "net";
-import { createSocketConnection } from "vscode-ws-jsonrpc/lib/server";
+import { createSocketConnection, IConnection } from "vscode-ws-jsonrpc/lib/server";
 
 import { EcoreLanguage } from "../common/ecore-language";
-import { GLSPLaunchOptions } from "./glsp-server-launcher";
 
 @injectable()
-export class EcoreGLSPServerContribution extends BaseGLSPServerContribution {
+export class EcoreGLSPServerContribution extends JavaSocketServerContribution {
 
     readonly id = EcoreLanguage.Id;
     readonly name = EcoreLanguage.Name;
@@ -31,9 +30,15 @@ export class EcoreGLSPServerContribution extends BaseGLSPServerContribution {
             "**/*.ecorediagram"
         ]
     };
-    @inject(GLSPLaunchOptions) @optional() protected readonly launchOptions: GLSPLaunchOptions;
 
-    start(clientConnection: IConnection): void {
+    createLaunchOptions(): Partial<JavaSocketServerLaunchOptions> {
+        return {
+            launchedExternally: true,
+            serverPort: getPort("ECORE_GLSP")
+        };
+    }
+
+    connect(clientConnection: IConnection): void {
         const socketPort = this.launchOptions.serverPort;
         if (socketPort) {
             const socket = new net.Socket();

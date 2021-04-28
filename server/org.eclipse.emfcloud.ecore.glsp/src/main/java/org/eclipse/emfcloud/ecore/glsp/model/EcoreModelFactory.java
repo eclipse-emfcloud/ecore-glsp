@@ -24,14 +24,15 @@ import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.builder.impl.GGraphBuilder;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
-import org.eclipse.glsp.server.actions.RequestModelAction;
-import org.eclipse.glsp.server.factory.ModelFactory;
+import org.eclipse.glsp.server.features.core.model.GModelFactory;
+import org.eclipse.glsp.server.features.core.model.ModelSourceLoader;
+import org.eclipse.glsp.server.features.core.model.RequestModelAction;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.utils.ClientOptions;
 
 import com.google.inject.Inject;
 
-public class EcoreModelFactory implements ModelFactory {
+public class EcoreModelFactory implements ModelSourceLoader, GModelFactory {
 
 	private static Logger LOGGER = Logger.getLogger(EcoreModelFactory.class);
 	private static final String ROOT_ID = "sprotty";
@@ -46,20 +47,24 @@ public class EcoreModelFactory implements ModelFactory {
 	private CommandCodec commandCodec;
 
 	@Override
-	public GModelRoot loadModel(RequestModelAction action, GModelState graphicalModelState) {
+	public void loadSourceModel(RequestModelAction action, GModelState gModelState) {
+
+		EcoreModelState modelState = EcoreModelState.getModelState(gModelState);
+		modelState.setClientOptions(action.getOptions());
+
 		Optional<String> sourceURI = ClientOptions.getValue(action.getOptions(), ClientOptions.SOURCE_URI);
 		if (sourceURI.isEmpty()) {
 			LOGGER.error("No source uri given to load model, return empty model.");
-			return createEmptyRoot();
+			modelState.setRoot(createEmptyRoot());
+			return;
 		}
+
 		Optional<ModelServerClientApi<EObject>> modelServerClient = modelServerClientProvider.get();
 		if (modelServerClient.isEmpty()) {
 			LOGGER.error("Connection to modelserver has not been initialized, return empty model");
-			return createEmptyRoot();
+			modelState.setRoot(createEmptyRoot());
+			return;
 		}
-
-		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
-		modelState.setClientOptions(action.getOptions());
 
 		EcoreModelServerAccess modelServerAccess = new EcoreModelServerAccess(modelState.getModelUri(),
 				modelServerClient.get(), commandCodec);
@@ -73,14 +78,33 @@ public class EcoreModelFactory implements ModelFactory {
 		EcoreFacade ecoreFacade = editorContext.getEcoreFacade();
 		if (ecoreFacade == null) {
 			LOGGER.error("EcoreFacade could not be found, return empty model");
-			return createEmptyRoot();
+			modelState.setRoot(createEmptyRoot());
+			return;
 		}
 
 		Diagram diagram = ecoreFacade.getDiagram();
 		GModelRoot gmodelRoot = editorContext.getGModelFactory().create(ecoreFacade.getEPackage());
 		ecoreFacade.initialize(diagram, gmodelRoot);
 		modelState.setRoot(gmodelRoot);
-		return gmodelRoot;
+
+	}
+
+	@Override
+	public void createGModel(GModelState gModelState) {
+		EcoreModelState modelState = EcoreModelState.getModelState(gModelState);
+
+		EcoreFacade ecoreFacade = EcoreModelState.getEcoreFacade(modelState);
+		if (ecoreFacade == null) {
+			LOGGER.error("EcoreFacade could not be found, return empty model");
+			modelState.setRoot(createEmptyRoot());
+			return;
+		}
+
+		Diagram diagram = ecoreFacade.getDiagram();
+		GModelRoot gmodelRoot = EcoreModelState.getEditorContext(modelState).getGModelFactory()
+				.create(ecoreFacade.getEPackage());
+		ecoreFacade.initialize(diagram, gmodelRoot);
+		modelState.setRoot(gmodelRoot);
 	}
 
 	private static GModelRoot createEmptyRoot() {

@@ -14,40 +14,36 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 import { ecoreTypeSchema } from "@eclipse-emfcloud/ecore-glsp-common/lib/browser/ecore-json-schema";
-import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia/lib/common";
-import { GlspSelection, isGlspSelection } from "@eclipse-emfcloud/theia-ecore/lib/browser/selection-forwarder";
+import { ModelServerPropertyDataService } from "@eclipse-emfcloud/modelserver-jsonforms-property-view";
+import { GlspSelection, isGlspSelection } from "@eclipse-glsp/theia-integration/lib/browser/diagram";
 import { JsonSchema, JsonSchema7, UISchemaElement } from "@jsonforms/core";
-import { JsonFormsPropertiesService } from "@ndoschek/jsonforms-property-view";
 import URI from "@theia/core/lib/common/uri";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 
 @injectable()
-export class EcoreGlspPropertiesService implements JsonFormsPropertiesService {
+export class EcoreGlspPropertyDataService extends ModelServerPropertyDataService {
 
-    @inject(ModelServerClient) protected readonly modelServerClient: ModelServerClient;
+    readonly id = "ecore-property-data-service";
+    readonly label = "EcoreGlspPropertyDataService";
 
     protected ecoreUri = "ecore/model/ecore.ecore";
-    protected classifierCounter = 0;
 
     canHandleSelection(selection: any): number {
-        if (isGlspSelection(selection)) {
-            return 15;
-        }
-        return 0;
+        return isGlspSelection(selection) ? 1 : 0;
     }
 
     protected getElementId(selection: GlspSelection): string {
         return selection.selectedElementsIDs[0] || "";
     }
 
-    protected getSelectionData(selection: GlspSelection): any { // WorkflowElementSelectionData {
+    protected getSelectionData(selection: GlspSelection): any {
         if (selection.additionalSelectionData) {
             return selection.additionalSelectionData.selectionDataMap.get(this.getElementId(selection));
         }
     }
 
-    async getProperties(selection: any): Promise<any> {
-        if (selection.selectedElementsIDs) {
+    async providePropertyData(selection: Object | undefined): Promise<Object | undefined> {
+        if (selection && isGlspSelection(selection) && selection.selectedElementsIDs) {
             const selectionData = this.getSelectionData(selection);
             return this.fetchElement(selectionData.modelUri, selectionData.semanticUri);
         }

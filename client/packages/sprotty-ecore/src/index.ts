@@ -16,5 +16,4 @@ import createEcoreDiagramContainer from "./di.config";
 export * from "./model";
 export * from "./views";
 export * from "./features/edit-label-autocomplete";
-export * from "./features/select/selection-data-service";
 export { createEcoreDiagramContainer };

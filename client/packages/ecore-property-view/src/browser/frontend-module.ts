@@ -15,18 +15,14 @@
  ********************************************************************************/
 import "../../style/jsonforms-styling.css";
 
-import { JsonFormsPropertyViewWidget } from "@ndoschek/jsonforms-property-view";
-import { PropertiesService, PropertyViewWidgetProvider } from "@ndoschek/property-view";
+import { PropertyDataService } from "@theia/property-view/lib/browser/property-data-service";
+import { PropertyViewWidgetProvider } from "@theia/property-view/lib/browser/property-view-widget-provider";
 import { ContainerModule } from "inversify";
 
-import { EcoreGlspPropertiesService } from "./properties-service";
-import { ModelServerJsonFormsPropertyViewWidget } from "./widget";
+import { EcoreGlspPropertyDataService } from "./property-data-service";
 import { EcoreGlspPropertyViewWidgetProvider } from "./widget-provider";
 
-export default new ContainerModule((bind, ubind, isBound, rebind) => {
-    if (isBound(JsonFormsPropertyViewWidget)) {
-        rebind(JsonFormsPropertyViewWidget).to(ModelServerJsonFormsPropertyViewWidget).inSingletonScope();
-    }
-    bind(PropertiesService).to(EcoreGlspPropertiesService).inSingletonScope();
+export default new ContainerModule(bind => {
+    bind(PropertyDataService).to(EcoreGlspPropertyDataService).inSingletonScope();
     bind(PropertyViewWidgetProvider).to(EcoreGlspPropertyViewWidgetProvider).inSingletonScope();
 });

@@ -12,7 +12,6 @@ package org.eclipse.emfcloud.ecore.glsp;
 
 import org.eclipse.emfcloud.ecore.glsp.actions.ReturnAttributeTypesAction;
 import org.eclipse.emfcloud.ecore.glsp.actions.SetSemanticUriAction;
-import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreSaveModelActionHandler;
@@ -31,19 +30,18 @@ import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
 import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
 import org.eclipse.emfcloud.modelserver.edit.DefaultCommandCodec;
-import org.eclipse.glsp.server.DefaultGLSPModule;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
-import org.eclipse.glsp.server.actions.ComputedBoundsActionHandler;
 import org.eclipse.glsp.server.actions.DisposeClientSessionActionHandler;
 import org.eclipse.glsp.server.actions.SaveModelActionHandler;
-import org.eclipse.glsp.server.actions.UndoRedoActionHandler;
+import org.eclipse.glsp.server.di.DefaultGLSPModule;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
-import org.eclipse.glsp.server.factory.ModelFactory;
+import org.eclipse.glsp.server.features.core.model.GModelFactory;
+import org.eclipse.glsp.server.features.core.model.ModelSourceLoader;
 import org.eclipse.glsp.server.features.directediting.ApplyLabelEditOperationHandler;
 import org.eclipse.glsp.server.features.toolpalette.ToolPaletteItemProvider;
+import org.eclipse.glsp.server.features.undoredo.UndoRedoActionHandler;
 import org.eclipse.glsp.server.layout.ILayoutEngine;
-import org.eclipse.glsp.server.layout.ServerLayoutConfiguration;
 import org.eclipse.glsp.server.model.ModelStateProvider;
 import org.eclipse.glsp.server.operations.OperationActionHandler;
 import org.eclipse.glsp.server.operations.OperationHandler;
@@ -63,7 +61,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		super.configureActionHandlers(bindings);
 		bindings.add(EcoreGetAttributeTypesActionHandler.class);
 		bindings.rebind(SaveModelActionHandler.class, EcoreSaveModelActionHandler.class);
-		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
+//		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
 		bindings.rebind(DisposeClientSessionActionHandler.class, EcoreDisposeClientSessionActionHandler.class);
@@ -71,7 +69,12 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	}
 
 	@Override
-	public Class<? extends ModelFactory> bindModelFactory() {
+	public Class<? extends ModelSourceLoader> bindSourceModelLoader() {
+		return EcoreModelFactory.class;
+	}
+
+	@Override
+	public Class<? extends GModelFactory> bindGModelFactory() {
 		return EcoreModelFactory.class;
 	}
 
@@ -109,11 +112,6 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.rebind(ApplyLabelEditOperationHandler.class, EcoreLabelEditOperationHandler.class);
 		bindings.rebind(ChangeRoutingPointsHandler.class, EcoreChangeRoutingPointsOperationHandler.class);
 		bindings.add(LayoutOperationHandler.class);
-	}
-
-	@Override
-	protected Class<? extends ServerLayoutConfiguration> bindServerLayoutConfiguration() {
-		return EcoreServerConfiguration.class;
 	}
 
 	@Override

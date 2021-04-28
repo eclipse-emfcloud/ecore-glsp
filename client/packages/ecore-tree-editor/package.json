@@ -3,23 +3,22 @@
   "keywords": [
     "theia-extension"
   ],
-  "version": "0.0.1",
+  "version": "0.2.0",
   "files": [
     "lib",
     "src"
   ],
   "dependencies": {
     "@eclipse-emfcloud/modelserver-theia": "next",
-    "@eclipse-emfcloud/ecore-glsp-common": "0.0.1",
-    "@theia/core": "latest",
-    "@theia/editor": "latest",
-    "@theia/filesystem": "latest",
-    "@theia/workspace": "latest",
+    "@eclipse-emfcloud/ecore-glsp-common": "0.2.0",
+    "@theia/core": "^1.12.1",
+    "@theia/editor": "^1.12.1",
+    "@theia/filesystem": "^1.12.1",
+    "@theia/workspace": "^1.12.1",
     "uuid": "^3.3.2",
-    "@eclipse-emfcloud/theia-tree-editor": "latest"
+    "@eclipse-emfcloud/theia-tree-editor": "next"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
     "rimraf": "^2.6.1",
     "typescript": "~3.9.2"
   },
