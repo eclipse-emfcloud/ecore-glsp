@@ -229,10 +229,6 @@ public class EcoreFacade {
 		}
 	}
 
-	public void updateNotationElement(GModelElement modelElement) {
-		modelIndex.getNotation(modelElement).ifPresent(notation -> updateNotationElement(notation, modelElement));
-	}
-
 	private Optional<Diagram> findDiagram() {
 		return notationResource.getContents().stream().filter(eObject -> isDiagramForEPackage(eObject))
 				.map(Diagram.class::cast).findFirst();

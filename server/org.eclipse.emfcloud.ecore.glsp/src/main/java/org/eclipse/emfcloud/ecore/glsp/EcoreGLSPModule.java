@@ -18,6 +18,7 @@ import org.eclipse.emfcloud.ecore.glsp.handler.EcoreSaveModelActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreUndoRedoActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.RequestSemanticUriActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelFactory;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelSourceLoader;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelStateProvider;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.CreateClassifierChildNodeOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.CreateClassifierNodeOperationHandler;
@@ -26,6 +27,7 @@ import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreChangeBoundsOperati
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreChangeRoutingPointsOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreDeleteOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLabelEditOperationHandler;
+import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLayoutOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
 import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
@@ -70,7 +72,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 
 	@Override
 	public Class<? extends ModelSourceLoader> bindSourceModelLoader() {
-		return EcoreModelFactory.class;
+		return EcoreModelSourceLoader.class;
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.add(CreateClassifierChildNodeOperationHandler.class);
 		bindings.rebind(ApplyLabelEditOperationHandler.class, EcoreLabelEditOperationHandler.class);
 		bindings.rebind(ChangeRoutingPointsHandler.class, EcoreChangeRoutingPointsOperationHandler.class);
-		bindings.add(LayoutOperationHandler.class);
+		bindings.rebind(LayoutOperationHandler.class, EcoreLayoutOperationHandler.class);
 	}
 
 	@Override

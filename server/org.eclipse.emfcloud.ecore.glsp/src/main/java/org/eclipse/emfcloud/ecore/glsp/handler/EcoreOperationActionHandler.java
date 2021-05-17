@@ -13,14 +13,8 @@ package org.eclipse.emfcloud.ecore.glsp.handler;
 import java.util.List;
 import java.util.Optional;
 
-import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
-import org.eclipse.emfcloud.ecore.glsp.EcoreRecordingCommand;
-import org.eclipse.emfcloud.ecore.glsp.gmodel.GModelFactory;
-import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.ModelserverAwareOperationHandler;
-import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.actions.Action;
-import org.eclipse.glsp.server.features.core.model.RequestBoundsAction;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.Operation;
 import org.eclipse.glsp.server.operations.OperationActionHandler;
@@ -44,18 +38,6 @@ public class EcoreOperationActionHandler extends OperationActionHandler {
 	protected List<Action> executeHandler(Operation operation, OperationHandler handler, GModelState gModelState) {
 		if (handler instanceof ModelserverAwareOperationHandler || handler instanceof CompoundOperationHandler) {
 			handler.execute(operation, gModelState);
-		} else {
-			// FIXME make sure that all operations are modelserver aware
-			// - layout is still no modelserver aware operation
-			EcoreModelState modelState = EcoreModelState.getModelState(gModelState);
-			EcoreEditorContext context = modelState.getEditorContext();
-			String label = handler.getLabel();
-			EcoreRecordingCommand command = new EcoreRecordingCommand(context, label,
-					() -> handler.execute(operation, modelState));
-			modelState.execute(command);
-			GModelRoot newRoot = new GModelFactory(modelState).create();
-
-			return List.of(new RequestBoundsAction(newRoot));
 		}
 		return none();
 	}
