@@ -58,6 +58,28 @@
         "panel": "new"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Run tests in terminal (headless)",
+      "type": "shell",
+      "group": "test",
+      "command": "yarn e2etest",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run tests in terminal (non-headless)",
+      "type": "shell",
+      "group": "test",
+      "command": "yarn e2etest:visual",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
     }
   ]
 }

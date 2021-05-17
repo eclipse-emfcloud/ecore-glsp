@@ -39,7 +39,6 @@ public class EcoreChangeRoutingPointsOperationHandler
 								});
 					});
 		}
-		;
 		modelServerAccess.setBendPoints(ecoreModelState, changeRoutingPointsMap);
 	}
 

@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.EcoreUtil.UsageCrossReferencer;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
@@ -53,6 +54,9 @@ import org.eclipse.emfcloud.modelserver.command.CCompoundCommand;
 import org.eclipse.emfcloud.modelserver.command.CommandKind;
 import org.eclipse.emfcloud.modelserver.common.codecs.EncodingException;
 import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
+import org.eclipse.glsp.graph.GEdge;
+import org.eclipse.glsp.graph.GModelElement;
+import org.eclipse.glsp.graph.GNode;
 import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.graph.GraphPackage;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
@@ -522,12 +526,12 @@ public class EcoreModelServerAccess {
 		CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
 		compoundCommand.setType(CommandKind.COMPOUND);
 		changeBendPointsMap.forEach((Edge edge, ElementAndRoutingPoints newRoutingPoints) -> {
-			// clear old bend points first
-			for (GPoint bendPoint : edge.getBendPoints()) {
+			// clear old bend points first if any
+			if (!edge.getBendPoints().isEmpty()) {
 				try {
-					Command removeBendPoint = createRemoveCommand(modelState, edge,
-							EnotationPackage.Literals.EDGE__BEND_POINTS, edge.getBendPoints().indexOf(bendPoint));
-					compoundCommand.getCommands().add(getCommandCodec().encode(removeBendPoint));
+					Command removeBendPoints = createRemoveCommand(modelState, edge,
+							EnotationPackage.Literals.EDGE__BEND_POINTS, edge.getBendPoints());
+					compoundCommand.getCommands().add(getCommandCodec().encode(removeBendPoints));
 				} catch (EncodingException e) {
 					// return false;
 				}
@@ -551,6 +555,71 @@ public class EcoreModelServerAccess {
 		return this.editCompound(compoundCommand);
 	}
 
+	private CCompoundCommand createLayoutCommand(EcoreModelState modelState, GModelElement layoutedRoot) {
+		CCompoundCommand compoundCommand = CCommandFactory.eINSTANCE.createCompoundCommand();
+		compoundCommand.setType(CommandKind.COMPOUND);
+
+		layoutedRoot.getChildren().forEach(gModelElement -> {
+			if (gModelElement instanceof GNode) {
+				modelState.getIndex().getNotation(gModelElement.getId(), Shape.class).ifPresent(shape -> {
+					try {
+						if (((GNode) gModelElement).getPosition() != null) {
+							Command setXPosition = createSetCommand(modelState, shape.getPosition(),
+									GraphPackage.Literals.GPOINT__X, ((GNode) gModelElement).getPosition().getX());
+							Command setYPosition = createSetCommand(modelState, shape.getPosition(),
+									GraphPackage.Literals.GPOINT__Y, ((GNode) gModelElement).getPosition().getY());
+							compoundCommand.getCommands().add(getCommandCodec().encode(setXPosition));
+							compoundCommand.getCommands().add(getCommandCodec().encode(setYPosition));
+						}
+
+						if (((GNode) gModelElement).getSize() != null) {
+							Command setHeight = createSetCommand(modelState, shape.getSize(),
+									GraphPackage.Literals.GBOUNDS__HEIGHT,
+									((GNode) gModelElement).getSize().getHeight());
+							Command setWidth = createSetCommand(modelState, shape.getSize(),
+									GraphPackage.Literals.GBOUNDS__WIDTH, ((GNode) gModelElement).getSize().getWidth());
+							compoundCommand.getCommands().add(getCommandCodec().encode(setHeight));
+							compoundCommand.getCommands().add(getCommandCodec().encode(setWidth));
+						}
+					} catch (EncodingException e) {
+						// return false;
+					}
+				});
+
+			} else if (gModelElement instanceof GEdge) {
+				modelState.getIndex().getNotation(gModelElement.getId(), Edge.class).ifPresent(edge -> {
+					try {
+						// clear existing bend points if any
+						if (!edge.getBendPoints().isEmpty()) {
+							Command removeBendPoints = createRemoveCommand(modelState, edge,
+									EnotationPackage.Literals.EDGE__BEND_POINTS, edge.getBendPoints());
+							compoundCommand.getCommands().add(getCommandCodec().encode(removeBendPoints));
+						}
+						// add all new points
+						for (GPoint newPoint : ((GEdge) gModelElement).getRoutingPoints()) {
+							Command addBendPoint = createAddCommand(modelState, edge,
+									EnotationPackage.Literals.EDGE__BEND_POINTS, EcoreUtil.copy(newPoint));
+							compoundCommand.getCommands().add(getCommandCodec().encode(addBendPoint));
+						}
+					} catch (EncodingException e) {
+						// return false;
+					}
+				});
+
+			}
+		});
+
+		return compoundCommand;
+	}
+
+	public boolean setLayout(EcoreModelState modelState, GModelElement layoutedRoot) {
+		CCompoundCommand compoundCommand = createLayoutCommand(modelState, layoutedRoot);
+		if (compoundCommand.getCommands().isEmpty()) {
+			return false;
+		}
+		return this.editCompound(compoundCommand);
+	}
+
 	private Command createRemoveCommand(EcoreModelState modelState, EObject owner, EStructuralFeature feature,
 			int index) {
 		EditingDomain editingDomain = EcoreModelState.getEditorContext(modelState).getResourceManager()
@@ -560,9 +629,14 @@ public class EcoreModelServerAccess {
 
 	private Command createRemoveCommand(EcoreModelState modelState, EObject owner, EStructuralFeature feature,
 			EObject element) {
+		return createRemoveCommand(modelState, owner, feature, List.of(element));
+	}
+
+	private Command createRemoveCommand(EcoreModelState modelState, EObject owner, EStructuralFeature feature,
+			Collection<?> values) {
 		EditingDomain editingDomain = EcoreModelState.getEditorContext(modelState).getResourceManager()
 				.getEditingDomain();
-		return RemoveCommand.create(editingDomain, owner, feature, List.of(element));
+		return RemoveCommand.create(editingDomain, owner, feature, values);
 	}
 
 	private NotationElement getNotationElement(EcoreModelState modelState, EObject semanticElement) {

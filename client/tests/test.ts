@@ -357,8 +357,7 @@ test('Add Attributes/Literals', async t => {
         .expect(defaultAttributeSelector.literalEnum.exists).ok("Adding Literal to Enum");
 });
 
-// Skipped, can be reactivated once layout this is fixed.
-test.skip('Layout new Diagram', async t => {
+test('Layout new Diagram', async t => {
     openFile(t, selectors.emptyEcore);
     createNode(t, "Class", 100, 100);
     createNode(t, "Abstract", 100, 100);
