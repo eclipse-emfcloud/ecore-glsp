@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,12 +8,14 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia";
 import { GLSPClientContribution, registerDiagramManager } from "@eclipse-glsp/theia-integration/lib/browser";
-import { CommandContribution } from "@theia/core";
+import { CommandContribution, MenuContribution } from "@theia/core";
 import { WebSocketConnectionProvider } from "@theia/core/lib/browser";
 import { ContainerModule } from "inversify";
 import { DiagramConfiguration } from "sprotty-theia/lib";
 
+import { EcoreModelServerClient } from "../common/ecore-model-server-client";
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreCommandContribution } from "./command-contribution";
 import { EcoreDiagramConfiguration } from "./diagram/ecore-diagram-configuration";
@@ -29,8 +31,12 @@ export default new ContainerModule(bind => {
     registerDiagramManager(bind, EcoreDiagramManager);
 
     bind(CommandContribution).to(EcoreCommandContribution);
+    bind(MenuContribution).to(EcoreCommandContribution);
+
     bind(FileGenServer).toDynamicValue(ctx => {
         const connection = ctx.container.get(WebSocketConnectionProvider);
         return connection.createProxy<FileGenServer>(FILEGEN_SERVICE_PATH);
     }).inSingletonScope();
+
+    bind(EcoreModelServerClient).toService(ModelServerClient);
 });

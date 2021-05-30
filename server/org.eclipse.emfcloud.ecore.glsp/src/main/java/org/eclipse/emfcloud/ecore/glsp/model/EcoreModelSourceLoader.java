@@ -1,20 +1,28 @@
+/********************************************************************************
+ * Copyright (c) 2021 EclipseSource and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0, or the MIT License which is
+ * available at https://opensource.org/licenses/MIT.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR MIT
+ ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.model;
 
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.ModelServerClientProvider;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
-import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
+import org.eclipse.emfcloud.ecore.modelserver.EcoreModelServerClient;
 import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.builder.impl.GGraphBuilder;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
 import org.eclipse.glsp.server.features.core.model.ModelSourceLoader;
+import org.eclipse.glsp.server.features.core.model.ModelSubmissionHandler;
 import org.eclipse.glsp.server.features.core.model.RequestModelAction;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.utils.ClientOptions;
@@ -33,7 +41,7 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 	private ActionDispatcher actionDispatcher;
 
 	@Inject
-	private CommandCodec commandCodec;
+	protected ModelSubmissionHandler submissionHandler;
 
 	@Override
 	public void loadSourceModel(RequestModelAction action, GModelState gModelState) {
@@ -48,7 +56,7 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 			return;
 		}
 
-		Optional<ModelServerClientApi<EObject>> modelServerClient = modelServerClientProvider.get();
+		Optional<EcoreModelServerClient> modelServerClient = modelServerClientProvider.get();
 		if (modelServerClient.isEmpty()) {
 			LOGGER.error("Connection to modelserver has not been initialized, return empty model");
 			modelState.setRoot(createEmptyRoot());
@@ -56,10 +64,10 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 		}
 
 		EcoreModelServerAccess modelServerAccess = new EcoreModelServerAccess(modelState.getModelUri(),
-				modelServerClient.get(), commandCodec);
+				modelServerClient.get());
 		modelState.setModelServerAccess(modelServerAccess);
 		modelServerAccess
-				.subscribe(new EcoreModelServerSubscriptionListener(modelState, modelServerAccess, actionDispatcher));
+				.subscribe(new EcoreModelServerSubscriptionListener(modelState, actionDispatcher, submissionHandler));
 
 		EcoreEditorContext editorContext = new EcoreEditorContext(modelState, modelServerAccess);
 		modelState.setEditorContext(editorContext);
@@ -70,11 +78,6 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 			modelState.setRoot(createEmptyRoot());
 			return;
 		}
-
-		Diagram diagram = ecoreFacade.getDiagram();
-		GModelRoot gmodelRoot = editorContext.getGModelFactory().create(ecoreFacade.getEPackage());
-		ecoreFacade.initialize(diagram, gmodelRoot);
-		modelState.setRoot(gmodelRoot);
 
 	}
 

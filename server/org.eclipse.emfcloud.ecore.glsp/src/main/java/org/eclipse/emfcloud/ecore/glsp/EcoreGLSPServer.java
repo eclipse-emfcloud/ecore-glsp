@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -13,9 +13,7 @@ package org.eclipse.emfcloud.ecore.glsp;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClient;
-import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
+import org.eclipse.emfcloud.ecore.modelserver.EcoreModelServerClient;
 import org.eclipse.emfcloud.modelserver.client.Response;
 import org.eclipse.glsp.server.jsonrpc.DefaultGLSPServer;
 
@@ -37,7 +35,7 @@ public class EcoreGLSPServer extends DefaultGLSPServer<EcoreInitializeOptions> {
 			LOGGER.debug(String.format("[%s] Pinging modelserver", options.getTimestamp()));
 
 			try {
-				ModelServerClientApi<EObject> client = new ModelServerClient(options.getModelServerURL());
+				EcoreModelServerClient client = new EcoreModelServerClient(options.getModelServerURL());
 				boolean alive = client.ping().thenApply(Response<Boolean>::body).get();
 				if (alive) {
 					modelServerClientProvider.setModelServerClient(client);

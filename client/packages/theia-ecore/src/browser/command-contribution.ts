@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -8,7 +8,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
+import { MenuContribution, MenuModelRegistry } from "@theia/core";
 import {
+    CommonMenus,
     FrontendApplication,
     open,
     OpenerService,
@@ -17,7 +19,7 @@ import {
     QuickOpenOptions,
     QuickOpenService
 } from "@theia/core/lib/browser";
-import { Command, CommandContribution, CommandRegistry } from "@theia/core/lib/common/command";
+import { Command, CommandContribution, CommandRegistry, CommandService } from "@theia/core/lib/common/command";
 import { MessageService } from "@theia/core/lib/common/message-service";
 import { ProgressService } from "@theia/core/lib/common/progress-service";
 import { QuickOpenModel } from "@theia/core/lib/common/quick-open-model";
@@ -28,19 +30,25 @@ import { EDITOR_CONTEXT_MENU } from "@theia/editor/lib/browser";
 import { FileDialogService } from "@theia/filesystem/lib/browser";
 import { FileService } from "@theia/filesystem/lib/browser/file-service";
 import { FileStat } from "@theia/filesystem/lib/common/files";
-import { NAVIGATOR_CONTEXT_MENU } from "@theia/navigator/lib/browser/navigator-contribution";
+import {
+    FileNavigatorCommands,
+    NAVIGATOR_CONTEXT_MENU,
+    NavigatorContextMenu
+} from "@theia/navigator/lib/browser/navigator-contribution";
 import { WorkspaceService } from "@theia/workspace/lib/browser";
 import { inject, injectable } from "inversify";
 
+import { EcoreModelServerClient } from "../common/ecore-model-server-client";
 import { FileGenServer } from "../common/generate-protocol";
 
 export const EXAMPLE_NAVIGATOR = [...NAVIGATOR_CONTEXT_MENU, "example"];
 export const EXAMPLE_EDITOR = [...EDITOR_CONTEXT_MENU, "example"];
 
-export const NEW_ECORE_FILE: Command = {
+export const NEW_ECORE_FILE_COMMAND: Command = {
     id: "file.newEcoreFile",
     category: "File",
-    label: "New Ecore-File"
+    label: "New Ecore Model Diagram",
+    iconClass: "ecoremodelfile"
 };
 
 export const GENERATE_GENMODEL_DEFAULT: Command = {
@@ -62,7 +70,7 @@ export const GENERATE_CODE: Command = {
 };
 
 @injectable()
-export class EcoreCommandContribution implements CommandContribution {
+export class EcoreCommandContribution implements CommandContribution, MenuContribution {
 
     @inject(FileService) protected readonly fileService: FileService;
     @inject(SelectionService) protected readonly selectionService: SelectionService;
@@ -74,54 +82,25 @@ export class EcoreCommandContribution implements CommandContribution {
     @inject(ProgressService) protected readonly progressService: ProgressService;
     @inject(QuickOpenService) protected readonly quickOpenService: QuickOpenService;
     @inject(FileGenServer) private readonly fileGenServer: FileGenServer;
+    @inject(EcoreModelServerClient) protected readonly modelServerClient: EcoreModelServerClient;
+    @inject(CommandService) protected readonly commandService: CommandService;
 
     registerCommands(registry: CommandRegistry): void {
-        registry.registerCommand(NEW_ECORE_FILE, this.newWorkspaceRootUriAwareCommandHandler({
-            execute: uri => this.getDirectory(uri).then(parent => {
-                if (parent) {
-                    const parentUri = parent.resource;
+        registry.registerCommand(NEW_ECORE_FILE_COMMAND, this.newWorkspaceRootUriAwareCommandHandler({
+            execute: () => {
+                let workspaceUri: URI = new URI();
+                if (this.workspaceService.tryGetRoots().length) {
+                    workspaceUri = this.workspaceService.tryGetRoots()[0].resource;
 
-                    const createEcore = (name: string, nsPrefix: string, nsURI: string): void => {
-                        if (name) {
-                            this.fileGenServer.generateEcore(name, nsPrefix, nsURI, parentUri.path.toString()).then(() => {
-                                const ecorePath = parentUri.toString() + "/" + name + ".ecore";
-                                const fileUriEcore = new URI(ecorePath);
-                                open(this.openerService, fileUriEcore);
-                            });
-                        }
-                    };
-
-                    // #FIXME also create empty enotation file (and create in new folder?)
-                    // make sure resources are added to modelserver - do not use openerservice from theia to create file!
-
-                    const showInput = (hint: string, prefix: string, onEnter: (result: string) => void): void => {
-                        const quickOpenModel: QuickOpenModel = {
-                            onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
-                                const dynamicItems: QuickOpenItem[] = [];
-                                const suffix = "Press 'Enter' to confirm or 'Escape' to cancel.";
-
-                                dynamicItems.push(new SingleStringInputOpenItem(
-                                    `${prefix}: '${lookFor}' ${suffix}`,
-                                    () => onEnter(lookFor),
-                                    (mode: QuickOpenMode) => mode === QuickOpenMode.OPEN,
-                                    () => false
-                                ));
-
-                                acceptor(dynamicItems);
-                            }
-                        };
-                        this.quickOpenService.open(quickOpenModel, this.getOptions(hint, false));
-                    };
-
-                    showInput("Name", "Name of Ecore", nameOfEcore => {
-                        showInput("NS Prefix", "NS Prefix", nsPrefix => {
-                            showInput("NS URI", "NS URI", nsURI => {
-                                createEcore(nameOfEcore, nsPrefix, nsURI);
+                    this.showInput("Name", "Enter name of Ecore Model", nameOfEcore => {
+                        this.showInput("NS Prefix", "Enter NS Prefix", nsPrefix => {
+                            this.showInput("NS URI", "Enter NS URI", nsURI => {
+                                this.createEcoreModelDiagram(nameOfEcore, workspaceUri, nsPrefix, nsURI);
                             });
                         });
                     });
                 }
-            })
+            }
         }));
         registry.registerCommand(GENERATE_GENMODEL_DEFAULT, this.newWorkspaceRootUriAwareCommandHandler({
             execute: uri => this.getDirectory(uri).then(parent => {
@@ -142,27 +121,8 @@ export class EcoreCommandContribution implements CommandContribution {
                 if (parent) {
                     const parentUri = parent.resource;
 
-                    const showInput = (hint: string, prefix: string, onEnter: (result: string) => void): void => {
-                        const quickOpenModel: QuickOpenModel = {
-                            onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
-                                const dynamicItems: QuickOpenItem[] = [];
-                                const suffix = "Press 'Enter' to confirm or 'Escape' to cancel.";
-
-                                dynamicItems.push(new SingleStringInputOpenItem(
-                                    `${prefix}: ${lookFor}. ${suffix}`,
-                                    () => onEnter(lookFor),
-                                    (mode: QuickOpenMode) => mode === QuickOpenMode.OPEN,
-                                    () => false
-                                ));
-
-                                acceptor(dynamicItems);
-                            }
-                        };
-                        this.quickOpenService.open(quickOpenModel, this.getOptions(hint, false));
-                    };
-
-                    showInput("Name", "Custom RootPackage Name", customPackageName => {
-                        showInput("Output folder name (relative from project root)", "folder name", folderName => {
+                    this.showInput("Name", "Custom RootPackage Name", customPackageName => {
+                        this.showInput("Output folder name (relative from project root)", "folder name", folderName => {
                             this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName).then(() => {
                                 const extensionStart = uri.displayName.lastIndexOf(".");
                                 const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
@@ -186,6 +146,56 @@ export class EcoreCommandContribution implements CommandContribution {
                 }
             })
         }));
+    }
+
+    registerMenus(menus: MenuModelRegistry): void {
+        menus.registerMenuAction(CommonMenus.FILE_NEW, {
+            commandId: NEW_ECORE_FILE_COMMAND.id,
+            label: NEW_ECORE_FILE_COMMAND.label,
+            icon: NEW_ECORE_FILE_COMMAND.iconClass,
+            order: "0"
+        });
+
+        menus.registerMenuAction(NavigatorContextMenu.NAVIGATION, {
+            commandId: NEW_ECORE_FILE_COMMAND.id,
+            label: NEW_ECORE_FILE_COMMAND.label,
+            icon: NEW_ECORE_FILE_COMMAND.iconClass,
+            order: "0"
+        });
+
+    }
+
+    protected showInput(prefix: string, hint: string, onEnter: (result: string) => void): void {
+        const quickOpenModel: QuickOpenModel = {
+            onType(lookFor: string, acceptor: (items: QuickOpenItem[]) => void): void {
+                const dynamicItems: QuickOpenItem[] = [];
+                const suffix = "Press 'Enter' to confirm or 'Escape' to cancel.";
+
+                dynamicItems.push(new SingleStringInputOpenItem(
+                    `${prefix}: '${lookFor}'  > ${suffix}`,
+                    () => onEnter(lookFor),
+                    (mode: QuickOpenMode) => mode === QuickOpenMode.OPEN,
+                    () => false
+                ));
+
+                acceptor(dynamicItems);
+            }
+        };
+        this.quickOpenService.open(quickOpenModel, this.getOptions(hint, false));
+    }
+
+    protected createEcoreModelDiagram(modelName: string, workspaceUri: URI, nsUri: string, nsPrefix: string): void {
+        if (modelName) {
+            this.modelServerClient.createEcoreResources(modelName, nsUri, nsPrefix).then(() => {
+                this.quickOpenService.hide();
+                const modelUri = new URI(workspaceUri.path.toString() + `/${modelName}/model/${modelName}.uml`);
+                this.commandService.executeCommand(FileNavigatorCommands.REFRESH_NAVIGATOR.id);
+                this.openerService.getOpener(modelUri).then(openHandler => {
+                    openHandler.open(modelUri);
+                    this.commandService.executeCommand(FileNavigatorCommands.REVEAL_IN_NAVIGATOR.id);
+                });
+            });
+        }
     }
 
     protected withProgress<T>(task: () => Promise<T>): Promise<T> {

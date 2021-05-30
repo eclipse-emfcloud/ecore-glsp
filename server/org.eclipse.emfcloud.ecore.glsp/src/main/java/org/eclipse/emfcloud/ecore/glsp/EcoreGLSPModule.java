@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -12,6 +12,7 @@ package org.eclipse.emfcloud.ecore.glsp;
 
 import org.eclipse.emfcloud.ecore.glsp.actions.ReturnAttributeTypesAction;
 import org.eclipse.emfcloud.ecore.glsp.actions.SetSemanticUriAction;
+import org.eclipse.emfcloud.ecore.glsp.handler.EcoreComputedBoundsActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreGetAttributeTypesActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreOperationActionHandler;
 import org.eclipse.emfcloud.ecore.glsp.handler.EcoreSaveModelActionHandler;
@@ -30,14 +31,13 @@ import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLabelEditOperationH
 import org.eclipse.emfcloud.ecore.glsp.operationhandler.EcoreLayoutOperationHandler;
 import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
-import org.eclipse.emfcloud.modelserver.edit.CommandCodec;
-import org.eclipse.emfcloud.modelserver.edit.DefaultCommandCodec;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
 import org.eclipse.glsp.server.actions.DisposeClientSessionActionHandler;
 import org.eclipse.glsp.server.actions.SaveModelActionHandler;
 import org.eclipse.glsp.server.di.DefaultGLSPModule;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
+import org.eclipse.glsp.server.features.core.model.ComputedBoundsActionHandler;
 import org.eclipse.glsp.server.features.core.model.GModelFactory;
 import org.eclipse.glsp.server.features.core.model.ModelSourceLoader;
 import org.eclipse.glsp.server.features.directediting.ApplyLabelEditOperationHandler;
@@ -63,7 +63,7 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		super.configureActionHandlers(bindings);
 		bindings.add(EcoreGetAttributeTypesActionHandler.class);
 		bindings.rebind(SaveModelActionHandler.class, EcoreSaveModelActionHandler.class);
-//		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
+		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
 		bindings.rebind(DisposeClientSessionActionHandler.class, EcoreDisposeClientSessionActionHandler.class);
@@ -135,7 +135,6 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 	@Override
 	public void configure() {
 		super.configure();
-		bind(CommandCodec.class).toInstance(new DefaultCommandCodec());
 		bind(ModelServerClientProvider.class).asEagerSingleton();
 	}
 
