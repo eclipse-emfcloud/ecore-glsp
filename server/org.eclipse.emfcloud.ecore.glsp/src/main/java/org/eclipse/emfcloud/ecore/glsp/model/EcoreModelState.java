@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -11,10 +11,12 @@
 package org.eclipse.emfcloud.ecore.glsp.model;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.EcoreModelIndex;
 import org.eclipse.emfcloud.ecore.glsp.ResourceManager;
+import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.model.GModelStateImpl;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
@@ -82,6 +84,22 @@ public class EcoreModelState extends GModelStateImpl implements GModelState {
 	@Override
 	public EcoreModelIndex getIndex() {
 		return EcoreModelIndex.get(getRoot());
+	}
+
+	public void loadSourceModels() throws GLSPServerException {
+		EcoreEditorContext editorContext = new EcoreEditorContext(this, modelServerAccess);
+		setEditorContext(editorContext);
+
+		// creates new ecoreFacade and fetches semantic and notation model
+		EcoreFacade ecoreFacade = editorContext.getEcoreFacade();
+		if (ecoreFacade == null) {
+			throw new GLSPServerException("Error during source model loading");
+		}
+
+		Diagram diagram = ecoreFacade.getDiagram();
+		GModelRoot gmodelRoot = editorContext.getGModelFactory().create(ecoreFacade.getEPackage());
+		ecoreFacade.initialize(diagram, gmodelRoot);
+		setRoot(gmodelRoot);
 	}
 
 }

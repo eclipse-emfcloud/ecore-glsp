@@ -18,11 +18,13 @@
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//State"/>
-    <position x="603.0" y="141.0"/>
+    <position x="602.0" y="136.0"/>
+    <size width="238.453125" height="104.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//StateMachine"/>
-    <position x="267.0" y="19.666666666666686"/>
+    <position x="267.0" y="22.666666666666686"/>
+    <size width="163.296875" height="43.0"/>
   </elements>
   <elements xsi:type="enotation:Edge" source="//@elements.4" target="//@elements.0">
     <semanticElement uri="//StateMachine/events"/>
@@ -38,7 +40,7 @@
   </elements>
   <elements xsi:type="enotation:Edge" source="//@elements.4" target="//@elements.3">
     <semanticElement uri="//StateMachine/states"/>
-    <bendPoints x="557.3203125" y="43.166666666666686"/>
+    <bendPoints x="721.2265625" y="43.166666666666686"/>
   </elements>
   <elements xsi:type="enotation:Edge" source="//@elements.3" target="//@elements.1">
     <semanticElement uri="//State/transitions"/>

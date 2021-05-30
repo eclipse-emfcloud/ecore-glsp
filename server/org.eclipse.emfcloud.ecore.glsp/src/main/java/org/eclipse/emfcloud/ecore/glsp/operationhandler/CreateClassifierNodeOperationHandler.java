@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -35,6 +35,9 @@ import com.google.common.collect.Lists;
 public class CreateClassifierNodeOperationHandler
 		extends ModelServerAwareBasicCreateOperationHandler<CreateNodeOperation> {
 
+	public static final int DEFAULT_SHAPE_HEIGHT = 75;
+	public static final int DEFAULT_SHAPE_WIDTH = 175;
+
 	public CreateClassifierNodeOperationHandler() {
 		super(handledElementTypeIds);
 	}
@@ -60,6 +63,7 @@ public class CreateClassifierNodeOperationHandler
 
 		Shape shape = EnotationFactory.eINSTANCE.createShape();
 		shape.setPosition(operation.getLocation().orElse(GraphUtil.point(0, 0)));
+		shape.setSize(GraphUtil.dimension(DEFAULT_SHAPE_WIDTH, DEFAULT_SHAPE_HEIGHT));
 
 		SemanticProxy proxy = EnotationFactory.eINSTANCE.createSemanticProxy();
 		proxy.setUri(getSemanticProxyUri(eClassifier));

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -84,11 +84,14 @@ public class ResourceManager {
 			EObject semanticRoot = modelServerAccess.getModel();
 			Resource semanticResource = loadResource(convertToFile(getSemanticURI()), semanticRoot);
 
+			boolean needsInitialAutoLayout = false;
 			EObject notationRoot = modelServerAccess.getNotationModel();
+			if (notationRoot == null) {
+				needsInitialAutoLayout = true;
+				notationRoot = modelServerAccess.createEcoreNotation();
+			}
 			Resource notationResource = loadResource(convertToFile(getNotationURI()), notationRoot);
-			// #FIXME if semanticresource exists, but no enotation resource add one basic
-			// notation resource to modelserver (diagram with semantic element)
-			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelState.getIndex());
+			ecoreFacade = new EcoreFacade(semanticResource, notationResource, modelState.getIndex(), needsInitialAutoLayout);
 			return ecoreFacade;
 		} catch (IOException e) {
 			LOGGER.error(e);

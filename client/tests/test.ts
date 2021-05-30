@@ -201,8 +201,7 @@ test('Switch Theme', async t => {
         .expect(Selector('div.p-Widget.p-DockPanel.p-SplitPanel-child').getStyleProperty('color')).eql('rgb(97, 97, 97)');
 });
 
-// Skipped, can be reactivated once layout this is fixed.
-test.skip('Open UML.ecore (Autolayout/ Big Ecore)', async t => {
+test('Open UML.ecore (Autolayout/ Big Ecore)', async t => {
     openFile(t, selectors.umlEcore);
 
     await t
@@ -210,7 +209,11 @@ test.skip('Open UML.ecore (Autolayout/ Big Ecore)', async t => {
         .expect(Selector('text.name.sprotty-label').withText('ConnectorKind').exists).ok('Class ConnectorKind exists')
         .expect(Selector('g.node.ecore-node.enum').count).eql(26)
         .expect(Selector('g.node.ecore-node.class').count).eql(486)
-        .expect(Selector('text.name.sprotty-label').withText('ConnectorKind').parent("g.node.ecore-node").getAttribute('transform')).eql('translate(12, 12)');
+        .expect(Selector('text.name.sprotty-label').withText('ConnectorKind').parent("g.node.ecore-node").getAttribute('transform')).eql('translate(12, 12)')
+        .wait(500)
+        .rightClick(await fileSelect('UML.enotation'))
+        .click(selectors.deleteFile)
+        .click(selectors.okButton);
 });
 
 test('Deletion/Renaming of enotation', async t => {
@@ -231,14 +234,17 @@ test('Deletion/Renaming of enotation', async t => {
 
 }).after(checkDefaultWorkbench);
 
-test('Create and Delete ecore file', async t => {
+test('Create and Delete ecore diagram files', async t => {
     const wsSelect = Selector('#shell-tab-explorer-view-container');
     const deleteFile = Selector('.p-Menu-itemLabel').withText('Delete');
     const okButton = Selector('.theia-button.main').withText('OK');
+    const newEcoreFolder = Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').withText('Creation');
+    const modelFolder = Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').withText('model');
     const newEcore = Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').withText('Creation.ecore');
+    const newEnotation = Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').withText('Creation.enotation');
 
     openQuickAccessBar(t);
-    writeQuickAccessBar(t, "New Ecore-File");
+    writeQuickAccessBar(t, "New Ecore Model Diagram");
     writeQuickAccessBar(t, "Creation");
     writeQuickAccessBar(t, "creationPrefix");
     writeQuickAccessBar(t, "creationURI");
@@ -246,11 +252,15 @@ test('Create and Delete ecore file', async t => {
     await t
         .click(wsSelect)
         .wait(500)
-        .expect(newEcore.exists).ok("File was not properply generated")
-        .rightClick(newEcore)
+        .expect(newEcoreFolder.exists).ok("Diagram files were not properply generated")
+        .click(newEcoreFolder)
+        .expect(modelFolder.exists).ok("Diagram files were not properply generated")
+        .expect(newEcore.exists).ok("Ecore file was not properply generated")
+        .expect(newEnotation.exists).ok("Enotation file was not properply generated")
+        .rightClick(newEcoreFolder)
         .click(deleteFile)
         .click(okButton)
-        .expect(newEcore.exists).notOk("File was still found, even though it should be deleted");
+        .expect(newEcore.exists).notOk("Files were still found, even though they should be deleted");
 
 }).after(checkDefaultWorkbench);
 

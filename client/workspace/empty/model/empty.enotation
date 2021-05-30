@@ -3,18 +3,18 @@
   <semanticElement uri="/"/>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEClass0"/>
-    <position x="588.171875" y="249.0"/>
-    <size width="317.84375" height="208.0"/>
+    <position x="12.0" y="12.0"/>
+    <size width="321.84375" height="208.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEClass5"/>
-    <position x="84.171875" y="239.0"/>
+    <position x="353.84375" y="94.5"/>
     <size width="155.484375" height="43.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//TestOccurrences"/>
-    <position x="1458.171875" y="40.0"/>
-    <size width="330.046875" height="572.0"/>
+    <position x="529.328125" y="12.0"/>
+    <size width="340.703125" height="572.0"/>
   </elements>
   <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.0" target="//@elements.1">
     <bendPoints x="371.9140625" y="353.0"/>
