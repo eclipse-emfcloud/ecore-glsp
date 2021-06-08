@@ -10,8 +10,11 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.modelserver;
 
+import static io.javalin.apibuilder.ApiBuilder.delete;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
+
+import java.io.IOException;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emfcloud.modelserver.common.ModelServerPathParametersV1;
@@ -63,12 +66,34 @@ public class EcoreModelServerRouting extends ModelServerRoutingV1 {
 
 	protected void createEcoreNotation(final Context ctx) {
 		getResolvedFileUri(ctx, ModelServerPathParametersV1.MODEL_URI).ifPresent(modelUri -> {
-			EObject result = ((EcoreModelResourceManager) resourceManager).addNotationResource(modelUri);
+			EObject result = ((EcoreModelResourceManager) resourceManager).addEnotationResource(modelUri);
 			try {
 				ctx.json(result != null ? JsonResponse.success(JsonCodec.encode(codecsManager.encode(ctx, result)))
 						: JsonResponse.error());
 			} catch (EncodingException e) {
 				e.printStackTrace();
+			}
+		});
+	}
+
+	protected void deleteEcoreResources(final Context ctx) {
+		getResolvedFileUri(ctx, ModelServerPathParametersV1.MODEL_URI).ifPresent(modelUri -> {
+			try {
+				((EcoreModelResourceManager) resourceManager).deleteEcoreResources(modelUri);
+				ctx.json(JsonResponse.success());
+			} catch (IOException e) {
+				ctx.json(JsonResponse.error());
+			}
+		});
+	}
+
+	protected void deleteEnotationResource(final Context ctx) {
+		getResolvedFileUri(ctx, ModelServerPathParametersV1.MODEL_URI).ifPresent(modelUri -> {
+			try {
+				((EcoreModelResourceManager) resourceManager).deleteEnotationResource(modelUri);
+				ctx.json(JsonResponse.success());
+			} catch (IOException e) {
+				ctx.json(JsonResponse.error());
 			}
 		});
 	}
@@ -85,6 +110,8 @@ public class EcoreModelServerRouting extends ModelServerRoutingV1 {
 	private void apiEndpoints() {
 		get(EcoreModelServerPaths.ECORE_CREATE, this::createEcoreResources);
 		get(EcoreModelServerPaths.ENOTATION_CREATE, this::createEcoreNotation);
+		delete(EcoreModelServerPaths.ECORE_DELETE, this::deleteEcoreResources);
+		delete(EcoreModelServerPaths.ENOTATION_DELETE, this::deleteEnotationResource);
 	}
 
 }

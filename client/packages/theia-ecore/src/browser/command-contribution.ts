@@ -188,7 +188,7 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
         if (modelName) {
             this.modelServerClient.createEcoreResources(modelName, nsUri, nsPrefix).then(() => {
                 this.quickOpenService.hide();
-                const modelUri = new URI(workspaceUri.path.toString() + `/${modelName}/model/${modelName}.uml`);
+                const modelUri = new URI(workspaceUri.path.toString() + `/${modelName}/model/${modelName}.ecore`);
                 this.commandService.executeCommand(FileNavigatorCommands.REFRESH_NAVIGATOR.id);
                 this.openerService.getOpener(modelUri).then(openHandler => {
                     openHandler.open(modelUri);

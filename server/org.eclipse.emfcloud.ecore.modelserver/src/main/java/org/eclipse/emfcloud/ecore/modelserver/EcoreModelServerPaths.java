@@ -16,5 +16,8 @@ public interface EcoreModelServerPaths extends ModelServerPaths {
 
 	String ECORE_CREATE = "ecore/create";
 	String ENOTATION_CREATE = "enotation/create";
+	
+	String ECORE_DELETE = "ecore/delete";
+	String ENOTATION_DELETE = "enotation/delete";
 
 }
