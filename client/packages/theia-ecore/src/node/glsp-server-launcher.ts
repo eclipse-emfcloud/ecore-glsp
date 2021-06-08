@@ -16,6 +16,8 @@ import { RawProcess, RawProcessFactory } from "@theia/process/lib/node/raw-proce
 import * as cp from "child_process";
 import { inject, injectable } from "inversify";
 
+import { findEquinoxLauncher } from "./equinox";
+
 export const GLSPLaunchOptions = Symbol.for("LaunchOptions");
 export interface GLSPLaunchOptions {
     serverPort: number;
@@ -41,7 +43,7 @@ export class GLSPServerLauncher implements BackendApplicationContribution {
 
     protected startServer(): void {
         if (this.launchOptions.jarPath) {
-            let args = ["-jar", this.launchOptions.jarPath, "--port", `${this.launchOptions.serverPort}`];
+            let args = ["-jar", findEquinoxLauncher(this.launchOptions.jarPath), "--port", `${this.launchOptions.serverPort}`];
             if (this.launchOptions.additionalArgs) {
                 args = [...args, ...this.launchOptions.additionalArgs];
             }
