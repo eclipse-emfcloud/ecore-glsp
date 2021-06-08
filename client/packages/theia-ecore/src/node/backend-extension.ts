@@ -9,6 +9,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 import { LaunchOptions, ModelServerClient } from "@eclipse-emfcloud/modelserver-theia";
+import { DefaultModelServerLauncher } from "@eclipse-emfcloud/modelserver-theia/lib/node";
 import { GLSPServerContribution } from "@eclipse-glsp/theia-integration/lib/node";
 import { ConnectionHandler, JsonRpcConnectionHandler } from "@theia/core";
 import { BackendApplicationContribution } from "@theia/core/lib/node";
@@ -18,14 +19,14 @@ import { join, resolve } from "path";
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreFileGenServer } from "./ecore-file-generation";
 import { EcoreGLSPServerContribution } from "./ecore-glsp-server-contribution";
-import { findEquinoxLauncher } from "./equinox";
+import { EcoreModelServerLauncher } from "./ecore-model-server-launcher";
 import { GLSPLaunchOptions, GLSPServerLauncher } from "./glsp-server-launcher";
 import { EcoreModelServerClientImpl } from "./model-server-client";
 
 @injectable()
 export class EcoreGlspLaunchOptions implements GLSPLaunchOptions {
     hostname = "localhost";
-    jarPath = findEquinoxLauncher(join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.glsp.product-1.0.0"));
+    jarPath = join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.glsp.product-1.0.0");
     serverPort = 5007;
 }
 
@@ -34,14 +35,19 @@ export class EcoreModelServerLaunchOptions implements LaunchOptions {
     baseURL = "api/v1/";
     serverPort = 8081;
     hostname = "localhost";
-    jarPath = findEquinoxLauncher(join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.modelserver.product-1.0.0"));
+    jarPath = join(__dirname, "..", "..", "build", "org.eclipse.emfcloud.ecore.modelserver.product-1.0.0");
     additionalArgs = [
         "--errorsOnly",
         `-r=${resolve(join(__dirname, "..", "..", "..", "..", "workspace"))}`
     ];
 }
 
-export default new ContainerModule((bind, _unbind, isBound, rebind) => {
+export default new ContainerModule((bind, unbind, isBound, rebind) => {
+    if (isBound(DefaultModelServerLauncher)) {
+        bind(EcoreModelServerLauncher).toSelf().inSingletonScope();
+        rebind(DefaultModelServerLauncher).toService(EcoreModelServerLauncher);
+    }
+
     if (isBound(LaunchOptions)) {
         rebind(LaunchOptions).to(EcoreModelServerLaunchOptions).inSingletonScope();
     } else {
