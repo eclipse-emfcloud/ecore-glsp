@@ -13,5 +13,7 @@ import { ModelServerClient, ModelServerMessage, Response } from "@eclipse-emfclo
 export const EcoreModelServerClient = Symbol("EcoreModelServerClient");
 export interface EcoreModelServerClient extends ModelServerClient {
     createEcoreResources(modelName: string, nsUri: string, nsPrefix: string): Promise<Response<ModelServerMessage>>;
+    deleteEcoreResources(modelUri: string): Promise<Response<ModelServerMessage>>;
+    deleteEnotationResource(modelUri: string): Promise<Response<ModelServerMessage>>;
 }
 

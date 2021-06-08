@@ -193,7 +193,7 @@ public class EcoreModelResourceManager extends DefaultModelResourceManager {
 		return proxy;
 	}
 
-	public EObject addNotationResource(final String modeluri) {
+	public EObject addEnotationResource(final String modeluri) {
 		URI ecoreModelUri = createURI(modeluri);
 
 		EPackage existingEPackage = loadModel(modeluri, EPackage.class).get();
@@ -222,6 +222,40 @@ public class EcoreModelResourceManager extends DefaultModelResourceManager {
 		}
 
 		return notationDiagram;
+	}
+
+	@Override
+	public void removeResource(final String modeluri) throws IOException {
+		ResourceSet existingResourceSet = getResourceSet(modeluri);
+		if (existingResourceSet != null) {
+			Resource resource = existingResourceSet.getResource(createURI(modeluri), false);
+			if (resource != null) {
+				resource.delete(null);
+			}
+		}
+	}
+
+	public void deleteEcoreResources(final String modeluri) throws IOException {
+		ResourceSet existingResourceSet = getResourceSet(modeluri);
+		if (existingResourceSet != null) {
+			for (Resource resource : existingResourceSet.getResources()) {
+				if (resource != null) {
+					resource.delete(null);
+				}
+			}
+			editingDomains.remove(existingResourceSet);
+			resourceSets.remove(createURI(modeluri));
+		}
+	}
+
+	public void deleteEnotationResource(final String modeluri) throws IOException {
+		ResourceSet existingResourceSet = getResourceSet(modeluri);
+		if (existingResourceSet != null) {
+			Resource resource = existingResourceSet.getResource(createURI(modeluri), false);
+			if (resource != null) {
+				resource.delete(null);
+			}
+		}
 	}
 
 }
