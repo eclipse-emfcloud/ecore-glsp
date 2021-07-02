@@ -11,11 +11,10 @@
 import {
     ModelServerClient,
     ModelServerCommand,
-    ModelServerCommandUtil,
-    ModelServerCompoundCommand,
     ModelServerMessage,
     ModelServerReferenceDescription,
-    ModelServerSubscriptionService
+    ModelServerSubscriptionService,
+    SetCommand
 } from "@eclipse-emfcloud/modelserver-theia/lib/common";
 import {
     AddCommandProperty,
@@ -138,7 +137,7 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
         return paths;
     }
 
-    protected applyCommand(command: ModelServerCommand | ModelServerCompoundCommand): void {
+    protected applyCommand(command: ModelServerCommand): void {
         switch (command.type) {
             case "add":     // this.addNodeViaCommand(command);
             case "remove":  // this.removeNodeViaCommand(command);
@@ -235,7 +234,7 @@ export class TreeEditorWidget extends NavigatableTreeEditorWidget {
         const changableFeatures = Object.keys(jsonFormsData).filter(key => key !== "eClass" && key !== "semanticUri" && key !== "source" && key !== "target");
         const featureName = Object.keys(feature)[0];
         if (featureName && changableFeatures.indexOf(featureName) > -1) {
-            return ModelServerCommandUtil.createSetCommand(this.getOwnerFromData(jsonFormsData), featureName, [jsonFormsData[featureName]]);
+            return new SetCommand(this.getOwnerFromData(jsonFormsData), featureName, [jsonFormsData[featureName]]);
         }
         return undefined;
     }
