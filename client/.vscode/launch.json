@@ -16,7 +16,7 @@
         "--root-dir=${workspaceRoot}/workspace",
         "--app-project-path=${workspaceRoot}/browser-app",
         "--loglevel=debug",
-        "--plugins=${workspaceRoot}/plugins"
+        "--plugins=${workspaceRoot}/browser-app/plugins"
       ],
       "env": {
         "NODE_ENV": "development"
@@ -38,10 +38,7 @@
       "request": "launch",
       "url": "http://localhost:3000/",
       "sourceMaps": true,
-      "webRoot": "${workspaceRoot}",
-      "sourceMapPathOverrides": {
-        "./src/*": "${workspaceFolder}/src/*"
-      }
+      "webRoot": "${workspaceRoot}/browser-app"
     }
   ]
 }

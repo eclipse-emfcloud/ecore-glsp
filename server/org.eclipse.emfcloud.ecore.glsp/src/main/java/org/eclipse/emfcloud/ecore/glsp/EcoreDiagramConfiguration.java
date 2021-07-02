@@ -48,7 +48,7 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 	}
 
 	@Override
-	public List<ShapeTypeHint> getNodeTypeHints() {
+	public List<ShapeTypeHint> getShapeTypeHints() {
 		List<ShapeTypeHint> hints = new ArrayList<>();
 		hints.add(new ShapeTypeHint(DefaultTypes.GRAPH, false, false, false, false,
 				List.of(Types.ECLASS, Types.ABSTRACT, Types.INTERFACE, Types.ENUM, Types.DATATYPE)));

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -19,6 +19,8 @@ import { GlspSelection, isGlspSelection } from "@eclipse-glsp/theia-integration/
 import { JsonSchema, JsonSchema7, UISchemaElement } from "@jsonforms/core";
 import URI from "@theia/core/lib/common/uri";
 import { injectable } from "inversify";
+
+import { getElementFromModelServer } from "./utils";
 
 @injectable()
 export class EcoreGlspPropertyDataService extends ModelServerPropertyDataService {
@@ -45,19 +47,9 @@ export class EcoreGlspPropertyDataService extends ModelServerPropertyDataService
     async providePropertyData(selection: Object | undefined): Promise<Object | undefined> {
         if (selection && isGlspSelection(selection) && selection.selectedElementsIDs) {
             const selectionData = this.getSelectionData(selection);
-            return this.fetchElement(selectionData.modelUri, selectionData.semanticUri);
+            return getElementFromModelServer(this.modelServerClient, selectionData.modelUri, selectionData.semanticUri);
         }
         return undefined;
-    }
-
-    protected fetchElement(modelUri: string, elementId: string): Promise<string> {
-        return this.modelServerClient.getElementById(modelUri, elementId)
-            .then(response => {
-                const returnObject = response.body as any;
-                // add semanticUri to jsonforms data structure
-                returnObject["semanticUri"] = elementId;
-                return returnObject;
-            });
     }
 
     async getSchema(selection: any, properties?: any): Promise<JsonSchema | undefined> {

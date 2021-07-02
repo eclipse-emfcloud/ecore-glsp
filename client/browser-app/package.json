@@ -3,33 +3,41 @@
   "name": "browser-app",
   "version": "0.2.0",
   "dependencies": {
+    "@eclipse-emfcloud/ecore-glsp-common": "0.2.0",
     "@eclipse-emfcloud/ecore-property-view": "0.2.0",
     "@eclipse-emfcloud/ecore-tree-editor": "0.2.0",
     "@eclipse-emfcloud/theia-ecore": "0.2.0",
-    "@theia/core": "^1.12.1",
-    "@theia/editor": "^1.12.1",
-    "@theia/filesystem": "^1.12.1",
-    "@theia/markers": "^1.12.1",
-    "@theia/messages": "^1.12.1",
-    "@theia/monaco": "^1.12.1",
-    "@theia/navigator": "^1.12.1",
-    "@theia/plugin-ext-vscode": "^1.12.1",
-    "@theia/preferences": "^1.12.1",
-    "@theia/process": "^1.12.1",
-    "@theia/property-view": "^1.12.1",
-    "@theia/terminal": "^1.12.1",
-    "@theia/workspace": "^1.12.1"
+    "@theia/core": "^1.0.0",
+    "@theia/editor": "^1.0.0",
+    "@theia/filesystem": "^1.0.0",
+    "@theia/markers": "^1.0.0",
+    "@theia/messages": "^1.0.0",
+    "@theia/monaco": "^1.0.0",
+    "@theia/navigator": "^1.0.0",
+    "@theia/plugin-ext": "^1.0.0",
+    "@theia/plugin-ext-vscode": "^1.0.0",
+    "@theia/preferences": "^1.0.0",
+    "@theia/process": "^1.0.0",
+    "@theia/property-view": "^1.0.0",
+    "@theia/terminal": "^1.0.0",
+    "@theia/workspace": "^1.0.0"
   },
   "devDependencies": {
-    "@theia/cli": "^1.12.1"
+    "@theia/cli": "^1.0.0"
   },
   "scripts": {
-    "prepare": "theia build --mode development",
-    "start": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --root-dir=../workspace --startFromJar --plugins=local-dir:../plugins",
-    "start:debug": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --loglevel=debug --root-dir=../workspace --plugins=local-dir:../plugins",
-    "watch": "theia build --watch --mode development"
+    "prepare": "theia build --mode development && yarn download:plugins",
+    "start": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --root-dir=../workspace --startFromJar --plugins=local-dir:./plugins",
+    "start:debug": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --loglevel=debug --root-dir=../workspace --plugins=local-dir:./plugins",
+    "watch": "theia build --watch --mode development",
+    "download:plugins": "theia download:plugins"
   },
   "theia": {
     "target": "browser"
+  },
+  "theiaPluginsDir": "plugins",
+  "theiaPlugins": {
+    "vscode-builtin-json": "https://open-vsx.org/api/vscode/json/1.48.2/file/vscode.json-1.48.2.vsix",
+    "vscode-builtin-json-language": "https://open-vsx.org/api/vscode/json-language-features/1.48.2/file/vscode.json-language-features-1.48.2.vsix"
   }
 }

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2020 EclipseSource and others.
+ * Copyright (c) 2020-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -15,14 +15,19 @@
  ********************************************************************************/
 import { ModelserverAwareWidgetProvider } from "@eclipse-emfcloud/modelserver-jsonforms-property-view";
 import {
+    CommandExecutionResult,
     ModelServerCommand,
-    ModelServerCommandUtil,
-    ModelServerReferenceDescription
+    ModelServerMessage,
+    ModelServerObject,
+    ModelServerReferenceDescription,
+    SetCommand
 } from "@eclipse-emfcloud/modelserver-theia/lib/common";
 import { isGlspSelection } from "@eclipse-glsp/theia-integration/lib/browser/diagram";
 import URI from "@theia/core/lib/common/uri";
 import { injectable, postConstruct } from "inversify";
 import { debounce, isEqual, isObject, transform } from "lodash";
+
+import { getElementFromModelServer } from "./utils";
 
 @injectable()
 export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetProvider {
@@ -38,9 +43,7 @@ export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetP
             }, 200)
         );
 
-        this.subscriptionService.onIncrementalUpdateListener(incrementalUpdate => {
-            this.updateWidgetData(incrementalUpdate.data);
-        });
+        this.subscriptionService.onIncrementalUpdateListener(incrementalUpdate => this.updateWidgetData(incrementalUpdate));
     }
 
     canHandle(selection: Object | undefined): number {
@@ -60,24 +63,31 @@ export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetP
         });
     }
 
-    protected updateViaCommand(command: ModelServerCommand, semanticUri: string): void {
-        const relativeRefURI = new URI(this.getRelativeModelUri(command.owner.$ref.replace("file:", "")));
-        if (this.isCurrentModelUri(relativeRefURI)) {
-            if (command.dataValues && relativeRefURI.fragment === semanticUri) {
-                let newValue: any = command.dataValues[0];
-                // Parse boolean and integer values
-                if (newValue === "true" || newValue === "false") {
-                    newValue = newValue === "true";
-                } else if (!isNaN(parseInt(newValue, 10))) {
-                    newValue = parseInt(newValue, 10);
+    protected async updateWidgetData(message: ModelServerMessage): Promise<void> {
+        if (message.type !== "incrementalUpdate" && message.type !== "fullUpdate") {
+            return;
+        }
+        if (this.isCommandExecutionResult(message.data)) {
+            if (message.data.affectedObjects && message.data.affectedObjects.length > 0) {
+                const affectedObject = message.data.affectedObjects[0];
+                const relativeRefURI = new URI(this.getRelativeModelUri(affectedObject.$ref.replace("file:", "")));
+                if (this.isCurrentModelUri(relativeRefURI)) {
+                    this.currentPropertyData = await getElementFromModelServer(this.modelServerClient, this.currentModelUri, this.currentPropertyData.semanticUri);
+                    this.jsonFormsWidget.updatePropertyViewData(this.currentPropertyData);
                 }
-                this.currentPropertyData[command.feature] = newValue;
-                this.jsonFormsWidget.updatePropertyViewData(this.currentPropertyData);
-            } else if (command.type === "remove") {
-                // clear global selection
-                this.selectionService.selection = new Object();
             }
         }
+    }
+
+    protected isCommandExecutionResult(object?: any): boolean {
+        return ModelServerObject.is(object) && object.eClass === CommandExecutionResult.URI
+            && "type" in object && typeof object["type"] === "string"
+            && "source" in object
+            && "affectedObjects" in object;
+    }
+
+    protected updateViaCommand(result: CommandExecutionResult, semanticUri: string): void {
+        // no-op
     }
 
     protected isCurrentModelUri(uri: URI): boolean {
@@ -122,7 +132,7 @@ export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetP
         const changableFeatures = Object.keys(jsonFormsData).filter(key => key !== "eClass" && key !== "semanticUri" && key !== "source" && key !== "target");
         const featureName = Object.keys(feature)[0];
         if (featureName && changableFeatures.indexOf(featureName) > -1) {
-            return ModelServerCommandUtil.createSetCommand(this.getOwner(jsonFormsData), featureName, [jsonFormsData[featureName]]);
+            return new SetCommand(this.getOwner(jsonFormsData), featureName, [jsonFormsData[featureName]]);
         }
         return undefined;
     }

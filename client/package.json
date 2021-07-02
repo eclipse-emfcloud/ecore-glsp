@@ -2,11 +2,11 @@
   "private": true,
   "engines": {
     "yarn": "1.0.x || >=1.2.1",
-    "node": ">=10.11.0 <13"
+    "node": ">=12.14.1 <13"
   },
   "scripts": {
     "test": "yarn",
-    "prepare": "lerna run prepare && yarn download:plugins",
+    "prepare": "lerna run prepare",
     "rebuild:browser": "theia rebuild:browser",
     "rebuild:electron": "theia rebuild:electron",
     "watch": "lerna run --parallel watch",
@@ -18,14 +18,12 @@
     "testcafe:start": "testcafe chrome:headless",
     "testcafe:start:visual": "testcafe chrome",
     "e2etest": "npm-run-all --parallel --race --aggregate-output start testcafe:start",
-    "e2etest:visual": "npm-run-all --parallel --race --aggregate-output start testcafe:start:visual",
-    "download:plugins": "theia download:plugins"
+    "e2etest:visual": "npm-run-all --parallel --race --aggregate-output start testcafe:start:visual"
   },
   "dependencies": {
     "yarn": "^1.22.4"
   },
   "devDependencies": {
-    "@theia/plugin": "^1.12.1",
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "babel-loader": "8.0.6",
@@ -40,19 +38,12 @@
     "vscode-languageclient": "^6.1.3"
   },
   "resolutions": {
-    "**/@eclipse-emfcloud/modelserver-theia": "0.8.0-next.5bf1df0",
-    "**/@eclipse-emfcloud/theia-tree-editor": "0.7.0-next.3da9d6a",
-    "**/@eclipse-glsp/client": "0.9.0-next.a088c7ff",
-    "**/@eclipse-glsp/theia-integration": "0.9.0-next.1415c5cb"
+    "**/sprotty": "0.10.0-next.0e06051",
+    "**/sprotty-theia": "0.10.0-next.a5ea006"
   },
   "workspaces": [
     "browser-app",
     "configs",
     "packages/*/"
-  ],
-  "theiaPluginsDir": "plugins",
-  "theiaPlugins": {
-    "vscode-builtin-json": "https://open-vsx.org/api/vscode/json/1.48.2/file/vscode.json-1.48.2.vsix",
-    "vscode-builtin-json-language": "https://open-vsx.org/api/vscode/json-language-features/1.48.2/file/vscode.json-language-features-1.48.2.vsix"
-  }
+  ]
 }
