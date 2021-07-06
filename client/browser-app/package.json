@@ -29,6 +29,7 @@
     "prepare": "theia build --mode development && yarn download:plugins",
     "start": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --root-dir=../workspace --startFromJar --plugins=local-dir:./plugins",
     "start:debug": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --loglevel=debug --root-dir=../workspace --plugins=local-dir:./plugins",
+    "tests:start": "theia start --hostname=0.0.0.0 --ECORE_GLSP=5007 --root-dir=../tests/workspace --startFromJar --plugins=local-dir:./plugins",
     "watch": "theia build --watch --mode development",
     "download:plugins": "theia download:plugins"
   },
