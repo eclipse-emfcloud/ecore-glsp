@@ -4,7 +4,7 @@ kind: Pod
 spec:
   containers:
   - name: ci
-    image: eclipseglsp/ci:0.0.4
+    image: eclipseglsp/ci:uitest
     tty: true
     resources:
       limits:
@@ -22,10 +22,18 @@ spec:
     - mountPath: "/.yarn"
       name: "yarn-global"
       readOnly: false
+    - name: global-cache
+      mountPath: /.cache     
+    - name: global-npm
+      mountPath: /.npm   
   volumes:
   - name: "jenkins-home"
     emptyDir: {}
   - name: "yarn-global"
+    emptyDir: {}
+  - name: global-cache
+    emptyDir: {}
+  - name: global-npm
     emptyDir: {}
 """
 pipeline {
