@@ -39,7 +39,7 @@ spec:
 pipeline {
     agent {
         kubernetes {
-            label 'glsp-agent-pod'
+            label 'ecore-glsp-agent-pod'
             yaml kubernetes_config
         }
     }
@@ -55,7 +55,7 @@ pipeline {
         stage('Build client') {
             steps {
                 container('ci') {
-                    timeout(30){
+                    timeout(15){
                         dir('client') {
                             sh 'yarn install'
                         }
@@ -66,7 +66,7 @@ pipeline {
         stage('Build server'){
             steps{
                 container('ci'){
-                    timeout(30){
+                    timeout(15){
                         dir('server'){
                         	sh 'mvn --version'
                             sh 'mvn clean verify --batch-mode -Dmaven.repo.local=/home/jenkins/.m2/repository'
@@ -78,7 +78,7 @@ pipeline {
         stage('E2E tests'){
             steps{
                 container('ci'){
-                    timeout(30){
+                    timeout(15){
                         dir('client'){
                             sh 'yarn e2etest'
                         }
@@ -86,7 +86,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy (master only)') {
             when { branch 'master' }
             steps {
@@ -95,9 +95,10 @@ pipeline {
         }
     }
     post {
-        failure {
+        always {
             container('ci') {
                 archiveArtifacts artifacts: 'client/tests/results/**', fingerprint: true
+                junit 'client/tests/results/testcafe-report.xml'
             }
         }
     }

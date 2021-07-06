@@ -12,13 +12,14 @@
     "watch": "lerna run --parallel watch",
     "start": "cd browser-app && yarn start",
     "start:debug": "cd browser-app && yarn start:debug",
+    "tests:start": "cd browser-app && yarn tests:start",
     "publish": "yarn && yarn publish:latest",
     "publish:latest": "lerna publish",
     "publish:next": "lerna publish --exact --canary=next --npm-tag=next --yes",
-    "testcafe:start": "testcafe chrome:headless",
-    "testcafe:start:visual": "testcafe chrome",
-    "e2etest": "npm-run-all --parallel --race --aggregate-output start testcafe:start",
-    "e2etest:visual": "npm-run-all --parallel --race --aggregate-output start testcafe:start:visual"
+    "testcafe:start": "testcafe chrome:headless --no-sandbox --disable-dev-shm-usage",
+    "testcafe:start:visual": "testcafe chrome --no-sandbox --disable-dev-shm-usage",
+    "e2etest": "npm-run-all --parallel --race --aggregate-output tests:start testcafe:start",
+    "e2etest:visual": "npm-run-all --parallel --race --aggregate-output tests:start testcafe:start:visual"
   },
   "dependencies": {
     "yarn": "^1.22.4"
