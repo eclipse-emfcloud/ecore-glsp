@@ -21,43 +21,44 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 	}
 
 	private PaletteItem classifiers() {
-		PaletteItem createEClass = node(Types.ECLASS, "Class");
-		PaletteItem createAbstract = node(Types.ABSTRACT, "Abstract");
-		PaletteItem createInterface = node(Types.INTERFACE, "Interface");
-		PaletteItem createEnum = node(Types.ENUM, "Enum");
-		PaletteItem createDataType = node(Types.DATATYPE, "DataType");
+		PaletteItem createEClass = node(Types.ECLASS, "Class", "eclass");
+		PaletteItem createAbstract = node(Types.ABSTRACT, "Abstract", "eclassabstract");
+		PaletteItem createInterface = node(Types.INTERFACE, "Interface", "eclassinterface");
+		PaletteItem createEnum = node(Types.ENUM, "Enum", "eenum");
+		PaletteItem createDataType = node(Types.DATATYPE, "DataType", "edatatype");
 
 		List<PaletteItem> classifiers = Lists.newArrayList(createEClass, createAbstract, createInterface, createEnum,
 				createDataType);
-		return PaletteItem.createPaletteGroup("ecore.classifier", "Classifier", classifiers);
+		return PaletteItem.createPaletteGroup("ecore.classifier", "Classifier", classifiers, "fa-hammer");
 	}
 
 	private PaletteItem relations() {
-		PaletteItem createEcoreEdge = edge(Types.REFERENCE, "Reference");
-		PaletteItem createComposition = edge(Types.COMPOSITION, "Containment");
-		PaletteItem createInheritance = edge(Types.INHERITANCE, "Inheritance");
-		PaletteItem createBiReference = edge(Types.BIDIRECTIONAL_REFERENCE, "Bi-Directional Reference");
-		PaletteItem createBiComposition = edge(Types.BIDIRECTIONAL_COMPOSITION, "Bi-Directional Containment");
+		PaletteItem createEcoreEdge = edge(Types.REFERENCE, "Reference", "ereference");
+		PaletteItem createComposition = edge(Types.COMPOSITION, "Containment", "ereference");
+		PaletteItem createInheritance = edge(Types.INHERITANCE, "Inheritance", "egenericsupertype");
+		PaletteItem createBiReference = edge(Types.BIDIRECTIONAL_REFERENCE, "Bi-Directional Reference", "ereference");
+		PaletteItem createBiComposition = edge(Types.BIDIRECTIONAL_COMPOSITION, "Bi-Directional Containment", "ereference");
 
 		List<PaletteItem> edges = Lists.newArrayList(createEcoreEdge, createComposition, createInheritance,
 				createBiReference, createBiComposition);
-		return PaletteItem.createPaletteGroup("ecore.relation", "Relation", edges);
+		return PaletteItem.createPaletteGroup("ecore.relation", "Relation", edges, "fa-hammer");
 	}
 
 	private PaletteItem features() {
-		PaletteItem createAttributeOperation = node(Types.ATTRIBUTE, "Attribute");
-		PaletteItem createEnumLiteral = node(Types.ENUMLITERAL, "Literal");
+		PaletteItem createAttribute = node(Types.ATTRIBUTE, "Attribute", "eattribute");
+		PaletteItem createEnumLiteral = node(Types.ENUMLITERAL, "Literal", "eenumliteral");
+		PaletteItem createOperation = node(Types.OPERATION, "Operation", "eoperation");
 
-		List<PaletteItem> features = Lists.newArrayList(createAttributeOperation, createEnumLiteral);
+		List<PaletteItem> features = Lists.newArrayList(createAttribute, createEnumLiteral, createOperation);
 		
-		return PaletteItem.createPaletteGroup("ecore.feature", "Feature", features);
+		return PaletteItem.createPaletteGroup("ecore.feature", "Feature", features, "fa-hammer");
 	}
 
-	private PaletteItem node(String elementTypeId, String label) {
-		return new PaletteItem(elementTypeId, label, new TriggerNodeCreationAction(elementTypeId));
+	private PaletteItem node(String elementTypeId, String label, String icon) {
+		return new PaletteItem(elementTypeId, label, new TriggerNodeCreationAction(elementTypeId), icon);
 	}
 
-	private PaletteItem edge(String elementTypeId, String label) {
-		return new PaletteItem(elementTypeId, label, new TriggerEdgeCreationAction(elementTypeId));
+	private PaletteItem edge(String elementTypeId, String label, String icon) {
+		return new PaletteItem(elementTypeId, label, new TriggerEdgeCreationAction(elementTypeId), icon);
 	}
 }

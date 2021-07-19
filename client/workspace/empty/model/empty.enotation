@@ -3,15 +3,21 @@
   <semanticElement uri="/"/>
   <elements xsi:type="enotation:Shape">
     <semanticElement uri="//NewEClass0"/>
-    <position x="526.0028686523438" y="267.0227279663086"/>
-    <size width="156.1875" height="43.734375"/>
+    <position x="12.0" y="12.0"/>
+    <size width="321.84375" height="208.0"/>
   </elements>
   <elements xsi:type="enotation:Shape">
-    <semanticElement uri="//NewEClass1"/>
-    <position x="886.0028686523438" y="299.0227279663086"/>
-    <size width="155.484375" height="43.734375"/>
+    <semanticElement uri="//NewEClass5"/>
+    <position x="353.84375" y="94.5"/>
+    <size width="155.484375" height="43.0"/>
   </elements>
-  <elements xsi:type="enotation:Edge">
-    <semanticElement uri="//NewEClass0/neweclass1s"/>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//TestOccurrences"/>
+    <position x="529.328125" y="12.0"/>
+    <size width="340.703125" height="572.0"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.0" target="//@elements.1">
+    <bendPoints x="371.9140625" y="353.0"/>
+    <bendPoints x="371.9140625" y="260.5"/>
   </elements>
 </enotation:Diagram>

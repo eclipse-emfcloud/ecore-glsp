@@ -1,0 +1,26 @@
+{
+  "extends": "./configs/base.tsconfig",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@eclipse-emfcloud/ecore-glsp-common": [
+        "packages/common/src/*"
+      ],
+      "@eclipse-emfcloud/ecore-property-view": [
+        "packages/ecore-property-view/src/*"
+      ],
+      "@eclipse-emfcloud/ecore-tree-editor": [
+        "packages/ecore-tree-editor/src/*"
+      ],
+      "@eclipse-emfcloud/sprotty-ecore": [
+        "packages/sprotty-ecore/src/*"
+      ],
+      "@eclipse-emfcloud/theia-ecore": [
+        "packages/theia-ecore/src/*"
+      ],
+    }
+  },
+  "include": [
+    "packages/*/src"
+  ]
+}

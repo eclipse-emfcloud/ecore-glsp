@@ -11,6 +11,7 @@
 package org.eclipse.emfcloud.ecore.glsp;
 
 import org.eclipse.emfcloud.ecore.glsp.gmodel.GModelFactory;
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 
 public class EcoreEditorContext {
@@ -18,10 +19,10 @@ public class EcoreEditorContext {
 	private final GModelFactory gModelFactory;
 	private final EcoreModelState modelState;
 
-	public EcoreEditorContext(EcoreModelState modelState) {
+	public EcoreEditorContext(EcoreModelState modelState, EcoreModelServerAccess modelServerAccess) {
 		this.modelState = modelState;
 		gModelFactory = new GModelFactory(modelState);
-		resourceManager = new ResourceManager(modelState);
+		resourceManager = new ResourceManager(modelState, modelServerAccess);
 	}
 
 	public EcoreFacade getEcoreFacade() {

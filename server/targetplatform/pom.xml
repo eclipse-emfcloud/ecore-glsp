@@ -10,7 +10,6 @@
 	</parent>
 
 	<artifactId>targetplatform</artifactId>
-	<version>1.0</version>
 	<packaging>pom</packaging>
 
 </project> 

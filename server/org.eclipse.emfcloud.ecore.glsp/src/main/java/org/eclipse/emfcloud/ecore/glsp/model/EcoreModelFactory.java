@@ -10,38 +10,36 @@
  ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.model;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
-import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.glsp.graph.DefaultTypes;
 import org.eclipse.glsp.graph.GModelRoot;
 import org.eclipse.glsp.graph.builder.impl.GGraphBuilder;
-import org.eclipse.glsp.server.actions.RequestModelAction;
-import org.eclipse.glsp.server.factory.ModelFactory;
+import org.eclipse.glsp.server.features.core.model.GModelFactory;
 import org.eclipse.glsp.server.model.GModelState;
 
-public class EcoreModelFactory implements ModelFactory {
+public class EcoreModelFactory implements GModelFactory {
+
+	private static Logger LOGGER = Logger.getLogger(EcoreModelFactory.class);
 	private static final String ROOT_ID = "sprotty";
 
 	@Override
-	public GModelRoot loadModel(RequestModelAction action, GModelState graphicalModelState) {
-		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
-		graphicalModelState.setClientOptions(action.getOptions());
+	public void createGModel(GModelState gModelState) {
+		EcoreModelState modelState = EcoreModelState.getModelState(gModelState);
 
-		EcoreEditorContext context = new EcoreEditorContext(modelState);
-
-		modelState.setEditorContext(context);
-
-		EcoreFacade ecoreFacade = context.getEcoreFacade();
+		EcoreFacade ecoreFacade = EcoreModelState.getEcoreFacade(modelState);
 		if (ecoreFacade == null) {
-			return createEmptyRoot();
+			LOGGER.error("EcoreFacade could not be found, return empty model");
+			modelState.setRoot(createEmptyRoot());
+			return;
 		}
-		Diagram diagram = ecoreFacade.getDiagram();
 
-		GModelRoot gmodelRoot = context.getGModelFactory().create(ecoreFacade.getEPackage());
+		Diagram diagram = ecoreFacade.getDiagram();
+		GModelRoot gmodelRoot = EcoreModelState.getEditorContext(modelState).getGModelFactory()
+				.create(ecoreFacade.getEPackage());
 		ecoreFacade.initialize(diagram, gmodelRoot);
 		modelState.setRoot(gmodelRoot);
-		return gmodelRoot;
 	}
 
 	private static GModelRoot createEmptyRoot() {

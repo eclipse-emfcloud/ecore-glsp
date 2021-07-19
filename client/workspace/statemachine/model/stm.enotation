@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ASCII"?>
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
+  <semanticElement uri="/"/>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Event"/>
+    <position x="10.171875" y="116.0"/>
+    <size width="172.296875" height="98.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//Transition"/>
+    <position x="291.09375" y="295.0"/>
+    <size width="128.078125" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//StateType"/>
+    <position x="907.0" y="23.0"/>
+    <size width="131.0625" height="121.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//State"/>
+    <position x="602.0" y="136.0"/>
+    <size width="238.453125" height="104.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//StateMachine"/>
+    <position x="267.0" y="22.666666666666686"/>
+    <size width="163.296875" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.4" target="//@elements.0">
+    <semanticElement uri="//StateMachine/events"/>
+    <bendPoints x="82.734375" y="41.166666666666686"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.1" target="//@elements.0">
+    <semanticElement uri="//Transition/event"/>
+    <bendPoints x="89.78125" y="316.5"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.1" target="//@elements.3">
+    <semanticElement uri="//Transition/state"/>
+    <bendPoints x="355.1328125" y="186.5"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.4" target="//@elements.3">
+    <semanticElement uri="//StateMachine/states"/>
+    <bendPoints x="721.2265625" y="43.166666666666686"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.3" target="//@elements.1">
+    <semanticElement uri="//State/transitions"/>
+    <bendPoints x="652.8984375" y="316.5"/>
+  </elements>
+</enotation:Diagram>

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -59,7 +59,7 @@ public class ClassifierNodeFactory extends AbstractGModelFactory<EClassifier, GN
 				.layout(GConstants.Layout.VBOX) //
 				.addCssClass(CSS.NODE) //
 				.add(buildHeader(eClass))//
-				.add(createLabeledChildrenCompartment(eClass.getEAttributes(), eClass));
+				.add(createLabeledChildrenCompartment(eClass.getEAttributes(), eClass.getEOperations(), eClass));
 
 		if (eClass.isAbstract()) {
 			b.addCssClass(CSS.ABSTRACT);
@@ -112,7 +112,8 @@ public class ClassifierNodeFactory extends AbstractGModelFactory<EClassifier, GN
 		modelState.getIndex().getNotation(classifier, Shape.class).ifPresent(shape -> {
 			if (shape.getPosition() != null) {
 				builder.position(GraphUtil.copy(shape.getPosition()));
-			} else if (shape.getSize() != null) {
+			}
+			if (shape.getSize() != null) {
 				builder.size(GraphUtil.copy(shape.getSize()));
 			}
 		});
@@ -136,6 +137,22 @@ public class ClassifierNodeFactory extends AbstractGModelFactory<EClassifier, GN
 						.hAlign(GConstants.HAlign.LEFT) //
 						.resizeContainer(true)) //
 				.addAll(children.stream() //
+						.map(parentFactory::create) //
+						.collect(Collectors.toList()))
+				.build();
+	}
+
+	private GCompartment createLabeledChildrenCompartment(Collection<? extends EObject> children,
+			Collection<? extends EObject> children2, EClassifier parent) {
+		return new GCompartmentBuilder(Types.COMP) //
+				.id(toId(parent) + "_childCompartment").layout(GConstants.Layout.VBOX) //
+				.layoutOptions(new GLayoutOptions() //
+						.hAlign(GConstants.HAlign.LEFT) //
+						.resizeContainer(true)) //
+				.addAll(children.stream() //
+						.map(parentFactory::create) //
+						.collect(Collectors.toList()))
+				.addAll(children2.stream() //
 						.map(parentFactory::create) //
 						.collect(Collectors.toList()))
 				.build();

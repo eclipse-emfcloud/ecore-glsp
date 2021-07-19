@@ -1,0 +1,37 @@
+{
+  "name": "@eclipse-emfcloud/ecore-tree-editor",
+  "keywords": [
+    "theia-extension"
+  ],
+  "version": "0.2.0",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "@eclipse-emfcloud/modelserver-theia": "0.8.0-next.0817744e",
+    "@eclipse-emfcloud/ecore-glsp-common": "0.2.0",
+    "@theia/core": "^1.0.0",
+    "@theia/editor": "^1.0.0",
+    "@theia/filesystem": "^1.0.0",
+    "@theia/workspace": "^1.0.0",
+    "uuid": "^3.3.2",
+    "@eclipse-emfcloud/theia-tree-editor": "0.7.0-next.8e8d607"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.1",
+    "typescript": "~3.9.2"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc && yarn run lint",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
+    "watch": "tsc -w"
+  },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ]
+}

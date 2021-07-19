@@ -7,13 +7,16 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Start Browser Backend",
+      "name": "Start Browser Backend (expects running GLSP Server instance)",
       "program": "${workspaceRoot}/browser-app/src-gen/backend/main.js",
       "args": [
-        "--loglevel=debug",
+        "--ECORE_GLSP=5007",
         "--port=3000",
         "--no-cluster",
-        "--ECORE_GLSP=5007"
+        "--root-dir=${workspaceRoot}/workspace",
+        "--app-project-path=${workspaceRoot}/browser-app",
+        "--loglevel=debug",
+        "--plugins=${workspaceRoot}/browser-app/plugins"
       ],
       "env": {
         "NODE_ENV": "development"
@@ -22,7 +25,8 @@
       "outFiles": [
         "${workspaceRoot}/node_modules/@theia/*/lib/**/*.js",
         "${workspaceRoot}/browser-app/lib/**/*.js",
-        "${workspaceRoot}/browser-app/src-gen/**/*.js"
+        "${workspaceRoot}/browser-app/src-gen/**/*.js",
+        "${workspaceRoot}/packages/*/lib/**/*.js"
       ],
       "smartStep": true,
       "internalConsoleOptions": "openOnSessionStart",

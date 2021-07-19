@@ -5,3 +5,5 @@ lib
 *-app/*
 !*-app/package.json
 build/
+tests/results
+plugins/

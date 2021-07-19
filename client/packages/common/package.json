@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "@eclipse-emfcloud/ecore-glsp-common",
+  "version": "0.2.0",
+  "description": "Common utilities",
+  "keywords": [
+    "theia-extension"
+  ],
+  "devDependencies": {
+    "rimraf": "^2.6.1"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc && yarn run lint",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
+    "watch": "tsc -w"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/common-frontend-module"
+    }
+  ]
+}

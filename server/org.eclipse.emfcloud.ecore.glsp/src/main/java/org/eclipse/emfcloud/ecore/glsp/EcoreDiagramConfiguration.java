@@ -21,6 +21,7 @@ import org.eclipse.glsp.graph.GraphPackage;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
 import org.eclipse.glsp.server.diagram.EdgeTypeHint;
 import org.eclipse.glsp.server.diagram.ShapeTypeHint;
+import org.eclipse.glsp.server.layout.ServerLayoutKind;
 
 import com.google.common.collect.Lists;
 
@@ -34,9 +35,9 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 	@Override
 	public List<EdgeTypeHint> getEdgeTypeHints() {
 		return Lists.newArrayList(createDefaultEdgeTypeHint(Types.REFERENCE),
-				createDefaultEdgeTypeHint(Types.COMPOSITION), 
-				createDefaultEdgeTypeHint(Types.INHERITANCE), 
-				createDefaultEdgeTypeHint(Types.BIDIRECTIONAL_REFERENCE) , 
+				createDefaultEdgeTypeHint(Types.COMPOSITION),
+				createDefaultEdgeTypeHint(Types.INHERITANCE),
+				createDefaultEdgeTypeHint(Types.BIDIRECTIONAL_REFERENCE),
 				createDefaultEdgeTypeHint(Types.BIDIRECTIONAL_COMPOSITION));
 	}
 
@@ -47,7 +48,7 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 	}
 
 	@Override
-	public List<ShapeTypeHint> getNodeTypeHints() {
+	public List<ShapeTypeHint> getShapeTypeHints() {
 		List<ShapeTypeHint> hints = new ArrayList<>();
 		hints.add(new ShapeTypeHint(DefaultTypes.GRAPH, false, false, false, false,
 				List.of(Types.ECLASS, Types.ABSTRACT, Types.INTERFACE, Types.ENUM, Types.DATATYPE)));
@@ -91,6 +92,11 @@ public class EcoreDiagramConfiguration implements DiagramConfiguration {
 		mappings.put(Types.ENUMLITERAL, GraphPackage.Literals.GLABEL);
 		mappings.put(Types.LABEL_INSTANCE, GraphPackage.Literals.GLABEL);
 		return mappings;
+	}
+
+	@Override
+	public ServerLayoutKind getLayoutKind() {
+		return ServerLayoutKind.MANUAL;
 	}
 
 }

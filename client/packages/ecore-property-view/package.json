@@ -1,0 +1,40 @@
+{
+  "name": "@eclipse-emfcloud/ecore-property-view",
+  "version": "0.2.0",
+  "description": "Ecore property view",
+  "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
+  "keywords": [
+    "theia-extension"
+  ],
+  "files": [
+    "lib",
+    "src"
+  ],
+  "dependencies": {
+    "@eclipse-emfcloud/theia-ecore": "0.2.0",
+    "@eclipse-emfcloud/jsonforms-property-view": "0.8.0-next.3a48b86a",
+    "@eclipse-emfcloud/modelserver-jsonforms-property-view": "0.8.0-next.3a48b86a",
+    "@eclipse-emfcloud/modelserver-theia": "0.8.0-next.0817744e",
+    "@eclipse-glsp/client": "0.9.0-RC01",
+    "@eclipse-glsp/theia-integration": "0.9.0-RC01",
+    "@theia/core": "^1.0.0",
+    "@theia/property-view": "^1.0.0",
+    "@theia/workspace": "^1.0.0"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.1",
+    "typescript": "~3.9.2"
+  },
+  "scripts": {
+    "prepare": "yarn run clean && yarn run build",
+    "clean": "rimraf lib",
+    "build": "tsc && yarn run lint",
+    "lint": "eslint -c ./.eslintrc.js --ext .ts ./src",
+    "watch": "tsc -w"
+  },
+  "theiaExtensions": [
+    {
+      "frontend": "lib/browser/frontend-module"
+    }
+  ]
+}

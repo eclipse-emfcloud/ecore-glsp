@@ -1,0 +1,8 @@
+.jsonforms-property-view .control>label, .jsonforms-property-view .array-table-layout.control>header>label {
+    text-transform: inherit !important;
+    font-size: var(--theia-ui-font-size1) !important;
+}
+
+.jsonforms-property-view .control>input[type="checkbox"] {
+    margin-left: 4px;
+}

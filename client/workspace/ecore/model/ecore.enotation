@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="ASCII"?>
+<enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
+  <semanticElement uri="/"/>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EAttribute"/>
+    <position x="905.640625" y="914.8666666666666"/>
+    <size width="167.296875" height="78.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EAnnotation"/>
+    <position x="3474.125" y="452.9999999999999"/>
+    <size width="187.296875" height="78.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EClass"/>
+    <position x="12.0" y="826.6666666666666"/>
+    <size width="438.5" height="364.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EClassifier"/>
+    <position x="2364.21875" y="435.6666666666666"/>
+    <size width="305.109375" height="208.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EDataType"/>
+    <position x="2045.1979166666667" y="500.6666666666666"/>
+    <size width="248.46875" height="78.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EEnum"/>
+    <position x="1559.1875" y="977.8666666666666"/>
+    <size width="420.734375" height="130.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EEnumLiteral"/>
+    <position x="2389.6015625" y="999.5333333333333"/>
+    <size width="254.34375" height="130.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EFactory"/>
+    <position x="1636.59375" y="202.0"/>
+    <size width="343.328125" height="130.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EModelElement"/>
+    <position x="3133.375" y="452.9999999999999"/>
+    <size width="320.75" height="78.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ENamedElement"/>
+    <position x="2920.75" y="465.9999999999999"/>
+    <size width="192.625" height="78.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EObject"/>
+    <position x="3681.421875" y="344.6666666666666"/>
+    <size width="418.515625" height="442.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EOperation"/>
+    <position x="870.078125" y="573.1999999999999"/>
+    <size width="273.984375" height="104.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EPackage"/>
+    <position x="2029.921875" y="223.66666666666663"/>
+    <size width="294.296875" height="130.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EParameter"/>
+    <position x="1292.59375" y="436.6666666666666"/>
+    <size width="148.0625" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EReference"/>
+    <position x="570.5" y="799.1333333333332"/>
+    <size width="279.578125" height="130.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EStructuralFeature"/>
+    <position x="1194.0625" y="670.8666666666666"/>
+    <size width="345.125" height="286.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ETypedElement"/>
+    <position x="1658.65625" y="385.6666666666666"/>
+    <size width="221.796875" height="208.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EBigDecimal"/>
+    <position x="3766.03125" y="12.0"/>
+    <size width="217.96875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EBigInteger"/>
+    <position x="3537.25" y="12.0"/>
+    <size width="208.78125" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EBoolean"/>
+    <position x="839.828125" y="12.0"/>
+    <size width="127.75" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EBooleanObject"/>
+    <position x="3110.859375" y="12.0"/>
+    <size width="185.984375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EByte"/>
+    <position x="109.03125" y="12.0"/>
+    <size width="94.359375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EByteArray"/>
+    <position x="1301.484375" y="12.0"/>
+    <size width="142.15625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EByteObject"/>
+    <position x="1463.640625" y="12.0"/>
+    <size width="152.609375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EChar"/>
+    <position x="223.390625" y="12.0"/>
+    <size width="98.03125" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ECharacterObject"/>
+    <position x="3316.84375" y="12.0"/>
+    <size width="200.40625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EDate"/>
+    <position x="1142.859375" y="12.0"/>
+    <size width="138.625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EDiagnosticChain"/>
+    <position x="3231.484375" y="107.0"/>
+    <size width="420.1875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EDouble"/>
+    <position x="702.109375" y="12.0"/>
+    <size width="117.71875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EDoubleObject"/>
+    <position x="2914.890625" y="12.0"/>
+    <size width="175.96875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EEList"/>
+    <position x="12.0" y="107.0"/>
+    <size width="320.453125" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EEnumerator"/>
+    <position x="1128.0625" y="107.0"/>
+    <size width="381.375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EFeatureMap"/>
+    <position x="352.453125" y="107.0"/>
+    <size width="355.71875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EFeatureMapEntry"/>
+    <position x="2358.78125" y="107.0"/>
+    <size width="415.515625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EFloat"/>
+    <position x="460.265625" y="12.0"/>
+    <size width="99.25" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EFloatObject"/>
+    <position x="1636.25" y="12.0"/>
+    <size width="157.0625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EInt"/>
+    <position x="12.0" y="12.0"/>
+    <size width="77.03125" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EIntegerObject"/>
+    <position x="2720.03125" y="12.0"/>
+    <size width="174.859375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EJavaClass"/>
+    <position x="1990.390625" y="12.0"/>
+    <size width="159.625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EJavaObject"/>
+    <position x="2532.15625" y="12.0"/>
+    <size width="167.875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ELong"/>
+    <position x="341.421875" y="12.0"/>
+    <size width="98.84375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ELongObject"/>
+    <position x="1813.3125" y="12.0"/>
+    <size width="157.078125" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EMap"/>
+    <position x="987.578125" y="12.0"/>
+    <size width="135.28125" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EResource"/>
+    <position x="1529.4375" y="107.0"/>
+    <size width="385.734375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EResourceSet"/>
+    <position x="2794.296875" y="107.0"/>
+    <size width="417.1875" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EShort"/>
+    <position x="579.515625" y="12.0"/>
+    <size width="102.59375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EShortObject"/>
+    <position x="2170.015625" y="12.0"/>
+    <size width="160.390625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EString"/>
+    <position x="2350.40625" y="12.0"/>
+    <size width="161.75" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EStringToStringMapEntry"/>
+    <position x="3681.421875" y="220.66666666666663"/>
+    <size width="265.546875" height="104.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ETreeIterator"/>
+    <position x="728.171875" y="107.0"/>
+    <size width="379.890625" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EGenericType"/>
+    <position x="2051.1796875" y="628.6666666666665"/>
+    <size width="251.78125" height="78.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//ETypeParameter"/>
+    <position x="2699.328125" y="649.6666666666665"/>
+    <size width="191.421875" height="43.0"/>
+  </elements>
+  <elements xsi:type="enotation:Shape">
+    <semanticElement uri="//EInvocationTargetException"/>
+    <position x="1935.171875" y="107.0"/>
+    <size width="403.609375" height="75.0"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.0" target="//@elements.4">
+    <semanticElement uri="//EAttribute/eAttributeType"/>
+    <bendPoints x="1072.9375" y="966.8666666666666"/>
+    <bendPoints x="1989.921875" y="966.8666666666666"/>
+    <bendPoints x="1989.921875" y="526.6666666666665"/>
+    <bendPoints x="2045.1979166666667" y="526.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.0" target="//@elements.15"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.1" target="//@elements.48">
+    <semanticElement uri="//EAnnotation/details"/>
+    <bendPoints x="3661.421875" y="472.4999999999999"/>
+    <bendPoints x="3671.421875" y="472.4999999999999"/>
+    <bendPoints x="3671.421875" y="272.66666666666663"/>
+    <bendPoints x="3681.421875" y="272.66666666666663"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.1" target="//@elements.8">
+    <semanticElement uri="//EAnnotation/eModelElement"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.1" target="//@elements.10">
+    <semanticElement uri="//EAnnotation/contents"/>
+    <bendPoints x="3661.421875" y="491.9999999999999"/>
+    <bendPoints x="3681.421875" y="491.9999999999999"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.1" target="//@elements.10">
+    <semanticElement uri="//EAnnotation/references"/>
+    <bendPoints x="3661.421875" y="511.4999999999999"/>
+    <bendPoints x="3671.421875" y="511.4999999999999"/>
+    <bendPoints x="3671.421875" y="639.3333333333333"/>
+    <bendPoints x="3681.421875" y="639.3333333333333"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.1" target="//@elements.8"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.2">
+    <semanticElement uri="//EClass/eSuperTypes"/>
+    <bendPoints x="187.4" y="826.6666666666666"/>
+    <bendPoints x="187.4" y="816.6666666666666"/>
+    <bendPoints x="275.1" y="816.6666666666666"/>
+    <bendPoints x="275.1" y="826.6666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.11">
+    <semanticElement uri="//EClass/eOperations"/>
+    <bendPoints x="450.5" y="850.9333333333333"/>
+    <bendPoints x="460.5" y="850.9333333333333"/>
+    <bendPoints x="460.5" y="631.5333333333333"/>
+    <bendPoints x="860.078125" y="631.5333333333333"/>
+    <bendPoints x="860.078125" y="607.8666666666666"/>
+    <bendPoints x="870.078125" y="607.8666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.0">
+    <semanticElement uri="//EClass/eAllAttributes"/>
+    <bendPoints x="450.5" y="1045.0666666666666"/>
+    <bendPoints x="540.5" y="1045.0666666666666"/>
+    <bendPoints x="540.5" y="956.1666666666665"/>
+    <bendPoints x="560.5" y="956.1666666666665"/>
+    <bendPoints x="560.5" y="950.6666666666665"/>
+    <bendPoints x="860.078125" y="950.6666666666665"/>
+    <bendPoints x="860.078125" y="946.0666666666666"/>
+    <bendPoints x="905.640625" y="946.0666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.14">
+    <semanticElement uri="//EClass/eAllReferences"/>
+    <bendPoints x="450.5" y="948.0"/>
+    <bendPoints x="500.5" y="948.0"/>
+    <bendPoints x="500.5" y="838.0333333333333"/>
+    <bendPoints x="520.5" y="838.0333333333333"/>
+    <bendPoints x="520.5" y="825.1333333333332"/>
+    <bendPoints x="570.5" y="825.1333333333332"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.14">
+    <semanticElement uri="//EClass/eReferences"/>
+    <bendPoints x="450.5" y="972.2666666666667"/>
+    <bendPoints x="510.5" y="972.2666666666667"/>
+    <bendPoints x="510.5" y="863.1666666666666"/>
+    <bendPoints x="530.5" y="863.1666666666666"/>
+    <bendPoints x="530.5" y="851.1333333333332"/>
+    <bendPoints x="570.5" y="851.1333333333332"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.0">
+    <semanticElement uri="//EClass/eAttributes"/>
+    <bendPoints x="450.5" y="1069.3333333333333"/>
+    <bendPoints x="550.5" y="1069.3333333333333"/>
+    <bendPoints x="550.5" y="961.6666666666665"/>
+    <bendPoints x="905.640625" y="961.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.14">
+    <semanticElement uri="//EClass/eAllContainments"/>
+    <bendPoints x="450.5" y="996.5333333333333"/>
+    <bendPoints x="520.5" y="996.5333333333333"/>
+    <bendPoints x="520.5" y="888.3"/>
+    <bendPoints x="540.5" y="888.3"/>
+    <bendPoints x="540.5" y="877.1333333333332"/>
+    <bendPoints x="570.5" y="877.1333333333332"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.11">
+    <semanticElement uri="//EClass/eAllOperations"/>
+    <bendPoints x="450.5" y="875.1999999999999"/>
+    <bendPoints x="470.5" y="875.1999999999999"/>
+    <bendPoints x="470.5" y="642.5333333333333"/>
+    <bendPoints x="870.078125" y="642.5333333333333"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.15">
+    <semanticElement uri="//EClass/eAllStructuralFeatures"/>
+    <bendPoints x="450.5" y="899.4666666666666"/>
+    <bendPoints x="480.5" y="899.4666666666666"/>
+    <bendPoints x="480.5" y="772.6333333333332"/>
+    <bendPoints x="480.5" y="772.6333333333332"/>
+    <bendPoints x="480.5" y="767.1333333333332"/>
+    <bendPoints x="1154.0625" y="767.1333333333332"/>
+    <bendPoints x="1154.0625" y="728.0666666666666"/>
+    <bendPoints x="1194.0625" y="728.0666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.2">
+    <semanticElement uri="//EClass/eAllSuperTypes"/>
+    <bendPoints x="99.7" y="826.6666666666666"/>
+    <bendPoints x="99.7" y="806.6666666666666"/>
+    <bendPoints x="362.8" y="806.6666666666666"/>
+    <bendPoints x="362.8" y="826.6666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.0">
+    <semanticElement uri="//EClass/eIDAttribute"/>
+    <bendPoints x="450.5" y="1093.6"/>
+    <bendPoints x="860.078125" y="1093.6"/>
+    <bendPoints x="860.078125" y="977.2666666666665"/>
+    <bendPoints x="905.640625" y="977.2666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.15">
+    <semanticElement uri="//EClass/eStructuralFeatures"/>
+    <bendPoints x="450.5" y="923.7333333333333"/>
+    <bendPoints x="490.5" y="923.7333333333333"/>
+    <bendPoints x="490.5" y="801.6333333333332"/>
+    <bendPoints x="510.5" y="801.6333333333332"/>
+    <bendPoints x="510.5" y="778.1333333333332"/>
+    <bendPoints x="1154.0625" y="778.1333333333332"/>
+    <bendPoints x="1154.0625" y="785.2666666666665"/>
+    <bendPoints x="1194.0625" y="785.2666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.50">
+    <semanticElement uri="//EClass/eGenericSuperTypes"/>
+    <bendPoints x="450.5" y="1142.1333333333332"/>
+    <bendPoints x="2009.921875" y="1142.1333333333332"/>
+    <bendPoints x="2009.921875" y="675.4666666666666"/>
+    <bendPoints x="2051.1796875" y="675.4666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.2" target="//@elements.50">
+    <semanticElement uri="//EClass/eAllGenericSuperTypes"/>
+    <bendPoints x="450.5" y="1166.3999999999999"/>
+    <bendPoints x="2019.921875" y="1166.3999999999999"/>
+    <bendPoints x="2019.921875" y="691.0666666666666"/>
+    <bendPoints x="2051.1796875" y="691.0666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.2" target="//@elements.3"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.3" target="//@elements.12">
+    <semanticElement uri="//EClassifier/ePackage"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.3" target="//@elements.51">
+    <semanticElement uri="//EClassifier/eTypeParameters"/>
+    <bendPoints x="2669.328125" y="574.3333333333333"/>
+    <bendPoints x="2679.328125" y="574.3333333333333"/>
+    <bendPoints x="2679.328125" y="666.8666666666666"/>
+    <bendPoints x="2699.328125" y="666.8666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.3" target="//@elements.9"/>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.4" target="//@elements.3"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.5" target="//@elements.6">
+    <semanticElement uri="//EEnum/eLiterals"/>
+    <bendPoints x="1979.921875" y="1064.5333333333333"/>
+    <bendPoints x="2389.6015625" y="1064.5333333333333"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.5" target="//@elements.4"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.6" target="//@elements.5">
+    <semanticElement uri="//EEnumLiteral/eEnum"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.6" target="//@elements.9"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.7" target="//@elements.12">
+    <semanticElement uri="//EFactory/ePackage"/>
+    <bendPoints x="1979.921875" y="288.6666666666667"/>
+    <bendPoints x="2029.921875" y="288.66666666666663"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.7" target="//@elements.8"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.8" target="//@elements.1">
+    <semanticElement uri="//EModelElement/eAnnotations"/>
+    <bendPoints x="3454.125" y="504.9999999999999"/>
+    <bendPoints x="3474.125" y="504.9999999999999"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.9" target="//@elements.8"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.11" target="//@elements.2">
+    <semanticElement uri="//EOperation/eContainingClass"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.11" target="//@elements.51">
+    <semanticElement uri="//EOperation/eTypeParameters"/>
+    <bendPoints x="1144.0625" y="590.5333333333333"/>
+    <bendPoints x="1154.0625" y="590.5333333333333"/>
+    <bendPoints x="1154.0625" y="363.6666666666666"/>
+    <bendPoints x="2689.328125" y="363.6666666666666"/>
+    <bendPoints x="2689.328125" y="658.2666666666665"/>
+    <bendPoints x="2699.328125" y="658.2666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.11" target="//@elements.13">
+    <semanticElement uri="//EOperation/eParameters"/>
+    <bendPoints x="1144.0625" y="625.1999999999999"/>
+    <bendPoints x="1174.0625" y="625.1999999999999"/>
+    <bendPoints x="1174.0625" y="458.1666666666666"/>
+    <bendPoints x="1292.59375" y="458.1666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.11" target="//@elements.3">
+    <semanticElement uri="//EOperation/eExceptions"/>
+    <bendPoints x="1144.0625" y="607.8666666666666"/>
+    <bendPoints x="1164.0625" y="607.8666666666666"/>
+    <bendPoints x="1164.0625" y="374.6666666666666"/>
+    <bendPoints x="2344.21875" y="374.6666666666666"/>
+    <bendPoints x="2344.21875" y="487.6666666666666"/>
+    <bendPoints x="2364.21875" y="487.6666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.11" target="//@elements.50">
+    <semanticElement uri="//EOperation/eGenericExceptions"/>
+    <bendPoints x="1144.0625" y="659.8666666666666"/>
+    <bendPoints x="2051.1796875" y="659.8666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.11" target="//@elements.16"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.12" target="//@elements.7">
+    <semanticElement uri="//EPackage/eFactoryInstance"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.12" target="//@elements.3">
+    <semanticElement uri="//EPackage/eClassifiers"/>
+    <bendPoints x="2324.21875" y="310.3333333333333"/>
+    <bendPoints x="2354.21875" y="310.3333333333333"/>
+    <bendPoints x="2354.21875" y="461.6666666666666"/>
+    <bendPoints x="2364.21875" y="461.6666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.12" target="//@elements.12">
+    <semanticElement uri="//EPackage/eSubpackages"/>
+    <bendPoints x="2128.0208333333335" y="223.66666666666663"/>
+    <bendPoints x="2128.0208333333335" y="213.66666666666663"/>
+    <bendPoints x="2226.1197916666665" y="213.66666666666663"/>
+    <bendPoints x="2226.1197916666665" y="223.66666666666663"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.12" target="//@elements.12">
+    <semanticElement uri="//EPackage/eSuperPackage"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.12" target="//@elements.9"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.13" target="//@elements.11">
+    <semanticElement uri="//EParameter/eOperation"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.13" target="//@elements.16"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.14" target="//@elements.14">
+    <semanticElement uri="//EReference/eOpposite"/>
+    <bendPoints x="663.6927083333334" y="799.1333333333332"/>
+    <bendPoints x="663.6927083333334" y="789.1333333333332"/>
+    <bendPoints x="756.8854166666666" y="789.1333333333332"/>
+    <bendPoints x="756.8854166666666" y="799.1333333333332"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.14" target="//@elements.2">
+    <semanticElement uri="//EReference/eReferenceType"/>
+    <bendPoints x="570.5" y="903.1333333333332"/>
+    <bendPoints x="550.5" y="903.1333333333332"/>
+    <bendPoints x="550.5" y="913.4333333333333"/>
+    <bendPoints x="530.5" y="913.4333333333333"/>
+    <bendPoints x="530.5" y="1020.8"/>
+    <bendPoints x="450.5" y="1020.8"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.14" target="//@elements.0">
+    <semanticElement uri="//EReference/eKeys"/>
+    <bendPoints x="850.078125" y="885.7999999999998"/>
+    <bendPoints x="860.078125" y="885.8"/>
+    <bendPoints x="860.078125" y="930.4666666666666"/>
+    <bendPoints x="905.640625" y="930.4666666666666"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.14" target="//@elements.15"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.15" target="//@elements.2">
+    <semanticElement uri="//EStructuralFeature/eContainingClass"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.15" target="//@elements.16"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.16" target="//@elements.3">
+    <semanticElement uri="//ETypedElement/eType"/>
+    <bendPoints x="1880.453125" y="489.6666666666666"/>
+    <bendPoints x="2334.21875" y="489.6666666666666"/>
+    <bendPoints x="2334.21875" y="513.6666666666665"/>
+    <bendPoints x="2364.21875" y="513.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.16" target="//@elements.50">
+    <semanticElement uri="//ETypedElement/eGenericType"/>
+    <bendPoints x="1880.453125" y="541.6666666666665"/>
+    <bendPoints x="2009.921875" y="541.6666666666665"/>
+    <bendPoints x="2009.921875" y="644.2666666666665"/>
+    <bendPoints x="2051.1796875" y="644.2666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.16" target="//@elements.9"/>
+  <elements xsi:type="enotation:Edge" source="//@elements.50" target="//@elements.50">
+    <semanticElement uri="//EGenericType/eUpperBound"/>
+    <bendPoints x="2159.0859375" y="628.6666666666665"/>
+    <bendPoints x="2159.0859375" y="618.6666666666665"/>
+    <bendPoints x="2195.0546875" y="618.6666666666665"/>
+    <bendPoints x="2195.0546875" y="628.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.50" target="//@elements.50">
+    <semanticElement uri="//EGenericType/eTypeArguments"/>
+    <bendPoints x="2123.1171875" y="628.6666666666665"/>
+    <bendPoints x="2123.1171875" y="608.6666666666665"/>
+    <bendPoints x="2231.0234375" y="608.6666666666665"/>
+    <bendPoints x="2231.0234375" y="628.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.50" target="//@elements.3">
+    <semanticElement uri="//EGenericType/eRawType"/>
+    <bendPoints x="2302.9609375" y="644.2666666666665"/>
+    <bendPoints x="2334.21875" y="644.2666666666665"/>
+    <bendPoints x="2334.21875" y="565.6666666666665"/>
+    <bendPoints x="2364.21875" y="565.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.50" target="//@elements.50">
+    <semanticElement uri="//EGenericType/eLowerBound"/>
+    <bendPoints x="2087.1484375" y="628.6666666666665"/>
+    <bendPoints x="2087.1484375" y="598.6666666666665"/>
+    <bendPoints x="2266.9921875" y="598.6666666666665"/>
+    <bendPoints x="2266.9921875" y="628.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.50" target="//@elements.51">
+    <semanticElement uri="//EGenericType/eTypeParameter"/>
+    <bendPoints x="2302.9609375" y="675.4666666666665"/>
+    <bendPoints x="2699.328125" y="675.4666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.50" target="//@elements.3">
+    <semanticElement uri="//EGenericType/eClassifier"/>
+    <bendPoints x="2302.9609375" y="659.8666666666666"/>
+    <bendPoints x="2344.21875" y="659.8666666666666"/>
+    <bendPoints x="2344.21875" y="591.6666666666665"/>
+    <bendPoints x="2364.21875" y="591.6666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" source="//@elements.51" target="//@elements.50">
+    <semanticElement uri="//ETypeParameter/eBounds"/>
+    <bendPoints x="2699.328125" y="684.0666666666665"/>
+    <bendPoints x="2679.328125" y="684.0666666666666"/>
+    <bendPoints x="2679.328125" y="691.0666666666666"/>
+    <bendPoints x="2302.9609375" y="691.0666666666665"/>
+  </elements>
+  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.51" target="//@elements.9"/>
+</enotation:Diagram>

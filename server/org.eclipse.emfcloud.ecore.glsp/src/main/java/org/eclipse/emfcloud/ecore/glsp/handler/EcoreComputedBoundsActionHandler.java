@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -12,19 +12,15 @@ package org.eclipse.emfcloud.ecore.glsp.handler;
 
 import java.util.List;
 
-import org.eclipse.emfcloud.ecore.enotation.Shape;
+import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
-import org.eclipse.glsp.graph.GDimension;
 import org.eclipse.glsp.graph.GModelRoot;
-import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionDispatcher;
-import org.eclipse.glsp.server.actions.ActionMessage;
-import org.eclipse.glsp.server.actions.ComputedBoundsAction;
-import org.eclipse.glsp.server.actions.ComputedBoundsActionHandler;
+import org.eclipse.glsp.server.features.core.model.ComputedBoundsAction;
+import org.eclipse.glsp.server.features.core.model.ComputedBoundsActionHandler;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.operations.LayoutOperation;
-import org.eclipse.glsp.server.types.ElementAndBounds;
 import org.eclipse.glsp.server.utils.LayoutUtil;
 
 import com.google.inject.Inject;
@@ -36,34 +32,24 @@ public class EcoreComputedBoundsActionHandler extends ComputedBoundsActionHandle
 
 	@Override
 	public List<Action> executeAction(ComputedBoundsAction computedBoundsAction, GModelState graphicalModelState) {
-		EcoreModelState modelState = EcoreModelState.getModelState(graphicalModelState);
 
-		for (ElementAndBounds element : computedBoundsAction.getBounds()) {
-			modelState.getIndex().getNotation(element.getElementId(), Shape.class)
-					.ifPresent(notationElement -> changeElementBounds(notationElement, element.getNewSize(),
-							element.getNewPosition()));
-		}
+		EcoreModelState ecoreModelState = EcoreModelState.getModelState(graphicalModelState);
+
 		synchronized (submissionHandler.getModelLock()) {
-			GModelRoot model = modelState.getRoot();
+			GModelRoot model = ecoreModelState.getRoot();
 			if (model != null && model.getRevision() == computedBoundsAction.getRevision()) {
 				LayoutUtil.applyBounds(model, computedBoundsAction, graphicalModelState);
-				if (modelState.getEditorContext().getEcoreFacade().diagramNeedsAutoLayout()) {
-					ActionMessage layoutMessage = new ActionMessage(modelState.getClientId(), new LayoutOperation());
-					actionDispatcher.dispatch(layoutMessage);
+				EcoreFacade ecoreFacade = ecoreModelState.getEditorContext().getEcoreFacade();
+				if (ecoreFacade.diagramNeedsAutoLayout()) {
+					actionDispatcher.dispatch(ecoreModelState.getClientId(), new LayoutOperation());
+					ecoreFacade.setNeedsInitialAutoLayout(false);
 				}
-				return submissionHandler.doSubmitModel(true, modelState);
+				return submissionHandler.submitModelDirectly(ecoreModelState);
 			}
 		}
-		return List.of();
+
+		return none();
 
 	}
 
-	private void changeElementBounds(Shape element, GDimension dimension, GPoint position) {
-		if (position != null) {
-			element.setPosition(position);
-		}
-		if (dimension != null) {
-			element.setSize(dimension);
-		}
-	}
 }

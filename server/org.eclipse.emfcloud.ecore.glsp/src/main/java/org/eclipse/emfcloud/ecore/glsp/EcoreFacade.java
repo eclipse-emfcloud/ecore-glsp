@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -32,6 +32,7 @@ import org.eclipse.glsp.graph.GNode;
 import org.eclipse.glsp.graph.GPoint;
 import org.eclipse.glsp.graph.GShapeElement;
 import org.eclipse.glsp.graph.util.GraphUtil;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
 
 import com.google.common.base.Preconditions;
 
@@ -39,20 +40,20 @@ public class EcoreFacade {
 
 	private final Resource semanticResource;
 	private final Resource notationResource;
-	private final EPackage ePackage;
-
-	private boolean diagramIsNewlyCreated = false;
+	private EPackage ePackage;
+	private boolean needsAutoLayout;
 
 	private Diagram diagram;
 	private EcoreModelIndex modelIndex;
 
-	public EcoreFacade(Resource semanticResource, Resource notationResource, EcoreModelIndex modelIndex) {
+	public EcoreFacade(Resource semanticResource, Resource notationResource, EcoreModelIndex modelIndex,
+			boolean needsAutoLayout) {
 		this.semanticResource = semanticResource;
 		this.notationResource = notationResource;
 		this.modelIndex = modelIndex;
-		this.ePackage = semanticResource.getContents().stream().filter(EPackage.class::isInstance)
-				.map(EPackage.class::cast).findFirst().orElseThrow();
+		this.setEPackage();
 		EcoreUtil.resolveAll(ePackage);
+		this.setNeedsInitialAutoLayout(needsAutoLayout);
 	}
 
 	public Resource getSemanticResource() {
@@ -67,6 +68,19 @@ public class EcoreFacade {
 		return this.ePackage;
 	}
 
+	private void setEPackage() {
+		this.ePackage = semanticResource.getContents().stream().filter(EPackage.class::isInstance)
+				.map(EPackage.class::cast).findFirst().orElseThrow();
+	}
+
+	public boolean diagramNeedsAutoLayout() {
+		return needsAutoLayout;
+	}
+
+	public void setNeedsInitialAutoLayout(boolean needsAutoLayout) {
+		this.needsAutoLayout = needsAutoLayout;
+	}
+
 	public Diagram getDiagram() {
 		if (diagram == null) {
 			getOrCreateDiagram();
@@ -76,7 +90,10 @@ public class EcoreFacade {
 
 	private Diagram getOrCreateDiagram() {
 		Optional<Diagram> existingDiagram = findDiagram();
-		diagram = existingDiagram.isPresent() ? existingDiagram.get() : createDiagram();
+		if (!existingDiagram.isPresent()) {
+			throw new GLSPServerException("Error during initilization of EcoreFace - no notation resource found!");
+		}
+		diagram = existingDiagram.get();
 		findUnresolvedElements(diagram).forEach(e -> e.setSemanticElement(resolved(e.getSemanticElement())));
 		modelIndex.indexNotation(diagram);
 		return diagram;
@@ -93,12 +110,6 @@ public class EcoreFacade {
 		return diagram;
 	}
 
-	public boolean diagramNeedsAutoLayout() {
-		boolean oldValue = this.diagramIsNewlyCreated;
-		this.diagramIsNewlyCreated = false;
-		return oldValue;
-	}
-
 	public Optional<? extends NotationElement> initializeNotationElement(GModelElement gModelElement) {
 		Optional<? extends NotationElement> result = Optional.empty();
 		if (gModelElement instanceof GNode) {
@@ -111,16 +122,9 @@ public class EcoreFacade {
 
 	public List<NotationElement> findUnresolvedElements(Diagram diagram) {
 		return diagram.getElements().stream()
-				.filter(element -> resolved(element.getSemanticElement()).getResolvedElement() == null)
+				.filter(element -> element.getSemanticElement() == null ? false
+						: resolved(element.getSemanticElement()).getResolvedElement() == null)
 				.collect(Collectors.toList());
-	}
-
-	private Diagram createDiagram() {
-		Diagram diagram = EnotationFactory.eINSTANCE.createDiagram();
-		diagram.setSemanticElement(createProxy(ePackage));
-		notationResource.getContents().add(diagram);
-		diagramIsNewlyCreated = true;
-		return diagram;
 	}
 
 	public Optional<Shape> initializeShape(GShapeElement shapeElement) {
@@ -129,17 +133,18 @@ public class EcoreFacade {
 
 	}
 
-	public Shape initializeShape(EObject semanticElement) {
-		return initializeShape(semanticElement, null);
-	}
-
 	public Shape initializeShape(EObject semanticElement, GShapeElement shapeElement) {
 		Shape shape = EnotationFactory.eINSTANCE.createShape();
 		shape.setSemanticElement(createProxy(semanticElement));
 		if (shapeElement != null) {
 			updateShape(shape, shapeElement);
-
 		}
+		modelIndex.indexNotation(shape);
+		return shape;
+	}
+
+	public Shape initializeShape(Shape shape, EObject semanticElement) {
+		shape.setSemanticElement(createProxy(semanticElement));
 		modelIndex.indexNotation(shape);
 		return shape;
 	}
@@ -160,6 +165,19 @@ public class EcoreFacade {
 		}
 		modelIndex.indexNotation(edge);
 		return edge;
+	}
+
+	public void initializeEdge(Edge edge, EObject semanticElement) {
+		if (semanticElement instanceof SemanticProxy) {
+			edge.setSemanticElement((SemanticProxy) semanticElement);
+		} else {
+			edge.setSemanticElement(createProxy(semanticElement));
+			modelIndex.indexNotation(edge);
+		}
+	}
+
+	public void initializeInheritanceEdge(Edge edge) {
+		modelIndex.indexInheritanceEdge(edge);
 	}
 
 	public SemanticProxy createProxy(EObject eObject) {
@@ -192,10 +210,11 @@ public class EcoreFacade {
 	public void updateShape(Shape shape, GShapeElement shapeElement) {
 		if (shapeElement.getSize() != null) {
 			shape.setSize(GraphUtil.copy(shapeElement.getSize()));
-
 		}
 		if (shapeElement.getPosition() != null) {
 			shape.setPosition(GraphUtil.copy(shapeElement.getPosition()));
+		} else if (shape.getPosition() != null) {
+			shapeElement.setPosition(GraphUtil.copy(shape.getPosition()));
 		}
 	}
 
@@ -208,10 +227,6 @@ public class EcoreFacade {
 		}
 	}
 
-	public void updateNotationElement(GModelElement modelElement) {
-		modelIndex.getNotation(modelElement).ifPresent(notation -> updateNotationElement(notation, modelElement));
-	}
-
 	private Optional<Diagram> findDiagram() {
 		return notationResource.getContents().stream().filter(eObject -> isDiagramForEPackage(eObject))
 				.map(Diagram.class::cast).findFirst();
@@ -220,9 +235,7 @@ public class EcoreFacade {
 	private boolean isDiagramForEPackage(EObject eObject) {
 		if (eObject instanceof Diagram) {
 			Diagram diagram = (Diagram) eObject;
-
 			return resolved(diagram.getSemanticElement()).getResolvedElement() == ePackage;
-
 		}
 		return false;
 	}

@@ -98,7 +98,7 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 		// create reference edges
 		eClass.getEReferences().stream().map(this::create).filter(Objects::nonNull).forEach(children::add);
 		// create inheritance edges
-		eClass.getESuperTypes().stream().map(s -> create(eClass, s)).forEach(children::add);
+		eClass.getESuperTypes().stream().map(s -> createInheritanceEdge(eClass, s)).forEach(children::add);
 		return children;
 	}
 
@@ -190,21 +190,30 @@ public class GModelFactory extends AbstractGModelFactory<EObject, GModelElement>
 				.text(name).build();
 	}
 
-	public GEdge create(EClass baseClass, EClass superClass) {
+	public GEdge createInheritanceEdge(EClass baseClass, EClass superClass) {
 		String sourceId = toId(baseClass);
 		String targetId = toId(superClass);
 		if (sourceId.isEmpty() || sourceId.isEmpty()) {
 			return null;
 		}
-		String id = sourceId + "_" + targetId;
-		return new GEdgeBuilder(Types.INHERITANCE) //
+		String id = EcoreEdgeUtil.getInheritanceEdgeId(sourceId, targetId);
+		GEdgeBuilder builder = new GEdgeBuilder(Types.INHERITANCE) //
 				.id(id)//
 				.addCssClass(CSS.ECORE_EDGE) //
 				.addCssClass(CSS.INHERITANCE) //
 				.sourceId(sourceId) //
 				.targetId(targetId) //
-				.routerKind(GConstants.RouterKind.MANHATTAN)//
-				.build();
+				.routerKind(GConstants.RouterKind.MANHATTAN);
+
+		modelState.getIndex().getInheritanceEdge(id).ifPresent(edge -> {
+			if (edge.getBendPoints().size() > 0) {
+				ArrayList<GPoint> gPoints = new ArrayList<>();
+				edge.getBendPoints().forEach(p -> gPoints.add(GraphUtil.copy(p)));
+				builder.addRoutingPoints(gPoints);
+			}
+		});
+
+		return builder.build();
 	}
 
 	public static GLSPServerException createFailed(EObject semanticElement) {

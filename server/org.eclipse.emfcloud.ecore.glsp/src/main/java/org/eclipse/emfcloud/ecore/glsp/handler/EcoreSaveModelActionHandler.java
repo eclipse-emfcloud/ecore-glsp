@@ -12,20 +12,24 @@ package org.eclipse.emfcloud.ecore.glsp.handler;
 
 import java.util.List;
 
+import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.BasicActionHandler;
 import org.eclipse.glsp.server.actions.SaveModelAction;
-import org.eclipse.glsp.server.actions.SetDirtyStateAction;
 import org.eclipse.glsp.server.model.GModelState;
+import org.eclipse.glsp.server.protocol.GLSPServerException;
 
 public class EcoreSaveModelActionHandler extends BasicActionHandler<SaveModelAction> {
 
 	@Override
 	protected List<Action> executeAction(SaveModelAction action, GModelState modelState) {
-		EcoreModelState.getResourceManager(modelState).save();
-		modelState.saveIsDone();
-		return List.of(new SetDirtyStateAction(modelState.isDirty()));
+
+		EcoreModelServerAccess modelServerAccess = EcoreModelState.getModelServerAccess(modelState);
+		if (!modelServerAccess.save()) {
+			throw new GLSPServerException("Could not execute save action: " + action.toString());
+		}
+		return none();
 	}
 
 }
