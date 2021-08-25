@@ -12,6 +12,7 @@ import { MenuContribution, MenuModelRegistry } from "@theia/core";
 import {
     CommonMenus,
     FrontendApplication,
+    LabelProvider,
     open,
     OpenerService,
     QuickOpenItem,
@@ -26,7 +27,6 @@ import { QuickOpenModel } from "@theia/core/lib/common/quick-open-model";
 import { SelectionService } from "@theia/core/lib/common/selection-service";
 import URI from "@theia/core/lib/common/uri";
 import { UriAwareCommandHandler, UriCommandHandler } from "@theia/core/lib/common/uri-command-handler";
-import { EDITOR_CONTEXT_MENU } from "@theia/editor/lib/browser";
 import { FileDialogService } from "@theia/filesystem/lib/browser";
 import { FileService } from "@theia/filesystem/lib/browser/file-service";
 import { FileStat } from "@theia/filesystem/lib/common/files";
@@ -41,26 +41,29 @@ import { inject, injectable } from "inversify";
 import { EcoreModelServerClient } from "../common/ecore-model-server-client";
 import { FileGenServer } from "../common/generate-protocol";
 
-export const EXAMPLE_NAVIGATOR = [...NAVIGATOR_CONTEXT_MENU, "example"];
-export const EXAMPLE_EDITOR = [...EDITOR_CONTEXT_MENU, "example"];
+export const ECORE_FILE_EXTENSION = ".ecore";
+
+export const GENMODEL_NAVIGATOR_CONTEXT_MENU = [...NAVIGATOR_CONTEXT_MENU, "2_genmodel"];
 
 export const NEW_ECORE_FILE_COMMAND: Command = {
     id: "file.newEcoreFile",
     category: "File",
     label: "New Ecore Model Diagram",
-    iconClass: "ecoremodelfile"
-};
-
-export const GENERATE_GENMODEL_DEFAULT: Command = {
-    id: "file.generateGenModelDefault",
-    category: "File",
-    label: "Generate GenModel (with default Values)"
+    iconClass: "newecorefile ecore-glsp-icon"
 };
 
 export const GENERATE_GENMODEL: Command = {
     id: "file.generateGenModel",
     category: "File",
-    label: "Generate GenModel"
+    label: "Generate EMF Generator Model",
+    iconClass: "genmodelfile ecore-glsp-icon"
+};
+
+export const GENERATE_GENMODEL_WIZARD: Command = {
+    id: "file.generateGenModelViaWizard",
+    category: "File",
+    label: "Generate EMF Generator Model...",
+    iconClass: "genmodelfile ecore-glsp-icon"
 };
 
 export const GENERATE_CODE: Command = {
@@ -84,6 +87,7 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
     @inject(FileGenServer) private readonly fileGenServer: FileGenServer;
     @inject(EcoreModelServerClient) protected readonly modelServerClient: EcoreModelServerClient;
     @inject(CommandService) protected readonly commandService: CommandService;
+    @inject(LabelProvider) private readonly labelProvider: LabelProvider;
 
     registerCommands(registry: CommandRegistry): void {
         registry.registerCommand(NEW_ECORE_FILE_COMMAND, this.newWorkspaceRootUriAwareCommandHandler({
@@ -102,30 +106,34 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
                 }
             }
         }));
-        registry.registerCommand(GENERATE_GENMODEL_DEFAULT, this.newWorkspaceRootUriAwareCommandHandler({
-            execute: uri => this.getDirectory(uri).then(parent => {
+        registry.registerCommand(GENERATE_GENMODEL, this.newWorkspaceRootUriAwareCommandHandler({
+            isVisible: (uri: URI) => uri.path.ext === ECORE_FILE_EXTENSION,
+            isEnabled: (uri: URI) => uri.path.ext === ECORE_FILE_EXTENSION,
+            execute: (uri: URI) => this.getDirectory(uri).then(parent => {
                 if (parent) {
                     const parentUri = parent.resource;
 
                     this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", "").then(() => {
-                        const extensionStart = uri.displayName.lastIndexOf(".");
-                        const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
+                        const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
+                        const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + ".genmodel";
                         const fileUri = new URI(genmodelPath);
                         open(this.openerService, fileUri);
                     });
                 }
             })
         }));
-        registry.registerCommand(GENERATE_GENMODEL, this.newWorkspaceRootUriAwareCommandHandler({
+        registry.registerCommand(GENERATE_GENMODEL_WIZARD, this.newWorkspaceRootUriAwareCommandHandler({
+            isVisible: (uri: URI) => uri.path.ext === ECORE_FILE_EXTENSION,
+            isEnabled: (uri: URI) => uri.path.ext === ECORE_FILE_EXTENSION,
             execute: uri => this.getDirectory(uri).then(parent => {
                 if (parent) {
                     const parentUri = parent.resource;
 
-                    this.showInput("Name", "Custom RootPackage Name", customPackageName => {
-                        this.showInput("Output folder name (relative from project root)", "folder name", folderName => {
+                    this.showInput("Root package name", "Root package name", customPackageName => {
+                        this.showInput("Output folder name (relative to selected Ecore)", "Output folder name", folderName => {
                             this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName).then(() => {
-                                const extensionStart = uri.displayName.lastIndexOf(".");
-                                const genmodelPath = parentUri.toString() + "/" + uri.displayName.substring(0, extensionStart) + ".genmodel";
+                                const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
+                                const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + ".genmodel";
                                 const fileUri = new URI(genmodelPath);
                                 open(this.openerService, fileUri);
                             });
@@ -161,6 +169,20 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
             label: NEW_ECORE_FILE_COMMAND.label,
             icon: NEW_ECORE_FILE_COMMAND.iconClass,
             order: "0"
+        });
+
+        menus.registerMenuAction(GENMODEL_NAVIGATOR_CONTEXT_MENU, {
+            commandId: GENERATE_GENMODEL.id,
+            label: GENERATE_GENMODEL.label,
+            icon: GENERATE_GENMODEL.iconClass,
+            order: "a0"
+        });
+
+        menus.registerMenuAction(GENMODEL_NAVIGATOR_CONTEXT_MENU, {
+            commandId: GENERATE_GENMODEL_WIZARD.id,
+            label: GENERATE_GENMODEL_WIZARD.label,
+            icon: GENERATE_GENMODEL_WIZARD.iconClass,
+            order: "a1"
         });
 
     }
