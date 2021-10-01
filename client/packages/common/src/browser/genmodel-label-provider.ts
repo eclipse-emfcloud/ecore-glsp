@@ -15,7 +15,7 @@ import { FileStat } from "@theia/filesystem/lib/common/files";
 import { injectable } from "inversify";
 
 @injectable()
-export class EcoreTreeLabelProviderContribution implements LabelProviderContribution {
+export class GenModelTreeLabelProviderContribution implements LabelProviderContribution {
     canHandle(uri: object): number {
         let toCheck: any = uri;
         if (FileStat.is(toCheck)) {
@@ -24,7 +24,7 @@ export class EcoreTreeLabelProviderContribution implements LabelProviderContribu
             toCheck = UriSelection.getUri(uri);
         }
         if (toCheck instanceof URI) {
-            if (toCheck.path.ext === ".ecore") {
+            if (toCheck.path.ext === ".genmodel") {
                 return 1000;
             }
         }
@@ -32,6 +32,6 @@ export class EcoreTreeLabelProviderContribution implements LabelProviderContribu
     }
 
     getIcon(): string {
-        return "ecoremodelfile";
+        return "genmodelfile";
     }
 }

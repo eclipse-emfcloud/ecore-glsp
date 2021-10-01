@@ -13,8 +13,10 @@ import "../../src/browser/style/common.css";
 import { LabelProviderContribution } from "@theia/core/lib/browser";
 import { ContainerModule } from "inversify";
 
-import { EcoreTreeLabelProviderContribution } from "./label-provider";
+import { EcoreTreeLabelProviderContribution } from "./ecore-label-provider";
+import { GenModelTreeLabelProviderContribution } from "./genmodel-label-provider";
 
 export default new ContainerModule(bind => {
     bind(LabelProviderContribution).to(EcoreTreeLabelProviderContribution);
+    bind(LabelProviderContribution).to(GenModelTreeLabelProviderContribution);
 });

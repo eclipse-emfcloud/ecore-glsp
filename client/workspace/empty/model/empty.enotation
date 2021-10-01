@@ -1,23 +1,4 @@
 <?xml version="1.0" encoding="ASCII"?>
 <enotation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:enotation="http://www.eclipsesource.com/glsp/ecore/notation">
   <semanticElement uri="/"/>
-  <elements xsi:type="enotation:Shape">
-    <semanticElement uri="//NewEClass0"/>
-    <position x="12.0" y="12.0"/>
-    <size width="321.84375" height="208.0"/>
-  </elements>
-  <elements xsi:type="enotation:Shape">
-    <semanticElement uri="//NewEClass5"/>
-    <position x="353.84375" y="94.5"/>
-    <size width="155.484375" height="43.0"/>
-  </elements>
-  <elements xsi:type="enotation:Shape">
-    <semanticElement uri="//TestOccurrences"/>
-    <position x="529.328125" y="12.0"/>
-    <size width="340.703125" height="572.0"/>
-  </elements>
-  <elements xsi:type="enotation:Edge" type="edge:inheritance" source="//@elements.0" target="//@elements.1">
-    <bendPoints x="371.9140625" y="353.0"/>
-    <bendPoints x="371.9140625" y="260.5"/>
-  </elements>
 </enotation:Diagram>
