@@ -9,14 +9,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 
-.p-Menu-itemIcon.fa.fa-project-diagram {
-    font-size: smaller;
-}
-
-.p-Menu-itemIcon.fa.fa-project-diagram:before {
-    font-family: "Font Awesome 5 Free";
-}
-
 .p-Menu-itemIcon.ecore-glsp-icon {
     background-repeat: no-repeat;
     background-position: center;
@@ -26,6 +18,9 @@
     background-size: 16px 16px;
     height: 16px;
     width: 16px;
+}
+
+.ecore-tool-button .ecoreimg {
     margin-right: 6px;
 }
 
@@ -241,29 +236,33 @@
     background-image: url(../../../resources/icons/EcoreModelFile.gif);
     height: 16px;
     width: 16px;
-    margin-left: -3px;
+    margin-right: 6px;
+}
+
+.p-TabBar.theia-app-centers .p-TabBar-tabIcon {
+    height: 16px;
+    width: 16px;
+    background-size: 16px;
+    background-position-y: 0px;
+    background-color: transparent;
+    background-repeat: no-repeat;
 }
 
 .p-TabBar.theia-app-centers .p-TabBar-tabIcon.ecoremodelfileTabIcon {
     background-image: url(../../../resources/icons/EcoreModelFile.gif);
-    height: 16px;
-    width: 16px;
-    background-color: transparent;
-    background-repeat: no-repeat;
 }
 
 .newecorefile {
     background-image: url(../../../resources/icons/NewEcoreFile.gif);
     height: 16px;
     width: 16px;
-    margin-left: -3px;
 }
 
 .genmodelfile {
     background-image: url(../../../resources/icons/GenModelModelFile.gif)!important;
     height: 16px;
     width: 16px;
-    margin-left: -3px;
+    margin-right: 6px;
     background-repeat: no-repeat!important;
     background-position: center!important;
 }

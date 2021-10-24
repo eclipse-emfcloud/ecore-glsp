@@ -16,6 +16,7 @@
 import { ModelserverAwareWidgetProvider } from "@eclipse-emfcloud/modelserver-jsonforms-property-view";
 import {
     CommandExecutionResult,
+    CommandExecutionType,
     ModelServerCommand,
     ModelServerMessage,
     ModelServerObject,
@@ -25,29 +26,40 @@ import {
 import { isGlspSelection } from "@eclipse-glsp/theia-integration/lib/browser/diagram";
 import URI from "@theia/core/lib/common/uri";
 import { injectable, postConstruct } from "inversify";
-import { debounce, isEqual, isObject, transform } from "lodash";
+import { isEqual, isObject, transform } from "lodash";
 
 import { getElementFromModelServer } from "./utils";
 
 @injectable()
 export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetProvider {
 
+    canHandle(selection: Object | undefined): number {
+        return isGlspSelection(selection) ? 100 : 0;
+    }
+
     @postConstruct()
     init(): void {
         this.propertyDataServices = this.propertyDataServices.concat(this.contributions.getContributions());
         this.currentPropertyData = {};
         this.currentModelUri = "";
-        this.jsonFormsWidget.onChange(
-            debounce((jsonFormsData: any) => {
-                this.handleChanges(jsonFormsData);
-            }, 200)
-        );
+        this.jsonFormsWidget.onChange((jsonFormsData: Object) => this.handleChanges(jsonFormsData));
+
+        this.jsonFormsWidget.onAttach(() => this.doSubscribe());
+        this.jsonFormsWidget.onDetach(() => this.doUnsubscribe());
 
         this.subscriptionService.onIncrementalUpdateListener(incrementalUpdate => this.updateWidgetData(incrementalUpdate));
     }
 
-    canHandle(selection: Object | undefined): number {
-        return isGlspSelection(selection) ? 100 : 0;
+    protected doSubscribe(): void {
+        if (this.selectionService.selection && isGlspSelection(this.selectionService.selection) && this.selectionService.selection.sourceUri) {
+            this.currentModelUri = this.getRelativeModelUri(this.selectionService.selection.sourceUri);
+            this.modelServerClient.subscribe(this.currentModelUri);
+        }
+    }
+
+    protected doUnsubscribe(): void {
+        this.modelServerClient.unsubscribe(this.currentModelUri);
+        this.currentModelUri = "";
     }
 
     updateContentWidget(selection: any): void {
@@ -63,19 +75,12 @@ export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetP
         });
     }
 
-    protected async updateWidgetData(message: ModelServerMessage): Promise<void> {
+    protected updateWidgetData(message: ModelServerMessage): void {
         if (message.type !== "incrementalUpdate" && message.type !== "fullUpdate") {
             return;
         }
         if (this.isCommandExecutionResult(message.data)) {
-            if (message.data.affectedObjects && message.data.affectedObjects.length > 0) {
-                const affectedObject = message.data.affectedObjects[0];
-                const relativeRefURI = new URI(this.getRelativeModelUri(affectedObject.$ref.replace("file:", "")));
-                if (this.isCurrentModelUri(relativeRefURI)) {
-                    this.currentPropertyData = await getElementFromModelServer(this.modelServerClient, this.currentModelUri, this.currentPropertyData.semanticUri);
-                    this.jsonFormsWidget.updatePropertyViewData(this.currentPropertyData);
-                }
-            }
+            this.updateViaCommand(message.data, this.currentPropertyData.semanticUri);
         }
     }
 
@@ -86,8 +91,31 @@ export class EcoreGlspPropertyViewWidgetProvider extends ModelserverAwareWidgetP
             && "affectedObjects" in object;
     }
 
-    protected updateViaCommand(result: CommandExecutionResult, semanticUri: string): void {
-        // no-op
+    protected async updateViaCommand(commandResult: CommandExecutionResult, semanticUri: string): Promise<void> {
+        switch (commandResult.type) {
+            case CommandExecutionType.EXECCUTE: {
+                if (commandResult.source && commandResult.source.feature && commandResult.source.dataValues) {
+                    this.currentPropertyData[commandResult.source.feature] = commandResult.source.dataValues[0];
+                    this.jsonFormsWidget.updatePropertyViewData(this.currentPropertyData);
+                }
+                break;
+            }
+            case CommandExecutionType.UNDO:
+            case CommandExecutionType.REDO: {
+                if (commandResult.affectedObjects && commandResult.affectedObjects.length > 0) {
+                    const changedObject = commandResult.affectedObjects[0];
+                    const relativeRefURI = new URI(this.getRelativeModelUri(changedObject.$ref.replace("file:", "")));
+                    if (this.isCurrentModelUri(relativeRefURI)) {
+                        await new Promise(f => setTimeout(f, 250));
+                        const response = await getElementFromModelServer(this.modelServerClient, this.currentModelUri, this.currentPropertyData.semanticUri);
+                        this.currentPropertyData = {};
+                        this.currentPropertyData = response;
+                        this.jsonFormsWidget.updatePropertyViewData(this.currentPropertyData);
+                    }
+                }
+                break;
+            }
+        }
     }
 
     protected isCurrentModelUri(uri: URI): boolean {

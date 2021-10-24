@@ -9,7 +9,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 import { TreeEditor } from "@eclipse-emfcloud/theia-tree-editor";
-import { LabelProviderContribution } from "@theia/core/lib/browser";
+import { codicon, LabelProviderContribution } from "@theia/core/lib/browser";
 import URI from "@theia/core/lib/common/uri";
 import { injectable } from "inversify";
 
@@ -33,7 +33,7 @@ const ICON_CLASSES: Map<string, string> = new Map([
 ]);
 
 /* Icon for unknown types */
-const UNKNOWN_ICON = "fa fa-question-circle";
+const UNKNOWN_ICON = `${codicon("question")}`;
 
 @injectable()
 export class TreeLabelProvider implements LabelProviderContribution {

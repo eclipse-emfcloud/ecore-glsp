@@ -26,7 +26,7 @@ const selectors = {
     umlEnotation: Selector('div.theia-TreeNodeSegment.theia-TreeNodeSegmentGrow').withText('UML.enotation'),
     wsSelect: Selector('#shell-tab-explorer-view-container'),
     svgCanvas: Selector('svg.sprotty-graph'),
-    eraser: Selector('.fas.fa-eraser.fa-xs'),
+    eraser: Selector('.codicon.codicon-chrome-close'),
     edgePoints: Selector('.sprotty-edge.ecore-edge.selected').child().withAttribute('data-kind', 'manhattan-50%'),
     duplicateFile: Selector('.p-Menu-itemLabel').withText('Duplicate'),
     deleteFile: Selector('.p-Menu-itemLabel').withText('Delete'),

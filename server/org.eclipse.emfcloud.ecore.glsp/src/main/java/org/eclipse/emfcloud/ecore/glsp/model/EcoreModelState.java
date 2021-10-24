@@ -21,6 +21,7 @@ import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.model.GModelStateImpl;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
+import org.eclipse.glsp.server.utils.MapUtil;
 
 public class EcoreModelState extends GModelStateImpl implements GModelState {
 
@@ -74,9 +75,9 @@ public class EcoreModelState extends GModelStateImpl implements GModelState {
 	}
 
 	public String getModelUri() {
-		String sourceURI = ClientOptions.getValue(getClientOptions(), ClientOptions.SOURCE_URI)
+		String sourceURI = MapUtil.getValue(getClientOptions(), ClientOptions.SOURCE_URI)
 				.orElseThrow(() -> new GLSPServerException("No source uri given to load model!"));
-		String workspaceRoot = ClientOptions.getValue(getClientOptions(), WORKSPACE_ROOT_OPTION)
+		String workspaceRoot = MapUtil.getValue(getClientOptions(), WORKSPACE_ROOT_OPTION)
 				.orElseThrow(() -> new GLSPServerException("No workspaceUri given to load model!"));
 		return sourceURI.replace(workspaceRoot.replaceFirst("file://", ""), "").replaceFirst("/", "");
 	}

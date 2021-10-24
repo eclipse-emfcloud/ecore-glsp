@@ -38,6 +38,7 @@ import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelServerAccess;
 import org.eclipse.emfcloud.ecore.glsp.model.EcoreModelState;
 import org.eclipse.glsp.server.protocol.GLSPServerException;
 import org.eclipse.glsp.server.utils.ClientOptions;
+import org.eclipse.glsp.server.utils.MapUtil;
 
 public class ResourceManager {
 	public static final String ECORE_EXTENSION = ".ecore";
@@ -51,7 +52,7 @@ public class ResourceManager {
 	private EditingDomain editingDomain;
 
 	public ResourceManager(EcoreModelState modelState, EcoreModelServerAccess modelServerAccess) {
-		String sourceURI = ClientOptions.getValue(modelState.getClientOptions(), ClientOptions.SOURCE_URI)
+		String sourceURI = MapUtil.getValue(modelState.getClientOptions(), ClientOptions.SOURCE_URI)
 				.orElseThrow(() -> new GLSPServerException("No source uri given to load model!"));
 		if (!sourceURI.endsWith(ECORE_EXTENSION) && !sourceURI.endsWith(NOTATION_EXTENSION)) {
 			throw new GLSPServerException("Could not setup ResourceManager: \n Invalid file extension: " + sourceURI);

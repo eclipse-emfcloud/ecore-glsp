@@ -16,11 +16,15 @@
 import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia";
 
 export async function getElementFromModelServer(modelServerClient: ModelServerClient, modelUri: string, elementId: string): Promise<Object> {
-    return modelServerClient.getElementById(modelUri, elementId)
+    return modelServerClient.getElementById(modelUri, elementId, "json")
         .then(response => {
             const returnObject = response.body as any;
-            // add semanticUri to jsonforms data structure
-            returnObject["semanticUri"] = elementId;
-            return returnObject;
+            if (typeof returnObject === "object" && returnObject !== undefined) {
+                // add elementId to jsonforms data structure
+                returnObject["semanticUri"] = elementId;
+                return returnObject;
+            }
+            // in case error message occurs the return object is a string, we return an empty object
+            return {};
         });
 }

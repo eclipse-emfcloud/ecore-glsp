@@ -9,39 +9,67 @@
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
 import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia";
-import { GLSPClientContribution, registerDiagramManager } from "@eclipse-glsp/theia-integration/lib/browser";
+import {
+    ContainerContext,
+    GLSPClientContribution,
+    GLSPTheiaFrontendModule,
+    registerDiagramManager,
+    TheiaGLSPConnector
+} from "@eclipse-glsp/theia-integration/lib/browser";
 import { CommandContribution, MenuContribution } from "@theia/core";
 import { WebSocketConnectionProvider } from "@theia/core/lib/browser";
 import { WorkspaceDeleteHandler } from "@theia/workspace/lib/browser/workspace-delete-handler";
-import { ContainerModule } from "inversify";
 import { DiagramConfiguration } from "sprotty-theia/lib";
 
+import { EcoreLanguage } from "../common/ecore-language";
 import { EcoreModelServerClient } from "../common/ecore-model-server-client";
 import { FILEGEN_SERVICE_PATH, FileGenServer } from "../common/generate-protocol";
 import { EcoreCommandContribution } from "./command-contribution";
 import { EcoreDiagramConfiguration } from "./diagram/ecore-diagram-configuration";
 import { EcoreDiagramManager } from "./diagram/ecore-diagram-manager";
-import { EcoreGLSPDiagramClient } from "./diagram/ecore-glsp-diagram-client";
+import { EcoreTheiaGLSPConnector } from "./diagram/ecore-theia-glsp-connector";
 import { EcoreGLSPClientContribution } from "./glsp-client-contribution";
 import { EcoreWorkspaceDeleteHandler } from "./workspace-delete-handler";
 
-export default new ContainerModule((bind, _unbind, _isBound, rebind) => {
-    bind(EcoreGLSPClientContribution).toSelf().inSingletonScope();
-    bind(GLSPClientContribution).toService(EcoreGLSPClientContribution);
-    bind(EcoreGLSPDiagramClient).toSelf().inSingletonScope();
-    bind(DiagramConfiguration).to(EcoreDiagramConfiguration).inSingletonScope();
-    registerDiagramManager(bind, EcoreDiagramManager);
+export class EcoreTheiaFrontendModule extends GLSPTheiaFrontendModule {
 
-    bind(EcoreWorkspaceDeleteHandler).toSelf().inSingletonScope();
-    rebind(WorkspaceDeleteHandler).toService(EcoreWorkspaceDeleteHandler);
+    readonly diagramLanguage = EcoreLanguage;
 
-    bind(CommandContribution).to(EcoreCommandContribution);
-    bind(MenuContribution).to(EcoreCommandContribution);
+    bindTheiaGLSPConnector(context: ContainerContext): void {
+        context.bind(TheiaGLSPConnector).toDynamicValue(dynamicContext => {
+            const connector = dynamicContext.container.resolve(EcoreTheiaGLSPConnector);
+            connector.doConfigure(this.diagramLanguage);
+            return connector;
+        });
+    }
 
-    bind(FileGenServer).toDynamicValue(ctx => {
-        const connection = ctx.container.get(WebSocketConnectionProvider);
-        return connection.createProxy<FileGenServer>(FILEGEN_SERVICE_PATH);
-    }).inSingletonScope();
+    bindDiagramConfiguration(context: ContainerContext): void {
+        context.bind(DiagramConfiguration).to(EcoreDiagramConfiguration);
+    }
 
-    bind(EcoreModelServerClient).toService(ModelServerClient);
-});
+    bindGLSPClientContribution(context: ContainerContext): void {
+        context.bind(GLSPClientContribution).to(EcoreGLSPClientContribution);
+    }
+
+    configure(context: ContainerContext): void {
+        context.bind(CommandContribution).to(EcoreCommandContribution);
+        context.bind(MenuContribution).to(EcoreCommandContribution);
+        context.bind(EcoreWorkspaceDeleteHandler).toSelf().inSingletonScope();
+        context.rebind(WorkspaceDeleteHandler).toService(EcoreWorkspaceDeleteHandler);
+
+        context.bind(FileGenServer).toDynamicValue(ctx => {
+            const connection = ctx.container.get(WebSocketConnectionProvider);
+            return connection.createProxy<FileGenServer>(FILEGEN_SERVICE_PATH);
+        }).inSingletonScope();
+
+        context.bind(EcoreModelServerClient).toService(ModelServerClient);
+    }
+
+    configureDiagramManager(context: ContainerContext): void {
+        registerDiagramManager(context.bind, EcoreDiagramManager);
+    }
+
+}
+
+export default new EcoreTheiaFrontendModule();
+

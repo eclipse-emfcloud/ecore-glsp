@@ -11,23 +11,14 @@
 import {
     DiagramWidgetOptions,
     GLSPDiagramManager,
-    GLSPNotificationManager,
-    GLSPTheiaSprottyConnector,
     GLSPWidgetOpenerOptions,
-    GLSPWidgetOptions,
-    TheiaFileSaver
+    GLSPWidgetOptions
 } from "@eclipse-glsp/theia-integration/lib/browser";
-import { MessageService } from "@theia/core";
-import { WidgetManager } from "@theia/core/lib/browser";
 import URI from "@theia/core/lib/common/uri";
-import { EditorManager } from "@theia/editor/lib/browser";
 import { WorkspaceService } from "@theia/workspace/lib/browser";
-import { inject, injectable } from "inversify";
+import { inject, injectable, postConstruct } from "inversify";
 
 import { EcoreLanguage } from "../../common/ecore-language";
-import { EcoreGLSPDiagramClient } from "./ecore-glsp-diagram-client";
-
-export const ECORE_DIAGRAM_ICON_CLASS = "fa fa-project-diagram";
 
 export interface EcoreDiagramWidgetOptions extends DiagramWidgetOptions, GLSPWidgetOptions {
     workspaceRoot: string;
@@ -35,35 +26,22 @@ export interface EcoreDiagramWidgetOptions extends DiagramWidgetOptions, GLSPWid
 
 @injectable()
 export class EcoreDiagramManager extends GLSPDiagramManager {
-    readonly diagramType = EcoreLanguage.DiagramType;
-    readonly iconClass = ECORE_DIAGRAM_ICON_CLASS;
-    readonly label = EcoreLanguage.Label + " Editor";
 
-    private _diagramConnector: GLSPTheiaSprottyConnector;
+    @inject(WorkspaceService) workspaceService: WorkspaceService;
+
+    readonly diagramType = EcoreLanguage.diagramType;
+    readonly label = EcoreLanguage.label + " Editor";
+
     private workspaceRoot: string;
 
-    constructor(
-        @inject(EcoreGLSPDiagramClient) diagramClient: EcoreGLSPDiagramClient,
-        @inject(TheiaFileSaver) fileSaver: TheiaFileSaver,
-        @inject(WidgetManager) widgetManager: WidgetManager,
-        @inject(EditorManager) editorManager: EditorManager,
-        @inject(MessageService) messageService: MessageService,
-        @inject(GLSPNotificationManager) notificationManager: GLSPNotificationManager,
-        @inject(WorkspaceService) workspaceService: WorkspaceService) {
-        super();
-        this._diagramConnector = new GLSPTheiaSprottyConnector({
-            diagramClient,
-            fileSaver, editorManager, widgetManager, diagramManager: this, messageService, notificationManager
-        });
-        workspaceService.roots.then(roots => this.workspaceRoot = roots[0].resource.toString());
+    @postConstruct()
+    protected async initialize(): Promise<void> {
+        super.initialize();
+        this.workspaceService.roots.then(roots => this.workspaceRoot = roots[0].resource.toString());
     }
 
     get fileExtensions(): string[] {
-        return [EcoreLanguage.FileExtension];
-    }
-
-    get diagramConnector(): GLSPTheiaSprottyConnector {
-        return this._diagramConnector;
+        return EcoreLanguage.fileExtensions;
     }
 
     protected createWidgetOptions(uri: URI, options?: GLSPWidgetOpenerOptions): EcoreDiagramWidgetOptions {
@@ -71,5 +49,9 @@ export class EcoreDiagramManager extends GLSPDiagramManager {
             ...super.createWidgetOptions(uri, options),
             workspaceRoot: this.workspaceRoot
         } as EcoreDiagramWidgetOptions;
+    }
+
+    get iconClass(): string {
+        return EcoreLanguage.iconClass!;
     }
 }

@@ -1,3 +1,13 @@
+/********************************************************************************
+ * Copyright (c) 2021 EclipseSource and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0 which is available at
+ * https://www.eclipse.org/legal/epl-2.0, or the MIT License which is
+ * available at https://opensource.org/licenses/MIT.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR MIT
+ ********************************************************************************/
 package org.eclipse.emfcloud.ecore.glsp.palette;
 
 import java.util.List;
@@ -29,7 +39,7 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 
 		List<PaletteItem> classifiers = Lists.newArrayList(createEClass, createAbstract, createInterface, createEnum,
 				createDataType);
-		return PaletteItem.createPaletteGroup("ecore.classifier", "Classifier", classifiers, "fa-hammer");
+		return PaletteItem.createPaletteGroup("ecore.classifier", "Classifier", classifiers, "symbol-property");
 	}
 
 	private PaletteItem relations() {
@@ -41,7 +51,7 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 
 		List<PaletteItem> edges = Lists.newArrayList(createEcoreEdge, createComposition, createInheritance,
 				createBiReference, createBiComposition);
-		return PaletteItem.createPaletteGroup("ecore.relation", "Relation", edges, "fa-hammer");
+		return PaletteItem.createPaletteGroup("ecore.relation", "Relation", edges, "symbol-property");
 	}
 
 	private PaletteItem features() {
@@ -51,7 +61,7 @@ public class EcoreToolPaletteItemProvider implements ToolPaletteItemProvider {
 
 		List<PaletteItem> features = Lists.newArrayList(createAttribute, createEnumLiteral, createOperation);
 		
-		return PaletteItem.createPaletteGroup("ecore.feature", "Feature", features, "fa-hammer");
+		return PaletteItem.createPaletteGroup("ecore.feature", "Feature", features, "symbol-property");
 	}
 
 	private PaletteItem node(String elementTypeId, String label, String icon) {
