@@ -39,13 +39,15 @@ const selectors = {
     input: Selector('div.label-edit input'),
     attribute: Selector('div.tool-group > div.tool-button').withText('Attribute'),
     literal: Selector('div.tool-group > div.tool-button').withText('Literal'),
-    firstEditorTab: Selector('div.p-Widget.p-TabBar.theia-app-centers.theia-app-main > div.p-TabBar-content-container.ps').child('ul').child(':first-child'),
+    firstEditorTab: Selector('#theia-main-content-panel > div.p-Widget.p-TabBar.theia-app-centers.theia-app-main.theia-tabBar-multirow > div.theia-tabBar-tab-row > div.p-TabBar-content-container.ps > ul > li:first-child'),
     close: Selector('.p-Menu-itemLabel').withText('Close'),
     saveButton: Selector('.theia-button.main').withText('Save'),
     dontSaveButton: Selector('.theia-button.secondary').withText('Don\'t save'),
     menuBarItem: Selector('.p-Menu.p-MenuBar-menu').child('p-MenuBar-itemLabel'),
-    undo: Selector('.p-Menu-itemLabel').withText('Undo')
-}
+    undo: Selector('.p-Menu-itemLabel').withText('Undo'),
+    explorerActions: Selector('#theia-left-content-panel div.p-Widget.p-TabBar-toolbar.ps div.item.enabled'),
+    openEditors: Selector('.p-Menu-itemLabel').withText('Open Editors'),
+};
 
 const nodesSelector = {
     classNode: Selector('g.node.ecore-node.class text.name.sprotty-label').withText('Class'),
@@ -104,6 +106,12 @@ const openWorkbench = async (t: TestController) => {
     }
     await t.click(navigatorButton);
     await checkDefaultWorkbench(t);
+};
+
+const closeOpenEditor = async (t: TestController) => {
+    await t
+        .click(selectors.explorerActions)
+        .click(selectors.openEditors);
 };
 
 const openFile = async (t: TestController, file: Selector, shouldOpenWorkbench = false) => {
@@ -248,6 +256,8 @@ fixture.disablePageReloads`Ecore-glsp E2E-Testing`
 
 test('Open Workbench', async t => {
     await openWorkbench(t);
+    // Due to Theia update to 1.18.0, the explorer area 'Open Editors' is opened by default, we close it for our tests
+    await closeOpenEditor(t);
 });
 
 test.skip('Switch Theme', async t => {

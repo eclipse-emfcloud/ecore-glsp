@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Ecore GLSP Dev" sequenceNumber="1634919286">
+<target name="Ecore GLSP Dev" sequenceNumber="1635154120">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.glsp.feature.feature.group" version="0.9.0.202109211845"/>
@@ -54,6 +54,7 @@
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.8.1200.v20210527-0259"/>
       <unit id="com.ibm.icu" version="67.1.0.v20200706-1749"/>
       <unit id="org.eclipse.core.resources" version="3.15.0.v20210521-0722"/>
+      <unit id="org.eclipse.equinox.event" version="1.6.0.v20210212-1143"/>
       <unit id="org.eclipse.emf.edit" version="2.16.0.v20190920-0401"/>
       <unit id="org.eclipse.emf.sdk.feature.group" version="2.26.0.v20210506-1425"/>
       <unit id="org.eclipse.emf.transaction.feature.group" version="1.12.0.201805140824"/>
