@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2019-2020 EclipseSource and others.
+ * Copyright (c) 2019-2021 EclipseSource and others.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0 which is available at
@@ -19,8 +19,8 @@ import { EcoreLanguage } from "../common/ecore-language";
 @injectable()
 export class EcoreGLSPServerContribution extends JavaSocketServerContribution {
 
-    readonly id = EcoreLanguage.Id;
-    readonly name = EcoreLanguage.Name;
+    readonly id = EcoreLanguage.contributionId;
+
     serverStarted = false;
     readonly description = {
         id: "ecore",
@@ -34,12 +34,15 @@ export class EcoreGLSPServerContribution extends JavaSocketServerContribution {
     createLaunchOptions(): Partial<JavaSocketServerLaunchOptions> {
         return {
             launchedExternally: true,
-            serverPort: getPort("ECORE_GLSP")
+            additionalArgs: ["--consoleLog", "true"],
+            socketConnectionOptions: {
+                port: getPort("ECORE_GLSP")
+            }
         };
     }
 
     connect(clientConnection: IConnection): void {
-        const socketPort = this.launchOptions.serverPort;
+        const socketPort = this.launchOptions.socketConnectionOptions.port;
         if (socketPort) {
             const socket = new net.Socket();
             const serverConnection = createSocketConnection(socket, socket, () => {

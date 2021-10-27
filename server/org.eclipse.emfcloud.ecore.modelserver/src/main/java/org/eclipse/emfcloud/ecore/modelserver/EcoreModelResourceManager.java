@@ -69,8 +69,7 @@ public class EcoreModelResourceManager extends DefaultModelResourceManager {
 				if (absolutePath.fileExtension().equals(ECORE_EXTENSION)) {
 					resourceSets.put(createURI(file.getAbsolutePath()), new ResourceSetImpl());
 				}
-				loadResource(file.getAbsolutePath(),
-						false /* do not remove unloadable resources on workspace startup */);
+				loadResource(file.getAbsolutePath());
 			}
 		}
 	}
@@ -225,12 +224,16 @@ public class EcoreModelResourceManager extends DefaultModelResourceManager {
 	}
 
 	@Override
-	public void removeResource(final String modeluri) throws IOException {
+	public void removeResource(final String modeluri) {
 		ResourceSet existingResourceSet = getResourceSet(modeluri);
 		if (existingResourceSet != null) {
 			Resource resource = existingResourceSet.getResource(createURI(modeluri), false);
 			if (resource != null) {
-				resource.delete(null);
+				try {
+					resource.delete(null);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

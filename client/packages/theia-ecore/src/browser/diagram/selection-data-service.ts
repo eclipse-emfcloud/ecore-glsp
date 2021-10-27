@@ -40,15 +40,14 @@ export class EcoreGlspSelectionDataService extends GlspSelectionDataService {
     async getSelectionData(selectedElementIds: string[]): Promise<EcoreGlspSelectionData> {
         const map = new Map<string, EcoreElementSelectionData>();
 
-        if (selectedElementIds.length === 0) {
-            selectedElementIds[0] = "";
-        }
+        // If the graph was selected, no id is available and we send an empty string to fetch its properties
+        const requestElementId = (selectedElementIds.length > 0) ? selectedElementIds[0] : "";
 
         return new Promise(resolve => {
-            this.actionDispatcher.request(new RequestSemanticUriAction(selectedElementIds[0])).then(response => {
+            this.actionDispatcher.request(new RequestSemanticUriAction(requestElementId)).then(response => {
                 if (isSetSemanticUriAction(response)) {
                     map.set(
-                        selectedElementIds[0],
+                        requestElementId,
                         {
                             modelUri: (response as SetSemanticUriAction).modelUri,
                             semanticUri: (response as SetSemanticUriAction).semanticUri,

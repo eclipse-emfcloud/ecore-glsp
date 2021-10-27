@@ -8,33 +8,23 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR MIT
  ********************************************************************************/
-import { ModelServerClient } from "@eclipse-emfcloud/modelserver-theia/lib/common";
+import { Args } from "@eclipse-glsp/client";
 import { BaseGLSPClientContribution } from "@eclipse-glsp/theia-integration/lib/browser";
-import { inject, injectable } from "inversify";
+import { MaybePromise } from "@theia/core";
+import { injectable } from "inversify";
 
 import { EcoreLanguage } from "../common/ecore-language";
-
-export interface EcoreInitializeOptions {
-    timestamp: Date;
-    modelServerURL: string;
-}
 
 @injectable()
 export class EcoreGLSPClientContribution extends BaseGLSPClientContribution {
 
-    @inject(ModelServerClient) protected readonly modelServerClient: ModelServerClient;
+    readonly id = EcoreLanguage.contributionId;
+    readonly fileExtensions = EcoreLanguage.fileExtensions;
 
-    readonly fileExtensions = [EcoreLanguage.FileExtension];
-    readonly id = EcoreLanguage.Id;
-    readonly name = EcoreLanguage.Name;
-
-    protected async createInitializeOptions(): Promise<EcoreInitializeOptions> {
-        // #TODO FIXME: using the launchoptions of the modelserverclient leads to an error, although the values seem to be correct...
-        // const options = await this.modelServerClient.getLaunchOptions();
-
+    protected createInitializeOptions(): MaybePromise<Args | undefined> {
         return {
-            timestamp: new Date(),
-            modelServerURL: "http://localhost:8081/api/v1/"
+            ["timestamp"]: new Date().toString(),
+            ["modelServerURL"]: "http://localhost:8081/api/v1/"
         };
     }
 

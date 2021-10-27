@@ -26,6 +26,7 @@ import org.eclipse.glsp.server.features.core.model.ModelSubmissionHandler;
 import org.eclipse.glsp.server.features.core.model.RequestModelAction;
 import org.eclipse.glsp.server.model.GModelState;
 import org.eclipse.glsp.server.utils.ClientOptions;
+import org.eclipse.glsp.server.utils.MapUtil;
 
 import com.google.inject.Inject;
 
@@ -33,6 +34,7 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 
 	private static Logger LOGGER = Logger.getLogger(EcoreModelSourceLoader.class);
 	private static final String ROOT_ID = "sprotty";
+	private static final String FORMAT_XMI = "xmi";
 
 	@Inject
 	private ModelServerClientProvider modelServerClientProvider;
@@ -49,7 +51,7 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 		EcoreModelState modelState = EcoreModelState.getModelState(gModelState);
 		modelState.setClientOptions(action.getOptions());
 
-		Optional<String> sourceURI = ClientOptions.getValue(action.getOptions(), ClientOptions.SOURCE_URI);
+		Optional<String> sourceURI = MapUtil.getValue(action.getOptions(), ClientOptions.SOURCE_URI);
 		if (sourceURI.isEmpty()) {
 			LOGGER.error("No source uri given to load model, return empty model.");
 			modelState.setRoot(createEmptyRoot());
@@ -66,8 +68,8 @@ public class EcoreModelSourceLoader implements ModelSourceLoader {
 		EcoreModelServerAccess modelServerAccess = new EcoreModelServerAccess(modelState.getModelUri(),
 				modelServerClient.get());
 		modelState.setModelServerAccess(modelServerAccess);
-		modelServerAccess
-				.subscribe(new EcoreModelServerSubscriptionListener(modelState, actionDispatcher, submissionHandler));
+		modelServerClient.get()
+				.subscribe(sourceURI.get(), new EcoreModelServerSubscriptionListener(modelState, actionDispatcher, submissionHandler), FORMAT_XMI);
 
 		EcoreEditorContext editorContext = new EcoreEditorContext(modelState, modelServerAccess);
 		modelState.setEditorContext(editorContext);

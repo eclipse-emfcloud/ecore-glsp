@@ -33,7 +33,6 @@ import org.eclipse.emfcloud.ecore.glsp.palette.EcoreToolPaletteItemProvider;
 import org.eclipse.emfcloud.ecore.glsp.registry.EcoreDIOperationHandlerRegistry;
 import org.eclipse.glsp.server.actions.Action;
 import org.eclipse.glsp.server.actions.ActionHandler;
-import org.eclipse.glsp.server.actions.DisposeClientSessionActionHandler;
 import org.eclipse.glsp.server.actions.SaveModelActionHandler;
 import org.eclipse.glsp.server.di.DefaultGLSPModule;
 import org.eclipse.glsp.server.diagram.DiagramConfiguration;
@@ -66,7 +65,6 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.rebind(ComputedBoundsActionHandler.class, EcoreComputedBoundsActionHandler.class);
 		bindings.rebind(OperationActionHandler.class, EcoreOperationActionHandler.class);
 		bindings.rebind(UndoRedoActionHandler.class, EcoreUndoRedoActionHandler.class);
-		bindings.rebind(DisposeClientSessionActionHandler.class, EcoreDisposeClientSessionActionHandler.class);
 		bindings.add(RequestSemanticUriActionHandler.class);
 	}
 
@@ -126,7 +124,6 @@ public class EcoreGLSPModule extends DefaultGLSPModule {
 		bindings.add(EcoreDiagramConfiguration.class);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	protected Class<? extends GLSPServer> bindGLSPServer() {
 		return EcoreGLSPServer.class;

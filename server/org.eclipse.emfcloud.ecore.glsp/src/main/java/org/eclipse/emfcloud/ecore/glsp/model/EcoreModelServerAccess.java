@@ -47,7 +47,6 @@ import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
 import org.eclipse.emfcloud.ecore.modelserver.EcoreModelServerClient;
 import org.eclipse.emfcloud.modelserver.client.ModelServerClientApi;
-import org.eclipse.emfcloud.modelserver.client.NotificationSubscriptionListener;
 import org.eclipse.emfcloud.modelserver.command.CCommand;
 import org.eclipse.emfcloud.modelserver.command.CCommandFactory;
 import org.eclipse.emfcloud.modelserver.command.CCompoundCommand;
@@ -77,7 +76,6 @@ public class EcoreModelServerAccess {
 	private String baseSourceUri;
 
 	private EcoreModelServerClient modelServerClient;
-	private NotificationSubscriptionListener<EObject> subscriptionListener;
 
 	public EcoreModelServerAccess(final String sourceURI, final EcoreModelServerClient modelServerClient) {
 		Preconditions.checkNotNull(modelServerClient);
@@ -110,24 +108,9 @@ public class EcoreModelServerAccess {
 		try {
 			return modelServerClient.get(getNotationURI(), FORMAT_XMI).thenApply(res -> res.body()).get();
 		} catch (InterruptedException | ExecutionException e) {
-			LOGGER.error(e);
-//			throw new GLSPServerException("Error during model loading", e);
-			LOGGER.error("Error during model loading");
+			LOGGER.error("Error during model loading", e);
 		}
 		return null;
-	}
-
-	public void subscribe(NotificationSubscriptionListener<EObject> subscriptionListener) {
-		LOGGER.debug("EcoreModelServerAccess - subscribe");
-		this.subscriptionListener = subscriptionListener;
-		this.modelServerClient.subscribe(getSemanticURI(), subscriptionListener, FORMAT_XMI);
-	}
-
-	public void unsubscribe() {
-		LOGGER.debug("EcoreModelServerAccess - unsubscribe");
-		if (subscriptionListener != null) {
-			this.modelServerClient.unsubscribe(getSemanticURI());
-		}
 	}
 
 	private EPackage getEPackage(EcoreModelState modelState) {

@@ -139,7 +139,7 @@ export class EcoreWorkspaceDeleteHandler extends WorkspaceDeleteHandler {
     }
 
     protected closeEcoreDiagramWidget(applicationShell: ApplicationShell, resourceUri: URI): void {
-        const diagramWidget = applicationShell.widgets.find((widget: Widget) => widget.id === `${EcoreLanguage.DiagramType}:${resourceUri}`);
+        const diagramWidget = applicationShell.widgets.find((widget: Widget) => widget.id === `${EcoreLanguage.diagramType}:${resourceUri}`);
         if (diagramWidget) {
             diagramWidget.close();
         }
