@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde?>
 <!-- generated with https://github.com/eclipse-cbi/targetplatform-dsl -->
-<target name="Ecore GLSP Dev" sequenceNumber="1635154120">
+<target name="Ecore GLSP Dev" sequenceNumber="1636098419">
   <locations>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.glsp.feature.feature.group" version="0.9.0.202109211845"/>
@@ -43,7 +43,7 @@
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.jetty.server" version="0.0.0"/>
       <unit id="org.eclipse.jetty.websocket.server" version="0.0.0"/>
-      <repository location="https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.43.v20210629/"/>
+      <repository location="https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.44.v20210927/"/>
     </location>
     <location includeMode="planner" includeAllPlatforms="false" includeSource="true" includeConfigurePhase="false" type="InstallableUnit">
       <unit id="org.eclipse.emf.ecore.feature.group" version="2.24.0.v20210405-0628"/>
