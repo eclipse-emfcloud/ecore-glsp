@@ -43,7 +43,7 @@ location "https://download.eclipse.org/tools/orbit/downloads/drops/R202106020316
 	org.slf4j.api [1.7.30,2.0.0)
 }
 
-location "https://download.eclipse.org/emfcloud/modelserver/p2/nightly/0.7/0.7.0.202110081257/" {
+location "https://download.eclipse.org/emfcloud/modelserver/p2/nightly/0.7/0.7.0.202112021704/" {
 	org.eclipse.emfcloud.modelserver.feature.feature.group [0.7.0,1.0.0)
 }
 
