@@ -133,36 +133,33 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
                 if (parent) {
                     const parentUri = parent.resource;
 
-                    this.showInput("Root package name", "Root package name").then(customPackageName => {
-                        if (customPackageName) {
-                            this.showInput("Output folder name (relative to selected Ecore)", "Output folder name",
-                                async (input: string) => !input ? "Please enter a valid path (e.g. '.' (for current directory) or '/genmodel'" : undefined
-                            ).then(folderName => {
-                                if (folderName) {
-                                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName || "").then(() => {
-                                        const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
-                                        const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + GENMODEL_EXTENSION;
-                                        const fileUri = new URI(genmodelPath);
-                                        open(this.openerService, fileUri);
-                                    });
-                                }
-                            });
-                        }
-                    });
+                    this.showInput("Root package name: the java package in which sources will be generated (e.g. my.company.project)", "Root package name")
+                        .then(customPackageName => {
+                            if (customPackageName) {
+                                this.showInput("Output folder name (relative to the workspace root)", "Output folder name",
+                                    async (input: string) => !input ? "Please enter a valid path (e.g. 'src' or 'myjavaproject/src'" : undefined
+                                ).then(folderName => {
+                                    if (folderName) {
+                                        this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName || "").then(() => {
+                                            const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
+                                            const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + GENMODEL_EXTENSION;
+                                            const fileUri = new URI(genmodelPath);
+                                            open(this.openerService, fileUri);
+                                        });
+                                    }
+                                });
+                            }
+                        });
                 }
             })
         }));
         registry.registerCommand(GENERATE_CODE, this.newWorkspaceRootUriAwareCommandHandler({
-            execute: (uri: URI) => this.getDirectory(uri).then(parent => {
-                if (parent) {
-                    const parentUri = parent.resource;
-                    if (parentUri.parent) {
-                        this.fileGenServer.generateCode(uri.path.toString(), parentUri.parent.path.toString()).then(() => {
-                            open(this.openerService, uri);
-                        });
-                    }
-                }
-            })
+            isVisible: (uri: URI) => uri.path.ext === GENMODEL_EXTENSION,
+            isEnabled: (uri: URI) => uri.path.ext === GENMODEL_EXTENSION,
+            execute: (uri: URI) => {
+                const wsPath = this.workspaceService.tryGetRoots()[0].resource;
+                this.fileGenServer.generateCode(uri.path.toString(), wsPath.toString()).then(result => console.log("Codegen result: " + result));
+            }
         }));
     }
 
@@ -193,6 +190,13 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
             label: GENERATE_GENMODEL_WIZARD.label,
             icon: GENERATE_GENMODEL_WIZARD.iconClass,
             order: "a1"
+        });
+
+        menus.registerMenuAction(GENMODEL_NAVIGATOR_CONTEXT_MENU, {
+            commandId: GENERATE_CODE.id,
+            label: GENERATE_CODE.label,
+            icon: GENERATE_CODE.iconClass,
+            order: "a2"
         });
 
     }
