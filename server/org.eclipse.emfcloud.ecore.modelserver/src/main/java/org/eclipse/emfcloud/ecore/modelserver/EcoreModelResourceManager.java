@@ -33,6 +33,7 @@ import org.eclipse.emfcloud.ecore.enotation.NotationElement;
 import org.eclipse.emfcloud.ecore.enotation.SemanticProxy;
 import org.eclipse.emfcloud.ecore.enotation.Shape;
 import org.eclipse.emfcloud.modelserver.emf.common.DefaultModelResourceManager;
+import org.eclipse.emfcloud.modelserver.emf.common.watchers.ModelWatchersManager;
 import org.eclipse.emfcloud.modelserver.emf.configuration.EPackageConfiguration;
 import org.eclipse.emfcloud.modelserver.emf.configuration.ServerConfiguration;
 import org.eclipse.glsp.graph.util.GraphUtil;
@@ -51,8 +52,8 @@ public class EcoreModelResourceManager extends DefaultModelResourceManager {
 
 	@Inject
 	public EcoreModelResourceManager(Set<EPackageConfiguration> configurations, AdapterFactory adapterFactory,
-			ServerConfiguration serverConfiguration) {
-		super(configurations, adapterFactory, serverConfiguration);
+			ServerConfiguration serverConfiguration, final ModelWatchersManager watchersManager) {
+		super(configurations, adapterFactory, serverConfiguration, watchersManager);
 	}
 
 	@Override
