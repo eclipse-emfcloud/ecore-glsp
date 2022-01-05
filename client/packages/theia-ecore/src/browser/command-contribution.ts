@@ -117,7 +117,8 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
                 if (parent) {
                     const parentUri = parent.resource;
 
-                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", "").then(() => {
+                    const sourceFolder = this.computeSrcFolder(parentUri);
+                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", sourceFolder).then(() => {
                         const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
                         const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + GENMODEL_EXTENSION;
                         const fileUri = new URI(genmodelPath);
@@ -199,6 +200,23 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
             order: "a2"
         });
 
+    }
+
+    private computeSrcFolder(parentUri: URI): string {
+        const wsUri = this.workspaceService.getWorkspaceRootUri(parentUri);
+        // We want to retain one URI segment below the workspace root, and then append an src-gen/ folder,
+        // to mimic the Eclipse Project structure.
+        if (wsUri) {
+            for (const uri of parentUri.allLocations) {
+                const relativity = wsUri.path.relativity(uri.path);
+                if (relativity >= 0 && relativity <= 1) {
+                    // Get the URI relative to the ws root, and append src-gen/
+                    const relativeUri = wsUri.relative(uri)!;
+                    return relativeUri.join("src-gen").toString();
+                }
+            }
+        }
+        return "";
     }
 
     protected async showInput(prefix: string, hint: string, inputCheck?: (input: string) => Promise<string | undefined>): Promise<string | undefined> {
