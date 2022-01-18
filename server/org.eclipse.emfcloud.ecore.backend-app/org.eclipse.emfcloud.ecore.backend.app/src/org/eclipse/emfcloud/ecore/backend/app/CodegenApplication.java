@@ -11,7 +11,15 @@
 package org.eclipse.emfcloud.ecore.backend.app;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.codegen.ecore.Generator;
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel;
 import org.eclipse.emf.common.util.URI;
@@ -25,25 +33,52 @@ public class CodegenApplication implements IApplication {
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		Generator codegen = new Generator();
 		String[] args = getArgs(context);
-		String[] genmodelArgs;
+		if (args.length != 1) {
+			throw new IllegalArgumentException("Expected argument: genmodel path; got "+Arrays.deepToString(args));
+		}
+		String genmodelPath = args[0];
+		
 		ResourceSet resourceSet = new ResourceSetImpl();
 
-		File genmodelFile = new File(args[0]);
+		File genmodelFile = new File(genmodelPath);
 		URI genmodelUri = URI.createFileURI(genmodelFile.getAbsolutePath());
 		Resource genmodelResource = resourceSet.getResource(genmodelUri, true);
 		GenModel genmodel = (GenModel) genmodelResource.getContents().get(0);
-		String modelDirectory = genmodel.getModelDirectory();
-		String basePackage = genmodel.getGenPackages().get(0).getBasePackage();
-		String nsName = genmodel.getGenPackages().get(0).getNSName();
-
-		String ecorePath = args[0].substring(0, args[0].lastIndexOf(".")) + ".ecore";
-
-		genmodelArgs = new String[]{"-ecore2GenModel", ecorePath, basePackage, nsName};
-		//TODO start Genmodel reloading here
-		codegen.run(args);
-		return null;
+		IPath modelDir = new Path(genmodel.getModelProjectDirectory());
+		
+		// FIXME: At the moment, the Eclipse/Codegen workspace is the same as the Theia Workspace
+		// Ideally, the Codegen App should use a different workspace, and we should add another
+		// parameter to retrieve the Theia workspace.
+		IPath theiaWsPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		
+		String rootLocation = theiaWsPath.append(modelDir.segment(0)).toString();
+		
+		// Before running codegen, make sure to clean all projects. This is required
+		// to avoid codegen errors, if a project no longer has a .project file
+		// Since we target the real filesystem, and not the eclipse filesystem,
+		// we don't necessarily expect valid eclipse .project files.
+		for (IProject project: ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+			// Remove project from workspace, but do not delete any contents
+			try {
+				project.delete(false, true, null);
+			} catch (CoreException ex) {
+				// Log the exception, but try generating the code nonetheless. If it's 
+				// an unrelated project, it might still work. 
+				ex.printStackTrace();
+			}
+		}
+		
+		// Generator arguments:
+		// 		"-reconcile",
+		// 		genmodelPath,
+		// 		rootProjectPath (first segment after Theia workspace)
+		List<String> codeGenArgs = new ArrayList<>();
+		codeGenArgs.add("-reconcile"); // Refresh genmodel before regenerating
+		codeGenArgs.add(genmodelPath);
+		codeGenArgs.add(rootLocation);
+		Generator codegen = new Generator();
+		return codegen.run(codeGenArgs.toArray(String[]::new));
 	}
 	
 	private String[] getArgs(IApplicationContext context) {

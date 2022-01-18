@@ -117,7 +117,8 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
                 if (parent) {
                     const parentUri = parent.resource;
 
-                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", "").then(() => {
+                    const sourceFolder = this.computeSrcFolder(parentUri);
+                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), "", sourceFolder).then(() => {
                         const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
                         const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + GENMODEL_EXTENSION;
                         const fileUri = new URI(genmodelPath);
@@ -133,36 +134,33 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
                 if (parent) {
                     const parentUri = parent.resource;
 
-                    this.showInput("Root package name", "Root package name").then(customPackageName => {
-                        if (customPackageName) {
-                            this.showInput("Output folder name (relative to selected Ecore)", "Output folder name",
-                                async (input: string) => !input ? "Please enter a valid path (e.g. '.' (for current directory) or '/genmodel'" : undefined
-                            ).then(folderName => {
-                                if (folderName) {
-                                    this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName || "").then(() => {
-                                        const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
-                                        const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + GENMODEL_EXTENSION;
-                                        const fileUri = new URI(genmodelPath);
-                                        open(this.openerService, fileUri);
-                                    });
-                                }
-                            });
-                        }
-                    });
+                    this.showInput("Root package name: the java package in which sources will be generated (e.g. my.company.project)", "Root package name")
+                        .then(customPackageName => {
+                            if (customPackageName) {
+                                this.showInput("Output folder name (relative to the workspace root)", "Output folder name",
+                                    async (input: string) => !input ? "Please enter a valid path (e.g. 'src' or 'myjavaproject/src'" : undefined
+                                ).then(folderName => {
+                                    if (folderName) {
+                                        this.fileGenServer.generateGenModel(parentUri.path.toString(), uri.path.toString(), customPackageName, folderName || "").then(() => {
+                                            const extensionStart = this.labelProvider.getName(uri).lastIndexOf(".");
+                                            const genmodelPath = parentUri.toString() + "/" + this.labelProvider.getName(uri).substring(0, extensionStart) + GENMODEL_EXTENSION;
+                                            const fileUri = new URI(genmodelPath);
+                                            open(this.openerService, fileUri);
+                                        });
+                                    }
+                                });
+                            }
+                        });
                 }
             })
         }));
         registry.registerCommand(GENERATE_CODE, this.newWorkspaceRootUriAwareCommandHandler({
-            execute: (uri: URI) => this.getDirectory(uri).then(parent => {
-                if (parent) {
-                    const parentUri = parent.resource;
-                    if (parentUri.parent) {
-                        this.fileGenServer.generateCode(uri.path.toString(), parentUri.parent.path.toString()).then(() => {
-                            open(this.openerService, uri);
-                        });
-                    }
-                }
-            })
+            isVisible: (uri: URI) => uri.path.ext === GENMODEL_EXTENSION,
+            isEnabled: (uri: URI) => uri.path.ext === GENMODEL_EXTENSION,
+            execute: (uri: URI) => {
+                const wsPath = this.workspaceService.tryGetRoots()[0].resource;
+                this.fileGenServer.generateCode(uri.path.toString(), wsPath.toString()).then(result => console.log("Codegen result: " + result));
+            }
         }));
     }
 
@@ -195,6 +193,30 @@ export class EcoreCommandContribution implements CommandContribution, MenuContri
             order: "a1"
         });
 
+        menus.registerMenuAction(GENMODEL_NAVIGATOR_CONTEXT_MENU, {
+            commandId: GENERATE_CODE.id,
+            label: GENERATE_CODE.label,
+            icon: GENERATE_CODE.iconClass,
+            order: "a2"
+        });
+
+    }
+
+    private computeSrcFolder(parentUri: URI): string {
+        const wsUri = this.workspaceService.getWorkspaceRootUri(parentUri);
+        // We want to retain one URI segment below the workspace root, and then append an src-gen/ folder,
+        // to mimic the Eclipse Project structure.
+        if (wsUri) {
+            for (const uri of parentUri.allLocations) {
+                const relativity = wsUri.path.relativity(uri.path);
+                if (relativity >= 0 && relativity <= 1) {
+                    // Get the URI relative to the ws root, and append src-gen/
+                    const relativeUri = wsUri.relative(uri)!;
+                    return relativeUri.join("src-gen").toString();
+                }
+            }
+        }
+        return "";
     }
 
     protected async showInput(prefix: string, hint: string, inputCheck?: (input: string) => Promise<string | undefined>): Promise<string | undefined> {

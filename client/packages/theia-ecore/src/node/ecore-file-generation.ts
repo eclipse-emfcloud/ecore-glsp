@@ -92,8 +92,10 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
 
     generateCode(genmodelPath: string, workspacePath: string): Promise<string> {
         const args: string[] = [
+            // Eclipse Args
             "-data", workspacePath,
             "-application", "org.eclipse.emfcloud.ecore.backend.app.codegen",
+            // Codegen App Args
             genmodelPath
         ];
 
@@ -139,6 +141,9 @@ export class EcoreFileGenServer implements FileGenServer, BackendApplicationCont
     }
 
     private spawnProcess(command: string, args?: string[]): RawProcess | undefined {
+        console.log("Spawn process:");
+        console.log("Command: " + command);
+        console.log("Args: ", args);
         const rawProcess = this.processFactory({ command, args });
         if (rawProcess.process === undefined) {
             return undefined;

@@ -6,5 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: ecore.glsp.backend.app
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.equinox.app,
- org.eclipse.emf.codegen.ecore;bundle-version="2.20.0"
+ org.eclipse.emf.codegen.ecore;bundle-version="2.20.0",
+ org.eclipse.core.resources;bundle-version="3.15.0",
+ org.eclipse.core.runtime;bundle-version="3.22.0"
 Export-Package: org.eclipse.emfcloud.ecore.backend.app
