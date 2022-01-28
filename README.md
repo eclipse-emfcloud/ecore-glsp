@@ -48,6 +48,7 @@ Make sure to only build the backend (and not the front-end). This is needed befo
 ### Building docker image
 
 Build the docker image using the following command, where &lt;imagename&gt; and &lt;tagname&gt; are replaced with the values you wish to use.
+
 `docker build -t <imagename>:<tagname> .`
 
 For example: `docker build -t ecore-glsp .`
