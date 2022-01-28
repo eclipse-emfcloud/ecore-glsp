@@ -39,18 +39,25 @@ The client repo contains a [Dockerfile](client/README.md), that builds the entir
 
 For installing docker locally please consult [docker's installation description](https://docs.docker.com/install/) for your OS.
 
-**Locally build backend only**
+### Locally build backend
+
 Make sure to only build the backend (and not the front-end). This is needed before building the docker image.
+
 `build.sh -b`
 
-**Building docker image**
+### Building docker image
+
+Build the docker image using the following command, where <imagename> and <tagname> are replaced with the values you wish to use.
 `docker build -t <imagename>:<tagname> .`
 
 For example: `docker build -t ecore-glsp .`
 
-**Running in docker**
+### Running in docker
+
+When the docker image is build, you can start the container using the following command (where again the <imagename> and <tagename> are replaced).
+
 `docker run -it -p 3000:3000 --rm <imagename>:<tagname>`
 
 For example: `docker run -it -p 3000:3000 --rm ecore-glsp`
 
-After that you should be able to connect with your browser at localhost:3000.
+After that you should be able to connect with your browser at http://localhost:3000.
