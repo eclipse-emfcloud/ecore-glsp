@@ -11,6 +11,7 @@
 package org.eclipse.emfcloud.ecore.glsp.model;
 
 import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emfcloud.ecore.enotation.Diagram;
 import org.eclipse.emfcloud.ecore.glsp.EcoreEditorContext;
 import org.eclipse.emfcloud.ecore.glsp.EcoreFacade;
@@ -77,9 +78,7 @@ public class EcoreModelState extends GModelStateImpl implements GModelState {
 	public String getModelUri() {
 		String sourceURI = MapUtil.getValue(getClientOptions(), ClientOptions.SOURCE_URI)
 				.orElseThrow(() -> new GLSPServerException("No source uri given to load model!"));
-		String workspaceRoot = MapUtil.getValue(getClientOptions(), WORKSPACE_ROOT_OPTION)
-				.orElseThrow(() -> new GLSPServerException("No workspaceUri given to load model!"));
-		return sourceURI.replace(workspaceRoot.replaceFirst("file://", ""), "").replaceFirst("/", "");
+		return URI.createFileURI(sourceURI).toString();
 	}
 
 	@Override
