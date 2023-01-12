@@ -4,7 +4,7 @@ kind: Pod
 spec:
   containers:
   - name: ci
-    image: eclipseglsp/ci:uitest
+    image: eclipseglsp/ci:uitest-v1.1
     tty: true
     resources:
       limits:
@@ -57,7 +57,9 @@ pipeline {
                 container('ci') {
                     timeout(15){
                         dir('client') {
-                            sh 'yarn install'
+                            withCredentials([string(credentialsId: "github-bot-token", variable: 'GITHUB_TOKEN')]) {
+                                sh 'yarn install'
+                            }
                         }
                     }
                 }
